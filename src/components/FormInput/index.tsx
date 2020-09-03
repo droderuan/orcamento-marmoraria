@@ -11,9 +11,15 @@ interface InputValueReference {
 interface InputProps extends TextInputProps {
   name: string;
   displayName: string;
+  containerStyle?: {};
 }
 
-const Input: React.FC<InputProps> = ({ name, displayName, ...restProps }) => {
+const Input: React.FC<InputProps> = ({
+  name,
+  displayName,
+  containerStyle,
+  ...restProps
+}) => {
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
 
   const inputElementRef = useRef<any>(null);
@@ -36,7 +42,7 @@ const Input: React.FC<InputProps> = ({ name, displayName, ...restProps }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container>
+    <Container style={containerStyle}>
       <InputLabel>{displayName}</InputLabel>
       <InputContainer>
         <TextInput

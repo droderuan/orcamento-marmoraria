@@ -1,20 +1,26 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { useNavigation, DrawerActions } from '@react-navigation/native';
-import { Text, ScrollView } from 'react-native';
-import HomeHeader from '../../components/homeHeader';
+import { ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Fontisto';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
-import BudgetCard from './components/Budget';
+import Button from '@components/Button';
+
+import BudgetCard from '../components/Budget';
 
 import {
   Container,
+  Header,
+  DrawerMenuButton,
+  SearchArea,
+  SearchInput,
+  SearchButton,
   NavButtons,
   NavButton,
   ButtonText,
   BudgetContainer,
   ButtonContainer,
-  NewBudgetButton,
-  NewBudgetButtonText,
 } from './styles';
 
 interface Filters {
@@ -37,8 +43,19 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <HomeHeader toggleDrawer={toggleDrawer} />
-      <NavButtons>
+      <Header>
+        <DrawerMenuButton onPress={toggleDrawer}>
+          <Icon name="player-settings" size={32} color="#fff" />
+        </DrawerMenuButton>
+        <SearchArea>
+          <SearchInput placeholder="Procure pelo nome do cliente" />
+          <SearchButton>
+            <IconAntDesign name="search1" size={20} color="#fff" />
+          </SearchButton>
+        </SearchArea>
+      </Header>
+
+      <NavButtons style={{ elevation: 5 }}>
         <NavButton
           onPress={() => changeFilter('pendant')}
           isSelected={selectedFilter === 'pendant'}
@@ -66,9 +83,9 @@ const Home: React.FC = () => {
       </ScrollView>
 
       <ButtonContainer>
-        <NewBudgetButton onPress={() => navigation.navigate('NewBudget')}>
-          <NewBudgetButtonText>Novo orçamento</NewBudgetButtonText>
-        </NewBudgetButton>
+        <Button onPress={() => navigation.navigate('NewBudget')}>
+          Novo orçamento
+        </Button>
       </ButtonContainer>
     </Container>
   );

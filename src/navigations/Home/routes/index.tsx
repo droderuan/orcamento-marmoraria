@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import NewBudget from '../pages/NewBudget';
-import HomePage from '../pages/Home';
+import NewBudgetRoutes from '@navigations/NewBudget/routes';
+import HomePage from '../screens';
 
 const App = createStackNavigator();
 
@@ -10,12 +10,12 @@ const Home: React.FC = () => (
   <App.Navigator
     screenOptions={{
       headerShown: false,
-      cardStyle: { backgroundColor: '#FFF', paddingTop: 24 },
+      cardStyle: { backgroundColor: '#FFF' },
     }}
     initialRouteName="Home"
   >
     <App.Screen name="Home" component={HomePage} />
-    <App.Screen name="NewBudget" component={NewBudget} />
+    <App.Screen name="NewBudget" component={NewBudgetRoutes} />
   </App.Navigator>
 );
 export default Home;

@@ -7,6 +7,43 @@ interface SelectedNavButtonProps {
 
 export const Container = styled.View`
   flex: 1;
+  margin-top: 24px;
+`;
+
+export const Header = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 55px;
+  padding: 0 16px;
+  background-color: #487195;
+`;
+
+export const DrawerMenuButton = styled.TouchableOpacity``;
+
+export const SearchArea = styled.View`
+  height: 32px;
+  width: 240px;
+  background-color: #fff;
+  flex-direction: row;
+`;
+
+export const SearchInput = styled.TextInput`
+  flex: 1;
+  height: 32px;
+  padding: 5px;
+  font-size: 14px;
+  font-family: 'Roboto-Regular';
+  color: #000;
+`;
+
+export const SearchButton = styled(RectButton)`
+  height: 32px;
+  width: 32px;
+  justify-content: center;
+  align-items: center;
+  background-color: #7f9cb5;
 `;
 
 export const NavButtons = styled.View`
@@ -36,7 +73,7 @@ export const BudgetContainer = styled.View`
 `;
 
 export const ButtonContainer = styled.View`
-  padding: 40px 45px;
+  padding: 10px 45px 20px;
   margin-top: 20px;
 `;
 
