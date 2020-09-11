@@ -11,6 +11,7 @@ module.exports = {
           '@navigations': './src/navigations/',
           '@components': './src/components/',
           '@hooks': './src/hooks/',
+          '@dtos': './src/dtos/',
         },
       },
     ],

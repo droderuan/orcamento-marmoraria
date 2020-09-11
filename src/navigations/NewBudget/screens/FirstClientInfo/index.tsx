@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -8,15 +9,24 @@ import Button from '../../../../components/Button';
 
 import { Container } from './styles';
 
-const FirstClientInfo: React.FC = () => {
+interface FirstClientInfoProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+interface ClientInfo {
+  name: string;
+  phone: string;
+}
+
+const FirstClientInfo: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const formRef = useRef<FormHandles>(null);
-  const navigation = useNavigation();
 
-  const handleSubmit = useCallback((data: any) => {
-    console.log(data);
-
-    navigation.navigate('MainPage');
-  }, []);
+  const handleSubmit = useCallback(
+    ({ name, phone }: ClientInfo) => {
+      navigation.replace('MainPage', { name, phone });
+    },
+    [navigation],
+  );
 
   return (
     <Container>

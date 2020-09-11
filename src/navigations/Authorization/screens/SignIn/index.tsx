@@ -17,6 +17,7 @@ import { Container, Logo, ButtonContainer } from './styles';
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
   const { signIn } = useAuth();
 
   const navigation = useNavigation();
@@ -43,8 +44,17 @@ const SignIn: React.FC = () => {
         <Container>
           <Logo source={LogoFake} />
           <Form onSubmit={handleSubmit} ref={formRef}>
-            <FormInput name="user" displayName="Usuário" />
-            <FormInput name="password" displayName="Senha" secureTextEntry />
+            <FormInput
+              name="user"
+              displayName="Usuário"
+              keyboardType="default"
+            />
+            <FormInput
+              name="password"
+              displayName="Senha"
+              secureTextEntry
+              onSubmitEditing={() => formRef.current?.submitForm()}
+            />
             <ButtonContainer>
               <Button
                 onPress={() => {
