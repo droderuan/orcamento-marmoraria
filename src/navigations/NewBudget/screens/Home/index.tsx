@@ -17,6 +17,7 @@ import {
   HeaderButtons,
   HeaderButton,
   HeaderButtonText,
+  ModalContent,
   ModalButtons,
   ModalHeaderWrapper,
   ModalTitle,
@@ -138,30 +139,32 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         onRequestClose={closeAddRoomModal}
         closeModal={closeAddRoomModal}
       >
-        <ModalTitle>Adicionar cômodo</ModalTitle>
+        <ModalContent>
+          <ModalTitle>Adicionar cômodo</ModalTitle>
 
-        <ModalInputTextContainer>
-          <ModalInputText
-            ref={modalInputRef}
-            onChangeText={room => setwritedRoomName(room)}
-            placeholder="Digite o nome do cômodo"
-            placeholderTextColor="#efefef"
-          />
-        </ModalInputTextContainer>
-
-        <ModalButtons>
-          <TouchableOpacity onPress={closeAddRoomModal}>
-            <MaterialCommunityIcons name="cancel" size={40} color="#dd3030" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={addRoom}>
-            <MaterialCommunityIcons
-              name="check-all"
-              size={40}
-              color="#30dd30"
+          <ModalInputTextContainer>
+            <ModalInputText
+              ref={modalInputRef}
+              onChangeText={room => setwritedRoomName(room)}
+              placeholder="Digite o nome do cômodo"
+              placeholderTextColor="#efefef"
             />
-          </TouchableOpacity>
-        </ModalButtons>
+          </ModalInputTextContainer>
+
+          <ModalButtons>
+            <TouchableOpacity onPress={closeAddRoomModal}>
+              <MaterialCommunityIcons name="cancel" size={40} color="#dd3030" />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={addRoom}>
+              <MaterialCommunityIcons
+                name="check-all"
+                size={40}
+                color="#30dd30"
+              />
+            </TouchableOpacity>
+          </ModalButtons>
+        </ModalContent>
       </Modal>
 
       <Modal
@@ -171,43 +174,45 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         onRequestClose={closeEditRoomModal}
         closeModal={closeEditRoomModal}
       >
-        <ModalHeaderWrapper>
-          <ModalTitle>Editar cômodo</ModalTitle>
-          <TouchableOpacity onPress={handleDeleteRoom}>
-            <MaterialIcons
-              name="delete"
-              size={48}
-              color="#dd3030"
-              style={{ marginRight: 10 }}
+        <ModalContent>
+          <ModalHeaderWrapper>
+            <ModalTitle>Editar cômodo</ModalTitle>
+            <TouchableOpacity onPress={handleDeleteRoom}>
+              <MaterialIcons
+                name="delete"
+                size={48}
+                color="#dd3030"
+                style={{ marginRight: 10 }}
+              />
+            </TouchableOpacity>
+          </ModalHeaderWrapper>
+
+          <ModalInputTextContainer>
+            <ModalInputText
+              onChangeText={
+                roomName => setEditRoom({ ...editRoom, name: roomName })
+                // eslint-disable-next-line react/jsx-curly-newline
+              }
+              value={editRoom.name}
+              placeholder="Digite o nome do cômodo"
+              placeholderTextColor="#efefef"
             />
-          </TouchableOpacity>
-        </ModalHeaderWrapper>
+          </ModalInputTextContainer>
 
-        <ModalInputTextContainer>
-          <ModalInputText
-            onChangeText={
-              roomName => setEditRoom({ ...editRoom, name: roomName })
-              // eslint-disable-next-line react/jsx-curly-newline
-            }
-            value={editRoom.name}
-            placeholder="Digite o nome do cômodo"
-            placeholderTextColor="#efefef"
-          />
-        </ModalInputTextContainer>
+          <ModalButtons>
+            <TouchableOpacity onPress={closeEditRoomModal}>
+              <MaterialCommunityIcons name="cancel" size={48} color="#dd3030" />
+            </TouchableOpacity>
 
-        <ModalButtons>
-          <TouchableOpacity onPress={closeEditRoomModal}>
-            <MaterialCommunityIcons name="cancel" size={48} color="#dd3030" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleEditRoom}>
-            <MaterialCommunityIcons
-              name="check-all"
-              size={48}
-              color="#30dd30"
-            />
-          </TouchableOpacity>
-        </ModalButtons>
+            <TouchableOpacity onPress={handleEditRoom}>
+              <MaterialCommunityIcons
+                name="check-all"
+                size={48}
+                color="#30dd30"
+              />
+            </TouchableOpacity>
+          </ModalButtons>
+        </ModalContent>
       </Modal>
 
       <HeaderButtons>

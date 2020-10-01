@@ -29,8 +29,8 @@ export const ModalButton = styled(RectButton)`
 
 export const ModalContent = styled.View`
   padding: 40px 20px;
+  width: 100%;
   justify-content: center;
-  background-color: #fff;
 `;
 
 export const ModalHeaderWrapper = styled.View`
