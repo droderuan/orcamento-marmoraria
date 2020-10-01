@@ -32,7 +32,7 @@ interface RouteParams {
 }
 
 const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
-  const { saveRoom } = useBudget();
+  const { saveRoom, saveProduct } = useBudget();
   const inputRef = useRef<TextInput>(null);
   const route = useRoute();
   const routeParams = route.params as RouteParams;
@@ -53,22 +53,15 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
     };
   });
 
-  // TODO: add input pointer to start after blur
+  // TODO: add input to pointer to start after blur
   const handleBlur = useCallback(() => {
     Keyboard.dismiss();
     inputRef.current?.blur();
   }, []);
 
   const editProduct = useCallback(() => {
-    const productToUpdate = room.products.findIndex(
-      item => item.id === product.id,
-    );
-    let toUpdateRoom = room.products[productToUpdate];
-    toUpdateRoom = product;
-    room.products[productToUpdate] = toUpdateRoom;
-
-    saveRoom(room);
-  }, [product, room, saveRoom]);
+    saveProduct({ product, roomId: room.id });
+  }, [product, room, saveProduct]);
 
   const handleChangeProductName = useCallback(value => {
     setProduct(oldProduct => ({ ...oldProduct, name: value }));

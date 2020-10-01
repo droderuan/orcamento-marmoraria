@@ -9,6 +9,7 @@ import RoomProps from '@dtos/Room';
 import Modal from '@components/Modal';
 
 import GenerateID from '@utils/GenerateID';
+import Product from '@dtos/Product';
 import { useBudget } from '../../hooks/budget';
 
 import {
@@ -48,7 +49,13 @@ interface EditRoomDTO {
 }
 
 const Home: React.FC<HomeProps> = ({ navigation }) => {
-  const { roomsInBudget, createRoom, saveRoom, deleteRoom } = useBudget();
+  const {
+    roomsInBudget,
+    createRoom,
+    saveRoom,
+    deleteRoom,
+    createProduct,
+  } = useBudget();
 
   const [writedRoomName, setwritedRoomName] = useState('');
   const [editRoom, setEditRoom] = useState<RoomProps>({} as RoomProps);
@@ -111,19 +118,15 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
   const handleCreateAndNavigateToProduct = useCallback(
     (room: RoomProps) => {
-      const updateRoom = room;
-      const { products } = updateRoom;
       const product = {
         id: GenerateID(),
         name: 'Novo Produto',
         items: [],
-      };
-      products.push(product);
-      updateRoom.products = products;
-      saveRoom(updateRoom);
+      } as Product;
+      createProduct({ roomId: room.id, product });
       navigation.navigate('RoomProducts', { room, productId: product.id });
     },
-    [navigation, saveRoom],
+    [navigation, createProduct],
   );
 
   return (
@@ -182,8 +185,9 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
         <ModalInputTextContainer>
           <ModalInputText
-            onChangeText={roomName =>
-              setEditRoom({ ...editRoom, name: roomName })
+            onChangeText={
+              roomName => setEditRoom({ ...editRoom, name: roomName })
+              // eslint-disable-next-line react/jsx-curly-newline
             }
             value={editRoom.name}
             placeholder="Digite o nome do cômodo"

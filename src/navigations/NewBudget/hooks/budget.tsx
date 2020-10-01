@@ -10,15 +10,23 @@ interface BudgetContextData {
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomProps): void;
   deleteRoom(roomToDelete: Room): void;
+  createProduct({ roomId, product }: CreateProductProps): void;
+  saveProduct({ roomId, product }: CreateProductProps): void;
+  deleteProduct({ roomId, productId }: DeleteProductProps): void;
 }
 
 interface CreateRoomProps {
   name: string;
 }
 
-interface ProductDTO {
+interface CreateProductProps {
   roomId: string;
   product: Product;
+}
+
+interface DeleteProductProps {
+  roomId: string;
+  productId: string;
 }
 
 const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
@@ -27,45 +35,10 @@ export const BudgetProvider: React.FC = ({ children }) => {
   const [budget, setBudget] = useState<Budget>({} as Budget);
   const [roomsInBudget, setRoomsInBudget] = useState<Room[]>([]);
 
-  const createProduct = useCallback(
-    ({ roomId, product }) => {
-      const roomsCopy = roomsInBudget;
-      const roomToAddProductIndex = roomsInBudget.findIndex(
-        room => room.id === roomId,
-      );
-      if (roomToAddProductIndex !== -1) {
-        const roomToAddProduct = roomsInBudget[roomToAddProductIndex];
-        roomToAddProduct?.products.push(product);
-        roomsCopy[roomToAddProductIndex] = roomToAddProduct;
-        setRoomsInBudget(oldRooms => [...roomsCopy]);
-      }
-    },
-    [roomsInBudget],
-  );
-
-  const deleteProduct = useCallback(
-    ({ roomId, product }: ProductDTO) => {
-      const roomsCopy = roomsInBudget;
-      const roomIndex = roomsInBudget.findIndex(room => room.id === roomId);
-
-      if (roomIndex !== -1) {
-        const roomToRemoveProduct = roomsInBudget[roomIndex];
-        const productIndex = roomToRemoveProduct.products.findIndex(
-          item => item.id === product.id,
-        );
-        roomToRemoveProduct.products.splice(productIndex, 0);
-        roomsCopy[roomIndex] = roomToRemoveProduct;
-        setRoomsInBudget(roomsCopy);
-      }
-    },
-    [roomsInBudget],
-  );
-
   const createRoom = useCallback(({ name }: CreateRoomProps) => {
     const newRoom = { id: generateID(), name, products: [] as Product[] };
 
     setRoomsInBudget(oldRoomsInBudget => {
-      console.log([...oldRoomsInBudget, newRoom]);
       return [...oldRoomsInBudget, newRoom];
     });
   }, []);
@@ -91,9 +64,70 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [roomsInBudget],
   );
 
+  const createProduct = useCallback(
+    ({ roomId, product }: CreateProductProps) => {
+      const roomsCopy = roomsInBudget;
+      const roomToAddProductIndex = roomsCopy.findIndex(
+        room => room.id === roomId,
+      );
+      if (roomToAddProductIndex !== -1) {
+        const roomToAddProduct = roomsCopy[roomToAddProductIndex];
+        roomToAddProduct.products.push(product);
+        roomsCopy[roomToAddProductIndex] = roomToAddProduct;
+        setRoomsInBudget([...roomsCopy]);
+      }
+    },
+    [roomsInBudget],
+  );
+
+  const saveProduct = useCallback(
+    ({ roomId, product }: CreateProductProps) => {
+      const roomsCopy = roomsInBudget;
+      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+
+      if (roomIndex !== -1) {
+        const roomToSaveProduct = roomsCopy[roomIndex];
+        const productIndex = roomToSaveProduct.products.findIndex(
+          item => item.id === product.id,
+        );
+        productIndex !== -1 &&
+          (roomToSaveProduct.products[productIndex] = product);
+        roomsCopy[roomIndex] = roomToSaveProduct;
+        setRoomsInBudget(roomsCopy);
+      }
+    },
+    [roomsInBudget],
+  );
+
+  const deleteProduct = useCallback(
+    ({ roomId, productId }: DeleteProductProps) => {
+      const roomsCopy = roomsInBudget;
+      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+
+      if (roomIndex !== -1) {
+        const updatedProducts = roomsCopy[roomIndex].products.filter(
+          item => item.id !== productId,
+        );
+        roomsCopy[roomIndex].products = updatedProducts;
+
+        setRoomsInBudget(roomsCopy);
+      }
+    },
+    [roomsInBudget],
+  );
+
   return (
     <BudgetContext.Provider
-      value={{ budget, roomsInBudget, createRoom, saveRoom, deleteRoom }}
+      value={{
+        budget,
+        roomsInBudget,
+        createRoom,
+        saveRoom,
+        deleteRoom,
+        createProduct,
+        saveProduct,
+        deleteProduct,
+      }}
     >
       {children}
     </BudgetContext.Provider>
