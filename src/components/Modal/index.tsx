@@ -1,13 +1,30 @@
 import React from 'react';
-import { ModalBaseProps } from 'react-native';
-import { Container, ModalBackground, ModalContent } from './styles';
+import { ModalBaseProps, TouchableWithoutFeedback } from 'react-native';
+import {
+  Container,
+  CloseModalTouchable,
+  ModalBackground,
+  ModalContent,
+} from './styles';
 
-const Modal: React.FC<ModalBaseProps> = ({ children, ...restProps }) => {
+interface ModalProps extends ModalBaseProps {
+  closeModal(): void;
+}
+
+const Modal: React.FC<ModalProps> = ({
+  children,
+  closeModal,
+  ...restProps
+}) => {
   return (
     <Container {...restProps}>
-      <ModalBackground>
-        <ModalContent>{children}</ModalContent>
-      </ModalBackground>
+      <CloseModalTouchable onPress={closeModal}>
+        <ModalBackground>
+          <TouchableWithoutFeedback>
+            <ModalContent>{children}</ModalContent>
+          </TouchableWithoutFeedback>
+        </ModalBackground>
+      </CloseModalTouchable>
     </Container>
   );
 };

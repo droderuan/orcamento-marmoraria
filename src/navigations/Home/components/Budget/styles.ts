@@ -4,7 +4,7 @@ export const BudgetCard = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: #efefef;
   margin: 10px 0;
 `;
 
@@ -26,7 +26,7 @@ export const RightBudgetCard = styled.View``;
 export const BudgetInfoButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
-  background: #efefef;
+  background: #7f9cb5;
 
   width: 32px;
 `;

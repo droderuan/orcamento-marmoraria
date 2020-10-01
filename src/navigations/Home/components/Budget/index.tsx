@@ -39,7 +39,7 @@ const Budget: React.FC = () => {
         </RightBudgetCard>
       </InfoWrapper>
       <BudgetInfoButton>
-        <Icon name="chevron-right" size={32} color="#7f9cb5" />
+        <Icon name="chevron-right" size={32} color="#fff" />
       </BudgetInfoButton>
     </BudgetCard>
   );

@@ -1,11 +1,15 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import RoomProps from '@dtos/Room';
 import Modal from '@components/Modal';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StackNavigationProp } from '@react-navigation/stack';
-import Room from '../../components/Room';
+import GenerateID from '@utils/GenerateID';
+import { useBudget } from '../../hooks/budget';
 
 import {
   Container,
@@ -13,100 +17,247 @@ import {
   HeaderButton,
   HeaderButtonText,
   ModalButtons,
+  ModalHeaderWrapper,
   ModalTitle,
   ModalInputTextContainer,
   ModalInputText,
   ProductsContainer,
-  ProductsList,
+  RoomList,
+  Room,
+  RoomNameWrapper,
+  RoomTitleWrapper,
+  RoomTitle,
+  ProductHorizontalList,
+  ProductCardContainer,
+  ProductCardHeader,
+  ProductCardTitle,
+  ProductCardInfo,
+  ProductCardInfoItem,
+  ItemText,
+  ProductCardAdd,
+  ProductCardAddText,
 } from './styles';
 
 interface HomeProps {
   navigation: StackNavigationProp<any, any>;
 }
 
-interface Product {
-  type: string;
-}
-
-interface Room {
-  type: 'Quarto' | 'Banheiro';
-  name: string;
-  products: Product[];
+interface EditRoomDTO {
+  room: RoomProps;
+  index: number;
 }
 
 const Home: React.FC<HomeProps> = ({ navigation }) => {
-  const [writedRoom, setWritedRoom] = useState('');
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const modalRef = useRef(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const { roomsInBudget, createRoom, saveRoom, deleteRoom } = useBudget();
 
-  const openModal = useCallback(() => setModalVisible(true), []);
+  const [writedRoomName, setwritedRoomName] = useState('');
+  const [editRoom, setEditRoom] = useState<RoomProps>({} as RoomProps);
 
-  const closeModal = useCallback(() => setModalVisible(false), []);
+  const [addRoomModalVisible, setAddRoomModalVisible] = useState(false);
+  const [editRoomModalVisible, setEditRoomModalVisible] = useState(false);
 
-  const handleNewProduct = useCallback(() => {
-    console.log('foi');
-    navigation.navigate('SelectProduct');
-  }, [navigation]);
+  const modalInputRef = useRef<TextInput>(null);
+
+  const openAddRoomModal = useCallback(() => {
+    setAddRoomModalVisible(true);
+    setTimeout(() => modalInputRef.current?.focus(), 250);
+  }, []);
+
+  const closeAddRoomModal = useCallback(
+    () => setAddRoomModalVisible(false),
+    [],
+  );
 
   const addRoom = useCallback(() => {
-    if (writedRoom !== '') {
-      setRooms(oldProps => {
-        return [
-          ...oldProps,
-          { name: writedRoom, type: 'Quarto', products: [] },
-        ];
+    if (writedRoomName !== '') {
+      createRoom({
+        name: writedRoomName,
       });
-      setWritedRoom('');
-      closeModal();
+
+      setwritedRoomName('');
+
+      closeAddRoomModal();
     }
-  }, [writedRoom, closeModal]);
+  }, [closeAddRoomModal, writedRoomName, createRoom]);
+
+  const openEditRoomModal = useCallback(({ room }: EditRoomDTO) => {
+    setEditRoomModalVisible(true);
+    setEditRoom(room);
+  }, []);
+
+  const closeEditRoomModal = useCallback(() => {
+    setEditRoomModalVisible(false);
+    setEditRoom({} as RoomProps);
+  }, []);
+
+  const handleEditRoom = useCallback(() => {
+    saveRoom(editRoom);
+    closeEditRoomModal();
+    setEditRoom({} as RoomProps);
+  }, [saveRoom, closeEditRoomModal, editRoom]);
+
+  const handleDeleteRoom = useCallback(() => {
+    deleteRoom(editRoom);
+    closeEditRoomModal();
+    setEditRoom({} as RoomProps);
+  }, [deleteRoom, closeEditRoomModal, editRoom]);
+
+  const handleNavigateToProduct = useCallback(
+    (room, productId = null) => {
+      navigation.navigate('RoomProducts', { room, productId });
+    },
+    [navigation],
+  );
+
+  const handleCreateAndNavigateToProduct = useCallback(
+    (room: RoomProps) => {
+      const updateRoom = room;
+      const { products } = updateRoom;
+      const product = {
+        id: GenerateID(),
+        name: 'Novo Produto',
+        items: [],
+      };
+      products.push(product);
+      updateRoom.products = products;
+      saveRoom(updateRoom);
+      navigation.navigate('RoomProducts', { room, productId: product.id });
+    },
+    [navigation, saveRoom],
+  );
 
   return (
     <Container>
       <Modal
         animationType="fade"
         transparent
-        visible={modalVisible}
-        onRequestClose={closeModal}
+        visible={addRoomModalVisible}
+        onRequestClose={closeAddRoomModal}
+        closeModal={closeAddRoomModal}
       >
         <ModalTitle>Adicionar cômodo</ModalTitle>
+
         <ModalInputTextContainer>
           <ModalInputText
-            onChangeText={room => setWritedRoom(room)}
+            ref={modalInputRef}
+            onChangeText={room => setwritedRoomName(room)}
             placeholder="Digite o nome do cômodo"
             placeholderTextColor="#efefef"
           />
         </ModalInputTextContainer>
 
         <ModalButtons>
-          <TouchableOpacity onPress={closeModal}>
-            <Icon name="cancel" size={40} color="#dd3030" />
+          <TouchableOpacity onPress={closeAddRoomModal}>
+            <MaterialCommunityIcons name="cancel" size={40} color="#dd3030" />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={addRoom}>
-            <Icon name="check-all" size={40} color="#30dd30" />
+            <MaterialCommunityIcons
+              name="check-all"
+              size={40}
+              color="#30dd30"
+            />
+          </TouchableOpacity>
+        </ModalButtons>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={editRoomModalVisible}
+        onRequestClose={closeEditRoomModal}
+        closeModal={closeEditRoomModal}
+      >
+        <ModalHeaderWrapper>
+          <ModalTitle>Editar cômodo</ModalTitle>
+          <TouchableOpacity onPress={handleDeleteRoom}>
+            <MaterialIcons
+              name="delete"
+              size={48}
+              color="#dd3030"
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
+        </ModalHeaderWrapper>
+
+        <ModalInputTextContainer>
+          <ModalInputText
+            onChangeText={roomName =>
+              setEditRoom({ ...editRoom, name: roomName })
+            }
+            value={editRoom.name}
+            placeholder="Digite o nome do cômodo"
+            placeholderTextColor="#efefef"
+          />
+        </ModalInputTextContainer>
+
+        <ModalButtons>
+          <TouchableOpacity onPress={closeEditRoomModal}>
+            <MaterialCommunityIcons name="cancel" size={48} color="#dd3030" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleEditRoom}>
+            <MaterialCommunityIcons
+              name="check-all"
+              size={48}
+              color="#30dd30"
+            />
           </TouchableOpacity>
         </ModalButtons>
       </Modal>
 
       <HeaderButtons>
-        <HeaderButton onPress={openModal}>
-          <Icon name="plus" size={26} color="#fff" />
+        <HeaderButton onPress={openAddRoomModal}>
+          <MaterialCommunityIcons name="plus" size={26} color="#fff" />
           <HeaderButtonText>Cômodo</HeaderButtonText>
-        </HeaderButton>
-        <HeaderButton onPress={handleNewProduct}>
-          <Icon name="plus" size={26} color="#fff" />
-          <HeaderButtonText>Produto</HeaderButtonText>
         </HeaderButton>
       </HeaderButtons>
 
       <ProductsContainer>
-        <ProductsList
-          data={rooms}
-          keyExtractor={item => item.name}
-          renderItem={({ item: room }) => (
-            <Room name={room.name} products={[]} />
+        <RoomList
+          data={roomsInBudget}
+          keyExtractor={room => room.id}
+          renderItem={({ item: room, index: roomIndex }) => (
+            <Room>
+              <RoomNameWrapper
+                onPress={() => openEditRoomModal({ room, index: roomIndex })}
+              >
+                <RoomTitleWrapper>
+                  <RoomTitle>{room.name}</RoomTitle>
+                </RoomTitleWrapper>
+              </RoomNameWrapper>
+
+              <ProductHorizontalList>
+                {room.products.map(product => (
+                  <ProductCardContainer
+                    onPress={() => handleNavigateToProduct(room, product.id)}
+                    key={product.id}
+                  >
+                    <ProductCardHeader>
+                      <ProductCardTitle>{product.name}</ProductCardTitle>
+                    </ProductCardHeader>
+                    <ProductCardInfo>
+                      {product.items.map((item, itemIndex) => (
+                        <ProductCardInfoItem key={itemIndex.toString()}>
+                          <ItemText>{item.quantity}</ItemText>
+                          <ItemText>{item.name}</ItemText>
+                          <ItemText>{item.size}</ItemText>
+                        </ProductCardInfoItem>
+                      ))}
+                    </ProductCardInfo>
+                  </ProductCardContainer>
+                ))}
+
+                <ProductCardContainer
+                  onPress={() => handleCreateAndNavigateToProduct(room)}
+                >
+                  <ProductCardAdd>
+                    <MaterialIcons name="add" size={48} color="#747171" />
+                    <ProductCardAddText>Novo Produto</ProductCardAddText>
+                  </ProductCardAdd>
+                </ProductCardContainer>
+              </ProductHorizontalList>
+            </Room>
           )}
         />
       </ProductsContainer>

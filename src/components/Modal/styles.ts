@@ -10,6 +10,8 @@ export const ModalBackground = styled.View`
   padding: 20px;
 `;
 
+export const CloseModalTouchable = styled.TouchableWithoutFeedback``;
+
 export const ModalContent = styled.View`
   padding: 40px 20px;
   justify-content: center;

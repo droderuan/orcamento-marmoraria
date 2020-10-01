@@ -69,7 +69,7 @@ export const BudgetContainer = styled.View`
 
   align-items: center;
   padding: 18px 10px;
-  background-color: #e4e4e4;
+  background-color: #fff;
 `;
 
 export const ButtonContainer = styled.View`

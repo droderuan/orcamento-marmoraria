@@ -57,6 +57,9 @@
 	<array>
 		<string>Roboto-Medium.ttf</string>
 		<string>Roboto-Regular.ttf</string>
+		<string>Heebo-ExtraLight.ttf</string>
+		<string>Heebo-Light.ttf</string>
+		<string>Heebo-Regular.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
