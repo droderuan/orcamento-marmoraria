@@ -9,15 +9,17 @@ import {
 
 interface ModalProps extends ModalBaseProps {
   closeModal(): void;
+  visible: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
   children,
   closeModal,
+  visible,
   ...restProps
 }) => {
   return (
-    <Container {...restProps}>
+    <Container visible={visible} onRequestClose={closeModal} {...restProps}>
       <CloseModalTouchable onPress={closeModal}>
         <ModalBackground>
           <TouchableWithoutFeedback>
