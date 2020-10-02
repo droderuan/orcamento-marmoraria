@@ -2,31 +2,39 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import Budget from '@dtos/Budget';
 import Room from '@dtos/Room';
 import Product from '@dtos/Product';
+import Item from '@dtos/Item';
 import generateID from '@utils/GenerateID';
 
 interface BudgetContextData {
   budget: Budget;
   roomsInBudget: Room[];
   saveRoom(updatedRoom: Room): void;
-  createRoom({ name }: CreateRoomProps): void;
+  createRoom({ name }: CreateRoomDTO): void;
   deleteRoom(roomToDelete: Room): void;
-  createProduct({ roomId, product }: CreateProductProps): void;
-  saveProduct({ roomId, product }: CreateProductProps): void;
-  deleteProduct({ roomId, productId }: DeleteProductProps): void;
+  createProduct({ roomId, product }: CreateProductDTO): void;
+  saveProduct({ roomId, product }: CreateProductDTO): void;
+  deleteProduct({ roomId, productId }: DeleteProductDTO): void;
+  addItemToProduct({ roomId, productId, item }: AddItemToProductDTO): void;
 }
 
-interface CreateRoomProps {
+interface CreateRoomDTO {
   name: string;
 }
 
-interface CreateProductProps {
+interface CreateProductDTO {
   roomId: string;
   product: Product;
 }
 
-interface DeleteProductProps {
+interface DeleteProductDTO {
   roomId: string;
   productId: string;
+}
+
+interface AddItemToProductDTO {
+  roomId: string;
+  productId: string;
+  item: Item;
 }
 
 const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
@@ -35,7 +43,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
   const [budget, setBudget] = useState<Budget>({} as Budget);
   const [roomsInBudget, setRoomsInBudget] = useState<Room[]>([]);
 
-  const createRoom = useCallback(({ name }: CreateRoomProps) => {
+  const createRoom = useCallback(({ name }: CreateRoomDTO) => {
     const newRoom = { id: generateID(), name, products: [] as Product[] };
 
     setRoomsInBudget(oldRoomsInBudget => {
@@ -65,7 +73,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
   );
 
   const createProduct = useCallback(
-    ({ roomId, product }: CreateProductProps) => {
+    ({ roomId, product }: CreateProductDTO) => {
       const roomsCopy = roomsInBudget;
       const roomToAddProductIndex = roomsCopy.findIndex(
         room => room.id === roomId,
@@ -81,7 +89,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
   );
 
   const saveProduct = useCallback(
-    ({ roomId, product }: CreateProductProps) => {
+    ({ roomId, product }: CreateProductDTO) => {
       const roomsCopy = roomsInBudget;
       const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
 
@@ -100,7 +108,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
   );
 
   const deleteProduct = useCallback(
-    ({ roomId, productId }: DeleteProductProps) => {
+    ({ roomId, productId }: DeleteProductDTO) => {
       const roomsCopy = roomsInBudget;
       const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
 
@@ -116,6 +124,11 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [roomsInBudget],
   );
 
+  const addItemToProduct = useCallback(
+    ({ roomId, productId, item }: AddItemToProductDTO) => {},
+    [],
+  );
+
   return (
     <BudgetContext.Provider
       value={{
@@ -127,6 +140,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
         createProduct,
         saveProduct,
         deleteProduct,
+        addItemToProduct,
       }}
     >
       {children}

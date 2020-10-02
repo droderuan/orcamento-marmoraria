@@ -1,7 +1,11 @@
 export default interface Item {
   id: string;
   name: string;
-  size: string;
+  measures: {
+    unit: 'cm' | 'm';
+    width: string;
+    length: string;
+  };
   quantity: number;
-  format: 'retangular' | 'circular' | 'triangular';
+  shape: 'Retangular' | 'Circular' | 'triangular';
 }

@@ -250,7 +250,9 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
                         <ProductCardInfoItem key={itemIndex.toString()}>
                           <ItemText>{item.quantity}</ItemText>
                           <ItemText>{item.name}</ItemText>
-                          <ItemText>{item.size}</ItemText>
+                          <ItemText>{`${item.measures.width}x${
+                            item.measures.length + item.measures.unit
+                          }`}</ItemText>
                         </ProductCardInfoItem>
                       ))}
                     </ProductCardInfo>

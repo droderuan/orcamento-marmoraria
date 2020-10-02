@@ -43,7 +43,7 @@ export const AddItemButton = styled(RectButton)`
 `;
 
 export const AddItemButtonText = styled.Text`
-  margin-left: 6px;
+  margin-left: 12px;
   font-family: 'Roboto-Regular';
   font-size: 20px;
   color: #fff;

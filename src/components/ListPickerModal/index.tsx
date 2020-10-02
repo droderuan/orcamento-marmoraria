@@ -6,7 +6,6 @@ import Modal from '../Modal';
 import {
   Container,
   ListPickerContainer,
-  ListPickerContent,
   ListOptionItemButton,
   ListOptionItem,
   ListOptionItemText,

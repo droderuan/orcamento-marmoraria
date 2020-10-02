@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { RectButton } from 'react-native-gesture-handler';
 
 interface ItemInputButtonTextProps {
   isOptionSelected: boolean;
@@ -29,6 +30,40 @@ export const ItemTextInput = styled.TextInput`
   font-size: 20px;
 `;
 
+export const ItemWithTwoTextInput = styled.TextInput`
+  text-align: center;
+  margin-right: 0px;
+  width: 35%;
+  height: 45px;
+  font-family: 'Roboto-Medium';
+  font-size: 20px;
+`;
+
+export const ItemWithTwoTextInputWrapper = styled.View`
+  margin-left: 15px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ItemText = styled.Text`
+  margin: 0 2px;
+  font-family: 'Roboto-regular';
+  font-size: 22px;
+  color: #000;
+`;
+
+export const UnitButton = styled(RectButton)`
+  margin-left: 5px;
+  padding: 10px 20px;
+`;
+
+export const UnitButtonText = styled.Text`
+  font-family: 'Roboto-regular';
+  font-size: 22px;
+  color: #000;
+`;
+
 export const ItemInputButton = styled.TouchableWithoutFeedback``;
 
 export const ItemInputButtonWrapper = styled.View`
@@ -47,4 +82,8 @@ export const ItemBottomLine = styled.View`
   width: 100%;
   height: 1px;
   background-color: #487195;
+`;
+
+export const ButtonWrapper = styled.View`
+  margin-top: 40px;
 `;
