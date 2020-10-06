@@ -35,6 +35,9 @@ import {
   ProductCardTitle,
   ProductCardInfo,
   ProductCardInfoItem,
+  ItemTextContainerQuantity,
+  ItemTextContainerName,
+  ItemTextContainerMeasures,
   ItemText,
   ProductCardAdd,
   ProductCardAddText,
@@ -124,8 +127,8 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         name: 'Novo Produto',
         items: [],
       } as Product;
-      createProduct({ roomId: room.id, product });
       navigation.navigate('RoomProducts', { room, productId: product.id });
+      createProduct({ roomId: room.id, product });
     },
     [navigation, createProduct],
   );
@@ -189,9 +192,8 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
           <ModalInputTextContainer>
             <ModalInputText
-              onChangeText={
-                roomName => setEditRoom({ ...editRoom, name: roomName })
-                // eslint-disable-next-line react/jsx-curly-newline
+              onChangeText={roomName =>
+                setEditRoom({ ...editRoom, name: roomName })
               }
               value={editRoom.name}
               placeholder="Digite o nome do cômodo"
@@ -248,11 +250,17 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
                     <ProductCardInfo>
                       {product.items.map((item, itemIndex) => (
                         <ProductCardInfoItem key={itemIndex.toString()}>
-                          <ItemText>{item.quantity}</ItemText>
-                          <ItemText>{item.name}</ItemText>
-                          <ItemText>{`${item.measures.width}x${
-                            item.measures.length + item.measures.unit
-                          }`}</ItemText>
+                          <ItemTextContainerQuantity>
+                            <ItemText>{item.quantity}</ItemText>
+                          </ItemTextContainerQuantity>
+                          <ItemTextContainerName>
+                            <ItemText numberOfLines={1}>{item.name}</ItemText>
+                          </ItemTextContainerName>
+                          <ItemTextContainerMeasures>
+                            <ItemText
+                              numberOfLines={1}
+                            >{`${item.measures.width}x${item.measures.length} ${item.measures.unit}`}</ItemText>
+                          </ItemTextContainerMeasures>
                         </ProductCardInfoItem>
                       ))}
                     </ProductCardInfo>

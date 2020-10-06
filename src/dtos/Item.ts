@@ -6,6 +6,9 @@ export default interface Item {
     width: string;
     length: string;
   };
+  stone: string;
+  type: string;
+  finishing: string;
   quantity: number;
   shape: 'Retangular' | 'Circular' | 'triangular';
 }

@@ -11,6 +11,7 @@ interface ProductCardProps {
 export const Container = styled.View`
   flex: 1;
   padding: 10px;
+  background-color: #fff;
 `;
 export const KeyboardDismiss = styled.TouchableWithoutFeedback``;
 
@@ -49,11 +50,66 @@ export const AddItemButtonText = styled.Text`
   color: #fff;
 `;
 
-export const ProductCard = styled(RectButton)<ProductCardProps>`
+export const ItemCard = styled.View`
+  width: 100%;
+  margin: 10px 0;
+  justify-content: space-between;
+  background-color: #efefef;
+`;
+
+export const ItemCardRowHeader = styled.View`
+  padding: 5px;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const ItemCardRow = styled.View`
+  padding: 5px;
+  width: 100%;
+  flex-direction: row;
+`;
+
+export const ItemCardColumnWithButtons = styled.View`
+  padding: 5px;
+  justify-content: space-between;
+`;
+
+export const Label = styled.View`
+  margin: 0 5px 5px;
+  width: 30%;
+`;
+
+export const TitleLabel = styled.Text`
+  font-family: 'Roboto-Regular';
+  font-size: 16px;
+  color: #595959;
+`;
+
+export const InfoLabel = styled.Text`
+  font-family: 'Roboto-Regular';
+  font-size: 20px;
+  color: #000;
+`;
+
+export const ButtonsItemCard = styled.View`
+  margin-bottom: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 40%;
+`;
+
+export const ButtonItemCard = styled(RectButton)`
+  justify-content: center;
+  align-items: center;
+  width: 46px;
+  height: 46px;
+  margin: 5px;
+`;
+
+export const ItemInfoButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
-  margin: 5px;
-  width: ${props => props.width - 15};
-  height: 90px;
+  padding-right: 2px;
   background: #7f9cb5;
 `;

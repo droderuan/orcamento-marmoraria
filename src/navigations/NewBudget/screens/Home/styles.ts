@@ -147,7 +147,18 @@ export const ProductCardInfoItem = styled.View`
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
   margin: 2px 0;
+`;
+
+export const ItemTextContainerQuantity = styled.View`
+  width: 20px;
+`;
+export const ItemTextContainerName = styled.View`
+  width: 60px;
+`;
+export const ItemTextContainerMeasures = styled.View`
+  width: 60px;
 `;
 
 export const ItemText = styled.Text`

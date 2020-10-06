@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { ModalProps } from 'react-native';
 
 import Modal from '../Modal';
@@ -15,6 +15,7 @@ import {
 interface ListPickerModalProps extends ModalProps {
   name?: string;
   options: string[];
+  selectDefault?: string;
   handleOnChange(selectedOption: string): void;
   handleCloseModal(): void;
   visible: boolean;
@@ -24,10 +25,17 @@ const ListPickerModal: React.FC<ListPickerModalProps> = ({
   options,
   handleOnChange,
   handleCloseModal,
+  selectDefault,
   visible,
   ...restModalProps
 }) => {
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState<string>();
+
+  useEffect(() => {
+    if (selectDefault) {
+      setSelected(selectDefault);
+    }
+  }, [selectDefault]);
 
   const handleSelectOption = useCallback(
     selectedOption => {
