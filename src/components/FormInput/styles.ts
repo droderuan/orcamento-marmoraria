@@ -18,6 +18,7 @@ export const InputContainer = styled.View`
   padding: 0 16px;
   flex-direction: row;
   align-items: center;
+  border-radius: 5px;
 `;
 
 export const TextInput = styled.TextInput`

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Button from '@components/Button';
 import Room from '@dtos/Room';
 import Product from '@dtos/Product';
 
@@ -121,10 +122,7 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
               value={product.name}
               onChangeText={handleChangeProductName}
             />
-            <AddItemButton onPress={handleCreateItem}>
-              <MaterialIcons name="add" size={32} color="#fff" />
-              <AddItemButtonText>Adicionar item</AddItemButtonText>
-            </AddItemButton>
+            <Button onPress={handleCreateItem}>Adicionar item</Button>
           </ProductHeaderWrapper>
 
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>

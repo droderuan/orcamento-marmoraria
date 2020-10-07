@@ -13,6 +13,7 @@ module.exports = {
           '@hooks': './src/hooks/',
           '@dtos': './src/dtos/',
           '@utils': './src/utils/',
+          '@styles': './src/styles/',
         },
       },
     ],

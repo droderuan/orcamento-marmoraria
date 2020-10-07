@@ -10,5 +10,5 @@ export default interface Item {
   type: string;
   finishing: string;
   quantity: number;
-  shape: 'Retangular' | 'Circular' | 'triangular';
+  shape: 'Retangular' | 'Circular' | 'Triangular';
 }

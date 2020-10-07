@@ -23,14 +23,11 @@ export const RoomName = styled.Text`
 `;
 
 export const ProductHeaderWrapper = styled.View`
-  flex-direction: row;
   width: 100%;
   justify-content: space-between;
-  align-items: center;
 `;
 
 export const ProductName = styled.TextInput`
-  flex: 1;
   font-size: 26px;
   font-family: 'Heebo-Light';
   color: #000;
