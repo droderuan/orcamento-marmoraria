@@ -1,13 +1,20 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+  SetStateAction,
+} from 'react';
 import { Alert, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import GenerateId from '@utils/GenerateID';
+import generateId from '@utils/GenerateID';
 
 import { useRoute } from '@react-navigation/native';
 import Item from '@dtos/Item';
 
 import Button from '@components/Button';
 import ListPickerModal from '@components/ListPickerModal';
+import Room from '@dtos/Room';
 import { useBudget } from '../../hooks/budget';
 
 import {
@@ -50,58 +57,39 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
+  const [room, setRoom] = useState({} as Room);
+
   const [name, setName] = useState('');
-  const [measures, setMeasures] = useState({} as Measure);
-  const [stone, setStone] = useState<string>();
-  const [shape, setShape] = useState<string>();
   const [quantity, setQuantity] = useState<string>('1');
-  const [unit, setUnit] = useState<string>('cm');
+  const [stone, setStone] = useState<string>();
   const [marble, setMarble] = useState<string>();
+  const [width, setWidth] = useState<string>();
+  const [length, setLength] = useState<string>();
+  const [shape, setShape] = useState<string>();
+  const [unit, setUnit] = useState<string>('cm');
+
+  const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
+  const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
+  const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
+
+  const toggleModal = useCallback(
+    (toggleModalStateFunction: React.Dispatch<SetStateAction<boolean>>) => {
+      toggleModalStateFunction(oldProps => !oldProps);
+    },
+    [],
+  );
 
   const handleChangeQuantity = useCallback((value: string) => {
     setQuantity(value);
   }, []);
 
-  const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
-  const unitOptions = ['cm', 'm'];
-
-  const openUnitModal = useCallback(() => {
-    setUnitModalPickerVisible(true);
-  }, [setUnitModalPickerVisible]);
-
-  const closeUnitModal = useCallback(() => {
-    setUnitModalPickerVisible(false);
-  }, [setUnitModalPickerVisible]);
-
   const handleChangeUnit = useCallback((option: string) => {
     setUnit(option);
   }, []);
 
-  const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
-  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
-
-  const openShapeModal = useCallback(() => {
-    setShapeModalPickerVisible(true);
-  }, [setShapeModalPickerVisible]);
-
-  const closeShapeModal = useCallback(() => {
-    setShapeModalPickerVisible(false);
-  }, [setShapeModalPickerVisible]);
-
   const handleChangeShape = useCallback((option: string) => {
     setShape(option);
   }, []);
-
-  const stoneOptions = ['Mármore', 'Granito'];
-  const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
-
-  const openStoneModal = useCallback(() => {
-    setStoneModalPickerVisible(true);
-  }, [setStoneModalPickerVisible]);
-
-  const closeStoneModal = useCallback(() => {
-    setStoneModalPickerVisible(false);
-  }, [setStoneModalPickerVisible]);
 
   const handleChangeStone = useCallback((option: string) => {
     setStone(option);
@@ -110,6 +98,62 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
     false,
   );
+
+  const openMarbleModal = useCallback(() => {
+    setMarbleModalPickerVisible(true);
+  }, [setMarbleModalPickerVisible]);
+
+  const handleChangeMarble = useCallback((option: string) => {
+    setMarble(option);
+  }, []);
+
+  const handleSaveItem = useCallback(() => {
+    const newItem = {
+      id: generateId(),
+      name,
+      shape,
+      stone,
+      type: marble,
+      quantity: parseInt(quantity, 10),
+      measures: { width, length, unit },
+    } as Item;
+    addItemToProduct({ roomId, productId, item: newItem });
+
+    navigation.goBack();
+  }, [
+    addItemToProduct,
+    roomId,
+    productId,
+    name,
+    shape,
+    quantity,
+    length,
+    width,
+    unit,
+    marble,
+    stone,
+    navigation,
+  ]);
+
+  useEffect(() => {
+    if (itemId) {
+      const findItem = getItem({ roomId, productId, itemId });
+      if (findItem) {
+        setName(findItem.name);
+        setStone(findItem.stone);
+        setMarble(findItem.type);
+        setWidth(findItem.measures.width);
+        setLength(findItem.measures.length);
+        setUnit(findItem.measures.unit);
+        setQuantity(findItem.quantity.toString(10));
+        setShape(findItem.shape);
+      }
+    }
+  }, [getItem, itemId, productId, roomId]);
+
+  const unitOptions = ['cm', 'm'];
+  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
+  const stoneOptions = ['Mármore', 'Granito'];
   const marbleOptions = [
     'Rosso Verona',
     'Travertino ',
@@ -124,57 +168,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     'Marrom Emperador Light ',
     'Nero Marquina',
   ];
-
-  const openMarbleModal = useCallback(() => {
-    setMarbleModalPickerVisible(true);
-  }, [setMarbleModalPickerVisible]);
-
-  const closeMarbleModal = useCallback(() => {
-    setMarbleModalPickerVisible(false);
-  }, [setMarbleModalPickerVisible]);
-
-  const handleChangeMarble = useCallback((option: string) => {
-    setMarble(option);
-  }, []);
-
-  const handleSaveItem = useCallback(() => {
-    const newItem = {
-      shape,
-      stone,
-      type: marble,
-      quantity: parseInt(quantity, 10),
-      measures: { ...measures, unit },
-    } as Item;
-    addItemToProduct({ roomId, productId, item: newItem });
-
-    navigation.goBack();
-  }, [
-    addItemToProduct,
-    roomId,
-    productId,
-    shape,
-    quantity,
-    measures,
-    unit,
-    marble,
-    stone,
-    navigation,
-  ]);
-
-  useEffect(() => {
-    if (itemId) {
-      const findItem = getItem({ roomId, productId, itemId });
-      if (findItem) {
-        setName(findItem.name);
-        setStone(findItem.stone);
-        setMarble(findItem.type);
-        setMeasures(findItem.measures);
-        setUnit(findItem.measures.unit);
-        setQuantity(findItem.quantity.toString(10));
-        setShape(findItem.shape);
-      }
-    }
-  }, [getItem, itemId, productId, roomId]);
 
   return (
     <Container>
@@ -203,7 +196,9 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
       <ItemInput>
         <ItemInputLabel>Pedra</ItemInputLabel>
-        <ItemInputButton onPress={openStoneModal}>
+        <ItemInputButton
+          onPress={() => toggleModal(setStoneModalPickerVisible)}
+        >
           <ItemInputButtonWrapper>
             <ItemInputButtonText isOptionSelected={!!stone}>
               {stone || 'Escolha o tipo da pedra'}
@@ -213,7 +208,7 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
               transparent
               selectDefault={stone}
               visible={stoneModalPickerVisible}
-              handleCloseModal={closeStoneModal}
+              handleCloseModal={() => toggleModal(setStoneModalPickerVisible)}
               handleOnChange={handleChangeStone}
               options={stoneOptions}
             />
@@ -234,7 +229,7 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
               transparent
               selectDefault={marble}
               visible={marbleModalPickerVisible}
-              handleCloseModal={closeMarbleModal}
+              handleCloseModal={() => toggleModal(setMarbleModalPickerVisible)}
               handleOnChange={handleChangeMarble}
               options={marbleOptions}
             />
@@ -245,7 +240,9 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
       <ItemInput>
         <ItemInputLabel>Formato</ItemInputLabel>
-        <ItemInputButton onPress={openShapeModal}>
+        <ItemInputButton
+          onPress={() => toggleModal(setShapeModalPickerVisible)}
+        >
           <ItemInputButtonWrapper>
             <ItemInputButtonText isOptionSelected={!!shape}>
               {shape || 'Escolha o formato'}
@@ -255,7 +252,7 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
               transparent
               selectDefault={shape}
               visible={shapeModalPickerVisible}
-              handleCloseModal={closeShapeModal}
+              handleCloseModal={() => toggleModal(setShapeModalPickerVisible)}
               handleOnChange={handleChangeShape}
               options={shapeOptions}
             />
@@ -270,14 +267,9 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
           <ItemWithTwoTextInput
             keyboardType="number-pad"
             placeholder="Largura"
-            value={measures.width}
+            value={width}
             placeholderTextColor="#A0A0A0"
-            onChangeText={value =>
-              setMeasures(oldMeasure => ({
-                ...oldMeasure,
-                width: value,
-              }))
-            }
+            onChangeText={value => setWidth(value)}
             onSubmitEditing={() => lengthInputRef.current?.focus()}
           />
           <ItemText>x</ItemText>
@@ -285,17 +277,12 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
             ref={lengthInputRef}
             keyboardType="number-pad"
             placeholder="Comprimento"
-            value={measures.length}
+            value={length}
             placeholderTextColor="#A0A0A0"
-            onChangeText={value =>
-              setMeasures(oldMeasure => ({
-                ...oldMeasure,
-                length: value,
-              }))
-            }
+            onChangeText={value => setLength(value)}
           />
 
-          <UnitButton onPress={openUnitModal}>
+          <UnitButton onPress={() => toggleModal(setUnitModalPickerVisible)}>
             <UnitButtonText>{unit}</UnitButtonText>
           </UnitButton>
 
@@ -303,7 +290,7 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
             animationType="fade"
             transparent
             visible={unitModalPickerVisible}
-            handleCloseModal={closeUnitModal}
+            handleCloseModal={() => toggleModal(setUnitModalPickerVisible)}
             handleOnChange={handleChangeUnit}
             options={unitOptions}
           />
