@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Alert, TextInput } from 'react-native';
+import { TextInput, ScrollView, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+
 import GenerateId from '@utils/GenerateID';
 
 import { useRoute } from '@react-navigation/native';
@@ -25,6 +26,8 @@ import {
   ItemInputButtonText,
   ItemBottomLine,
   ButtonWrapper,
+  FinishingSelectWrapper,
+  FinishingSelect,
 } from './styles';
 
 interface FirstClientInfoProps {
@@ -42,6 +45,13 @@ interface Measure {
   length: string;
 }
 
+interface Modals {
+  unit: false;
+  shape: false;
+  stone: false;
+  marble: false;
+}
+
 const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const { addItemToProduct, getItem } = useBudget();
   const route = useRoute();
@@ -49,276 +59,292 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
-  const [item, setItem] = useState({ id: GenerateId() } as Item);
-  const [measures, setMeasures] = useState({} as Measure);
+  const [item, setItem] = useState({
+    id: GenerateId(),
+    quantity: 1,
+    measures: {
+      unit: 'cm',
+    },
+  } as Item);
 
-  const [quantity, setQuantity] = useState<string>('1');
-
-  const handleChangeQuantity = useCallback((value: string) => {
-    setQuantity(value);
-  }, []);
-
-  const [unit, setUnit] = useState<string>('cm');
-  const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
-  const unitOptions = ['cm', 'm'];
-
-  const openUnitModal = useCallback(() => {
-    setUnitModalPickerVisible(true);
-  }, [setUnitModalPickerVisible]);
-
-  const closeUnitModal = useCallback(() => {
-    setUnitModalPickerVisible(false);
-  }, [setUnitModalPickerVisible]);
-
-  const handleChangeUnit = useCallback((option: string) => {
-    setUnit(option);
-  }, []);
-
-  const [shape, setShape] = useState<string>();
-  const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
-  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
-
-  const openShapeModal = useCallback(() => {
-    setShapeModalPickerVisible(true);
-  }, [setShapeModalPickerVisible]);
-
-  const closeShapeModal = useCallback(() => {
-    setShapeModalPickerVisible(false);
-  }, [setShapeModalPickerVisible]);
-
-  const handleChangeShape = useCallback((option: string) => {
-    setShape(option);
-  }, []);
-
-  const stoneOptions = ['Mármore', 'Granito'];
-  const [stone, setStone] = useState<string>();
-  const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
-
-  const openStoneModal = useCallback(() => {
-    setStoneModalPickerVisible(true);
-  }, [setStoneModalPickerVisible]);
-
-  const closeStoneModal = useCallback(() => {
-    setStoneModalPickerVisible(false);
-  }, [setStoneModalPickerVisible]);
-
-  const handleChangeStone = useCallback((option: string) => {
-    setStone(option);
-  }, []);
-
-  const [marble, setMarble] = useState<string>();
-  const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
-    false,
-  );
-  const marbleOptions = [
-    'Rosso Verona',
-    'Travertino ',
-    'Travertino Bege Bahia',
-    'Crema Marfil ',
-    'Botticino ',
-    'Branco Nacional ',
-    'Pighês  ',
-    'Carrara ',
-    'Branco Thassos ',
-    'Marrom Emperador ',
-    'Marrom Emperador Light ',
-    'Nero Marquina',
-  ];
-
-  const openMarbleModal = useCallback(() => {
-    setMarbleModalPickerVisible(true);
-  }, [setMarbleModalPickerVisible]);
-
-  const closeMarbleModal = useCallback(() => {
-    setMarbleModalPickerVisible(false);
-  }, [setMarbleModalPickerVisible]);
-
-  const handleChangeMarble = useCallback((option: string) => {
-    setMarble(option);
-  }, []);
-
-  const handleSaveItem = useCallback(() => {
-    const newItem = {
-      ...item,
-      shape,
-      stone,
-      type: marble,
-      quantity: parseInt(quantity, 10),
-      measures: { ...measures, unit },
-    } as Item;
-    addItemToProduct({ roomId, productId, item: newItem });
-
-    navigation.goBack();
-  }, [
-    addItemToProduct,
-    item,
-    roomId,
-    productId,
-    shape,
-    quantity,
-    measures,
-    unit,
-    marble,
-    stone,
-    navigation,
-  ]);
+  const [writeQuantity, setWriteQuantity] = useState('1');
 
   useEffect(() => {
     if (itemId) {
       const findItem = getItem({ roomId, productId, itemId });
       if (findItem) {
         setItem(findItem);
-        setStone(findItem.stone);
-        setMarble(findItem.type);
-        setMeasures(findItem.measures);
-        setUnit(findItem.measures.unit);
-        setQuantity(findItem.quantity.toString(10));
-        setShape(findItem.shape);
       }
     }
   }, [getItem, itemId, productId, roomId]);
 
+  const [modalsVisible, setModalsVisible] = useState({
+    unit: false,
+    shape: false,
+    stone: false,
+    marble: false,
+  } as Modals);
+
+  const toggleModal = useCallback(
+    (modalName: 'unit' | 'shape' | 'stone' | 'marble') => {
+      setModalsVisible(oldProps => ({
+        ...oldProps,
+        [modalName]: !oldProps[modalName],
+      }));
+    },
+    [],
+  );
+
+  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
+  const stoneOptions = ['Mármore', 'Granito'];
+  const unitOptions = ['cm', 'm'];
+  const marbleOptions = [
+    'Rosso Verona',
+    'Travertino',
+    'Travertino Bege Bahia',
+    'Crema Marfil',
+    'Botticino',
+    'Branco Nacional ',
+    'Pighês',
+    'Carrara',
+    'Branco Thassos',
+    'Marrom Emperador',
+    'Marrom Emperador Light',
+    'Nero Marquina',
+  ];
+
+  const handleChangeQuantity = useCallback(() => {
+    setItem(oldItem => ({
+      ...oldItem,
+      quantity: parseInt(writeQuantity, 10),
+    }));
+  }, [writeQuantity]);
+
+  const handleChangeUnit = useCallback((option: 'cm' | 'm') => {
+    setItem(oldItem => ({
+      ...oldItem,
+      measures: {
+        ...oldItem.measures,
+        unit: option,
+      },
+    }));
+  }, []);
+
+  const handleChangeShape = useCallback(
+    (option: 'Retangular' | 'Circular' | 'Triangular') => {
+      setItem(oldItem => ({
+        ...oldItem,
+        shape: option,
+      }));
+    },
+    [],
+  );
+
+  const handleChangeStone = useCallback((option: string) => {
+    setItem(oldItem => ({
+      ...oldItem,
+      stone: option,
+    }));
+  }, []);
+
+  const handleChangeMarble = useCallback((option: string) => {
+    setItem(oldItem => ({
+      ...oldItem,
+      type: option,
+    }));
+  }, []);
+
+  const handleSaveItem = useCallback(() => {
+    if (!item.quantity) {
+      Alert.alert('Digite a quantidade');
+      return;
+    }
+    if (!item.shape) {
+      Alert.alert('Digite o formato');
+      return;
+    }
+    if (!item.stone) {
+      Alert.alert('Selecione o tipo da pedra');
+      return;
+    }
+    if (!item.type) {
+      Alert.alert('Selecione a pedra');
+      return;
+    }
+
+    addItemToProduct({ roomId, productId, item });
+
+    navigation.goBack();
+  }, [addItemToProduct, item, productId, roomId, navigation]);
+
   return (
-    <Container>
-      <ItemInput>
-        <ItemInputLabel>Nome da Peça</ItemInputLabel>
-        <ItemTextInput
-          placeholder="Digite o nome da peça"
-          placeholderTextColor="#A0A0A0"
-          value={item.name}
-          onChangeText={value =>
-            setItem(oldItem => ({ ...oldItem, name: value }))
-          }
-        />
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Quantidade</ItemInputLabel>
-        <ItemTextInput
-          keyboardType="number-pad"
-          placeholderTextColor="#A0A0A0"
-          value={quantity.toString()}
-          maxLength={10}
-          value={quantity}
-          onChangeText={value => handleChangeQuantity(value)}
-        />
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Pedra</ItemInputLabel>
-        <ItemInputButton onPress={openStoneModal}>
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!stone}>
-              {stone || 'Escolha o tipo da pedra'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={stone}
-              visible={stoneModalPickerVisible}
-              handleCloseModal={closeStoneModal}
-              handleOnChange={handleChangeStone}
-              options={stoneOptions}
-            />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Mármore</ItemInputLabel>
-        <ItemInputButton onPress={openMarbleModal}>
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!marble}>
-              {marble || 'Escolha o mármore'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={marble}
-              visible={marbleModalPickerVisible}
-              handleCloseModal={closeMarbleModal}
-              handleOnChange={handleChangeMarble}
-              options={marbleOptions}
-            />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Formato</ItemInputLabel>
-        <ItemInputButton onPress={openShapeModal}>
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!shape}>
-              {shape || 'Escolha o formato'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={shape}
-              visible={shapeModalPickerVisible}
-              handleCloseModal={closeShapeModal}
-              handleOnChange={handleChangeShape}
-              options={shapeOptions}
-            />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Medidas</ItemInputLabel>
-        <ItemWithTwoTextInputWrapper>
-          <ItemWithTwoTextInput
-            keyboardType="number-pad"
-            placeholder="Largura"
-            value={measures.width}
+    <ScrollView>
+      <Container>
+        <ItemInput>
+          <ItemInputLabel>Nome da Peça</ItemInputLabel>
+          <ItemTextInput
+            placeholder="Digite o nome da peça"
             placeholderTextColor="#A0A0A0"
+            value={item.name}
             onChangeText={value =>
-              setMeasures(oldMeasure => ({
-                ...oldMeasure,
-                width: value,
-              }))
-            }
-            onSubmitEditing={() => lengthInputRef.current?.focus()}
-          />
-          <ItemText>x</ItemText>
-          <ItemWithTwoTextInput
-            ref={lengthInputRef}
-            keyboardType="number-pad"
-            placeholder="Comprimento"
-            value={measures.length}
-            placeholderTextColor="#A0A0A0"
-            onChangeText={value =>
-              setMeasures(oldMeasure => ({
-                ...oldMeasure,
-                length: value,
-              }))
+              setItem(oldItem => ({ ...oldItem, name: value }))
             }
           />
+          <ItemBottomLine />
+        </ItemInput>
 
-          <UnitButton onPress={openUnitModal}>
-            <UnitButtonText>{unit}</UnitButtonText>
-          </UnitButton>
-
-          <ListPickerModal
-            animationType="fade"
-            transparent
-            visible={unitModalPickerVisible}
-            handleCloseModal={closeUnitModal}
-            handleOnChange={handleChangeUnit}
-            options={unitOptions}
+        <ItemInput>
+          <ItemInputLabel>Quantidade</ItemInputLabel>
+          <ItemTextInput
+            keyboardType="number-pad"
+            placeholderTextColor="#A0A0A0"
+            maxLength={10}
+            value={writeQuantity}
+            placeholder="Digite a quantidade"
+            onEndEditing={handleChangeQuantity}
+            onChangeText={value => setWriteQuantity(value)}
           />
-        </ItemWithTwoTextInputWrapper>
-        <ItemBottomLine />
-      </ItemInput>
-      <ButtonWrapper>
-        <Button onPress={handleSaveItem}>Salvar</Button>
-      </ButtonWrapper>
-    </Container>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ItemInput>
+          <ItemInputLabel>Pedra</ItemInputLabel>
+          <ItemInputButton
+            onPress={() => {
+              toggleModal('stone');
+            }}
+          >
+            <ItemInputButtonWrapper>
+              <ItemInputButtonText isOptionSelected={!!item.stone}>
+                {item.stone || 'Escolha o tipo da pedra'}
+              </ItemInputButtonText>
+              <ListPickerModal
+                animationType="fade"
+                transparent
+                selectDefault={item.stone}
+                visible={modalsVisible.stone}
+                handleCloseModal={() => toggleModal('stone')}
+                handleOnChange={handleChangeStone}
+                options={stoneOptions}
+              />
+            </ItemInputButtonWrapper>
+          </ItemInputButton>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ItemInput>
+          <ItemInputLabel>Mármore</ItemInputLabel>
+          <ItemInputButton onPress={() => toggleModal('marble')}>
+            <ItemInputButtonWrapper>
+              <ItemInputButtonText isOptionSelected={!!item.type}>
+                {item.type || 'Escolha o mármore'}
+              </ItemInputButtonText>
+              <ListPickerModal
+                animationType="fade"
+                transparent
+                selectDefault={item.type}
+                visible={modalsVisible.marble}
+                handleCloseModal={() => toggleModal('marble')}
+                handleOnChange={handleChangeMarble}
+                options={marbleOptions}
+              />
+            </ItemInputButtonWrapper>
+          </ItemInputButton>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ItemInput>
+          <ItemInputLabel>Formato</ItemInputLabel>
+          <ItemInputButton onPress={() => toggleModal('shape')}>
+            <ItemInputButtonWrapper>
+              <ItemInputButtonText isOptionSelected={!!item.shape}>
+                {item.shape || 'Escolha o formato'}
+              </ItemInputButtonText>
+              <ListPickerModal
+                animationType="fade"
+                transparent
+                selectDefault={item?.shape}
+                visible={modalsVisible.shape}
+                handleCloseModal={() => toggleModal('shape')}
+                handleOnChange={handleChangeShape}
+                options={shapeOptions}
+              />
+            </ItemInputButtonWrapper>
+          </ItemInputButton>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ItemInput>
+          <ItemInputLabel>Medidas</ItemInputLabel>
+          <ItemWithTwoTextInputWrapper>
+            <ItemWithTwoTextInput
+              keyboardType="number-pad"
+              placeholder="Comprimento"
+              selectTextOnFocus
+              onSubmitEditing={() => lengthInputRef.current?.focus()}
+              value={item?.measures?.length}
+              placeholderTextColor="#A0A0A0"
+              onChangeText={value =>
+                setItem(oldItem => ({
+                  ...oldItem,
+                  measures: {
+                    ...oldItem.measures,
+                    length: value,
+                  },
+                }))
+              }
+            />
+            <ItemText>x</ItemText>
+            <ItemWithTwoTextInput
+              ref={lengthInputRef}
+              keyboardType="number-pad"
+              placeholder="Largura"
+              selectTextOnFocus
+              value={item?.measures?.width}
+              placeholderTextColor="#A0A0A0"
+              onChangeText={value =>
+                setItem(oldItem => ({
+                  ...oldItem,
+                  measures: {
+                    ...oldItem.measures,
+                    width: value,
+                  },
+                }))
+              }
+            />
+
+            <UnitButton onPress={() => toggleModal('unit')}>
+              <UnitButtonText>{item.measures?.unit}</UnitButtonText>
+            </UnitButton>
+
+            <ListPickerModal
+              animationType="fade"
+              transparent
+              selectDefault={item?.measures.unit}
+              visible={modalsVisible.unit}
+              handleCloseModal={() => toggleModal('unit')}
+              handleOnChange={handleChangeUnit}
+              options={unitOptions}
+            />
+          </ItemWithTwoTextInputWrapper>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ItemInput>
+          <ItemInputLabel>Acabamento</ItemInputLabel>
+          <FinishingSelectWrapper>
+            <FinishingSelect>
+              <ItemTextInput>asda</ItemTextInput>
+            </FinishingSelect>
+          </FinishingSelectWrapper>
+          <ItemBottomLine />
+        </ItemInput>
+
+        <ButtonWrapper>
+          <Button onPress={handleSaveItem}>Salvar</Button>
+        </ButtonWrapper>
+      </Container>
+    </ScrollView>
   );
 };
 

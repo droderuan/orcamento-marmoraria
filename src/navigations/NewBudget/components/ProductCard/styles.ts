@@ -7,7 +7,6 @@ export const ProductCardContainer = styled.View`
   padding: 0 12px;
   border-radius: 5px;
   background-color: #efefef;
-  border-color: #f00;
   border-width: 5px;
 `;
 

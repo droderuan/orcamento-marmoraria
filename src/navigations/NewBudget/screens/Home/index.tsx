@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { TouchableOpacity, TextInput, Keyboard } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

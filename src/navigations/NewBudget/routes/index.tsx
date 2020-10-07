@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { primary500 } from '@styles/theme/colors';
 import { BudgetProvider } from '../hooks/budget';
 
 import FirstClientInfo from '../screens/FirstClientInfo';
@@ -16,7 +17,7 @@ const NewBudgetRoutes: React.FC = () => {
       <NewBudget.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#487195',
+            backgroundColor: primary500,
           },
           headerTintColor: '#fff',
         }}

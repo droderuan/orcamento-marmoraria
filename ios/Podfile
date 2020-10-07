@@ -8,6 +8,8 @@ target 'appOrcamento' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-material-kit', :path => '../node_modules/react-native-material-kit'
+
   target 'appOrcamentoTests' do
     inherit! :complete
     # Pods for testing
