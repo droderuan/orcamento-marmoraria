@@ -5,7 +5,7 @@ import React, {
   useEffect,
   SetStateAction,
 } from 'react';
-import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import generateId from '@utils/GenerateID';
 
@@ -58,6 +58,13 @@ interface Measure {
   length: string;
 }
 
+interface Modals {
+  unit: false;
+  shape: false;
+  stone: false;
+  marble: false;
+}
+
 const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const { addItemToProduct, getItem } = useBudget();
   const route = useRoute();
@@ -93,10 +100,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     setQuantity(value);
   }, []);
 
-  const handleChangeUnit = useCallback((option: string) => {
-    setUnit(option);
-  }, []);
-
   const handleChangeShape = useCallback((option: string) => {
     setShape(option);
   }, []);
@@ -107,6 +110,10 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   const handleChangeMarble = useCallback((option: string) => {
     setMarble(option);
+  }, []);
+
+  const handleChangeUnit = useCallback((option: string) => {
+    setUnit(option);
   }, []);
 
   const handleSaveItem = useCallback(() => {

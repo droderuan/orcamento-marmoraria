@@ -34,38 +34,45 @@ export const ItemTextInput = styled.TextInput`
   font-size: 20px;
 `;
 
+export const ItemWithTwoTextInputWrapper = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+
 export const ItemWithTwoTextInput = styled.TextInput`
   text-align: center;
   margin-right: 0px;
-  width: 35%;
+  width: 130px;
   height: 45px;
   font-family: 'Roboto-Medium';
   font-size: 20px;
 `;
 
-export const ItemWithTwoTextInputWrapper = styled.View`
-  margin-left: 15px;
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-`;
-
 export const ItemText = styled.Text`
-  margin: 0 2px;
+  margin: 0 2px 5px;
   font-family: 'Roboto-regular';
   font-size: 22px;
   color: #000;
 `;
 
 export const UnitButton = styled(RectButton)`
+  margin-top: -10px;
   margin-left: 5px;
-  padding: 10px 20px;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: ${primary900};
 `;
 
 export const UnitButtonText = styled.Text`
+  margin-bottom: 5px;
   font-family: 'Roboto-regular';
   font-size: 22px;
-  color: #000;
+  color: #fff;
 `;
 
 export const ItemInputButton = styled.TouchableWithoutFeedback``;
