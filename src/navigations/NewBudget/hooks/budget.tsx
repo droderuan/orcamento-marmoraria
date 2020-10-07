@@ -1,11 +1,9 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
 import Budget from '@dtos/Budget';
 import Room from '@dtos/Room';
 import Product from '@dtos/Product';
 import Item from '@dtos/Item';
 import generateID from '@utils/GenerateID';
-import GenerateID from '@utils/GenerateID';
 
 interface CreateRoomDTO {
   name: string;
@@ -42,7 +40,6 @@ interface GetItemDTO {
 interface BudgetContextData {
   budget: Budget;
   roomsInBudget: Room[];
-  saveBudget(): void;
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomDTO): void;
   deleteRoom(roomToDelete: Room): void;
@@ -183,20 +180,11 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [roomsInBudget],
   );
 
-  const saveBudget = useCallback(() => {
-    const budgetToSave = {
-      ...budget,
-      id: GenerateID(),
-      rooms: roomsInBudget,
-    } as Budget;
-  }, [roomsInBudget]);
-
   return (
     <BudgetContext.Provider
       value={{
         budget,
         roomsInBudget,
-        saveBudget,
         createRoom,
         saveRoom,
         deleteRoom,
