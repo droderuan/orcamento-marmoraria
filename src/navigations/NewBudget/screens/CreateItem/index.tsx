@@ -45,20 +45,23 @@ interface Measure {
 const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const { addItemToProduct, getItem } = useBudget();
   const route = useRoute();
+
   const { productId, roomId, itemId } = route.params as RouteParams;
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
-  const [item, setItem] = useState({ id: GenerateId() } as Item);
+  const [name, setName] = useState('');
   const [measures, setMeasures] = useState({} as Measure);
-
+  const [stone, setStone] = useState<string>();
+  const [shape, setShape] = useState<string>();
   const [quantity, setQuantity] = useState<string>('1');
+  const [unit, setUnit] = useState<string>('cm');
+  const [marble, setMarble] = useState<string>();
 
   const handleChangeQuantity = useCallback((value: string) => {
     setQuantity(value);
   }, []);
 
-  const [unit, setUnit] = useState<string>('cm');
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
   const unitOptions = ['cm', 'm'];
 
@@ -74,7 +77,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     setUnit(option);
   }, []);
 
-  const [shape, setShape] = useState<string>();
   const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
   const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
 
@@ -91,7 +93,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   }, []);
 
   const stoneOptions = ['Mármore', 'Granito'];
-  const [stone, setStone] = useState<string>();
   const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
 
   const openStoneModal = useCallback(() => {
@@ -106,7 +107,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     setStone(option);
   }, []);
 
-  const [marble, setMarble] = useState<string>();
   const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
     false,
   );
@@ -139,7 +139,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   const handleSaveItem = useCallback(() => {
     const newItem = {
-      ...item,
       shape,
       stone,
       type: marble,
@@ -151,7 +150,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     navigation.goBack();
   }, [
     addItemToProduct,
-    item,
     roomId,
     productId,
     shape,
@@ -167,7 +165,7 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
     if (itemId) {
       const findItem = getItem({ roomId, productId, itemId });
       if (findItem) {
-        setItem(findItem);
+        setName(findItem.name);
         setStone(findItem.stone);
         setMarble(findItem.type);
         setMeasures(findItem.measures);
@@ -185,10 +183,8 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
         <ItemTextInput
           placeholder="Digite o nome da peça"
           placeholderTextColor="#A0A0A0"
-          value={item.name}
-          onChangeText={value =>
-            setItem(oldItem => ({ ...oldItem, name: value }))
-          }
+          value={name}
+          onChangeText={value => setName(value)}
         />
         <ItemBottomLine />
       </ItemInput>
@@ -200,7 +196,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
           placeholderTextColor="#A0A0A0"
           value={quantity.toString()}
           maxLength={10}
-          value={quantity}
           onChangeText={value => handleChangeQuantity(value)}
         />
         <ItemBottomLine />
