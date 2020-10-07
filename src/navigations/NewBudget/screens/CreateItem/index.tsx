@@ -5,7 +5,7 @@ import React, {
   useEffect,
   SetStateAction,
 } from 'react';
-import { Alert, TextInput } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import generateId from '@utils/GenerateID';
 
@@ -19,6 +19,7 @@ import { useBudget } from '../../hooks/budget';
 
 import {
   Container,
+  Content,
   ItemInput,
   ItemInputLabel,
   ItemTextInput,
@@ -32,6 +33,16 @@ import {
   ItemInputButtonText,
   ItemBottomLine,
   ButtonWrapper,
+  SelectFinishingContainer,
+  SelectFinishingBackground,
+  FirstButtonWrapper,
+  FirstButton,
+  FirstButtonText,
+  SecondAndThirdButtonWrapper,
+  SecondButton,
+  SecondButtonText,
+  ThirdButton,
+  ThirdButtonText,
 } from './styles';
 
 interface FirstClientInfoProps {
@@ -171,135 +182,168 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   return (
     <Container>
-      <ItemInput>
-        <ItemInputLabel>Nome da Peça</ItemInputLabel>
-        <ItemTextInput
-          placeholder="Digite o nome da peça"
-          placeholderTextColor="#A0A0A0"
-          value={name}
-          onChangeText={value => setName(value)}
-        />
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Quantidade</ItemInputLabel>
-        <ItemTextInput
-          keyboardType="number-pad"
-          placeholderTextColor="#A0A0A0"
-          value={quantity.toString()}
-          maxLength={10}
-          onChangeText={value => handleChangeQuantity(value)}
-        />
-        <ItemBottomLine />
-      </ItemInput>
-
-      <ItemInput>
-        <ItemInputLabel>Pedra</ItemInputLabel>
-        <ItemInputButton
-          onPress={() => toggleModal(setStoneModalPickerVisible)}
-        >
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!stone}>
-              {stone || 'Escolha o tipo da pedra'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={stone}
-              visible={stoneModalPickerVisible}
-              handleCloseModal={() => toggleModal(setStoneModalPickerVisible)}
-              handleOnChange={handleChangeStone}
-              options={stoneOptions}
+      <ScrollView>
+        <Content>
+          <ItemInput>
+            <ItemInputLabel>Nome da Peça</ItemInputLabel>
+            <ItemTextInput
+              placeholder="Digite o nome da peça"
+              placeholderTextColor="#A0A0A0"
+              value={name}
+              onChangeText={value => setName(value)}
             />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
+            <ItemBottomLine />
+          </ItemInput>
 
-      <ItemInput>
-        <ItemInputLabel>Mármore</ItemInputLabel>
-        <ItemInputButton onPress={openMarbleModal}>
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!marble}>
-              {marble || 'Escolha o mármore'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={marble}
-              visible={marbleModalPickerVisible}
-              handleCloseModal={() => toggleModal(setMarbleModalPickerVisible)}
-              handleOnChange={handleChangeMarble}
-              options={marbleOptions}
+          <ItemInput>
+            <ItemInputLabel>Quantidade</ItemInputLabel>
+            <ItemTextInput
+              keyboardType="number-pad"
+              placeholderTextColor="#A0A0A0"
+              value={quantity.toString()}
+              maxLength={10}
+              onChangeText={value => handleChangeQuantity(value)}
             />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
+            <ItemBottomLine />
+          </ItemInput>
 
-      <ItemInput>
-        <ItemInputLabel>Formato</ItemInputLabel>
-        <ItemInputButton
-          onPress={() => toggleModal(setShapeModalPickerVisible)}
-        >
-          <ItemInputButtonWrapper>
-            <ItemInputButtonText isOptionSelected={!!shape}>
-              {shape || 'Escolha o formato'}
-            </ItemInputButtonText>
-            <ListPickerModal
-              animationType="fade"
-              transparent
-              selectDefault={shape}
-              visible={shapeModalPickerVisible}
-              handleCloseModal={() => toggleModal(setShapeModalPickerVisible)}
-              handleOnChange={handleChangeShape}
-              options={shapeOptions}
-            />
-          </ItemInputButtonWrapper>
-        </ItemInputButton>
-        <ItemBottomLine />
-      </ItemInput>
+          <ItemInput>
+            <ItemInputLabel>Pedra</ItemInputLabel>
+            <ItemInputButton
+              onPress={() => toggleModal(setStoneModalPickerVisible)}
+            >
+              <ItemInputButtonWrapper>
+                <ItemInputButtonText isOptionSelected={!!stone}>
+                  {stone || 'Escolha o tipo da pedra'}
+                </ItemInputButtonText>
+                <ListPickerModal
+                  animationType="fade"
+                  transparent
+                  selectDefault={stone}
+                  visible={stoneModalPickerVisible}
+                  handleCloseModal={() =>
+                    toggleModal(setStoneModalPickerVisible)
+                  }
+                  handleOnChange={handleChangeStone}
+                  options={stoneOptions}
+                />
+              </ItemInputButtonWrapper>
+            </ItemInputButton>
+            <ItemBottomLine />
+          </ItemInput>
 
-      <ItemInput>
-        <ItemInputLabel>Medidas</ItemInputLabel>
-        <ItemWithTwoTextInputWrapper>
-          <ItemWithTwoTextInput
-            keyboardType="number-pad"
-            placeholder="Largura"
-            value={width}
-            placeholderTextColor="#A0A0A0"
-            onChangeText={value => setWidth(value)}
-            onSubmitEditing={() => lengthInputRef.current?.focus()}
-          />
-          <ItemText>x</ItemText>
-          <ItemWithTwoTextInput
-            ref={lengthInputRef}
-            keyboardType="number-pad"
-            placeholder="Comprimento"
-            value={length}
-            placeholderTextColor="#A0A0A0"
-            onChangeText={value => setLength(value)}
-          />
+          <ItemInput>
+            <ItemInputLabel>Mármore</ItemInputLabel>
+            <ItemInputButton onPress={openMarbleModal}>
+              <ItemInputButtonWrapper>
+                <ItemInputButtonText isOptionSelected={!!marble}>
+                  {marble || 'Escolha o mármore'}
+                </ItemInputButtonText>
+                <ListPickerModal
+                  animationType="fade"
+                  transparent
+                  selectDefault={marble}
+                  visible={marbleModalPickerVisible}
+                  handleCloseModal={() =>
+                    toggleModal(setMarbleModalPickerVisible)
+                  }
+                  handleOnChange={handleChangeMarble}
+                  options={marbleOptions}
+                />
+              </ItemInputButtonWrapper>
+            </ItemInputButton>
+            <ItemBottomLine />
+          </ItemInput>
 
-          <UnitButton onPress={() => toggleModal(setUnitModalPickerVisible)}>
-            <UnitButtonText>{unit}</UnitButtonText>
-          </UnitButton>
+          <ItemInput>
+            <ItemInputLabel>Formato</ItemInputLabel>
+            <ItemInputButton
+              onPress={() => toggleModal(setShapeModalPickerVisible)}
+            >
+              <ItemInputButtonWrapper>
+                <ItemInputButtonText isOptionSelected={!!shape}>
+                  {shape || 'Escolha o formato'}
+                </ItemInputButtonText>
+                <ListPickerModal
+                  animationType="fade"
+                  transparent
+                  selectDefault={shape}
+                  visible={shapeModalPickerVisible}
+                  handleCloseModal={() =>
+                    toggleModal(setShapeModalPickerVisible)
+                  }
+                  handleOnChange={handleChangeShape}
+                  options={shapeOptions}
+                />
+              </ItemInputButtonWrapper>
+            </ItemInputButton>
+            <ItemBottomLine />
+          </ItemInput>
 
-          <ListPickerModal
-            animationType="fade"
-            transparent
-            visible={unitModalPickerVisible}
-            handleCloseModal={() => toggleModal(setUnitModalPickerVisible)}
-            handleOnChange={handleChangeUnit}
-            options={unitOptions}
-          />
-        </ItemWithTwoTextInputWrapper>
-        <ItemBottomLine />
-      </ItemInput>
-      <ButtonWrapper>
-        <Button onPress={handleSaveItem}>Salvar</Button>
-      </ButtonWrapper>
+          <ItemInput>
+            <ItemInputLabel>Medidas</ItemInputLabel>
+            <ItemWithTwoTextInputWrapper>
+              <ItemWithTwoTextInput
+                keyboardType="number-pad"
+                placeholder="Largura"
+                value={width}
+                placeholderTextColor="#A0A0A0"
+                onChangeText={value => setWidth(value)}
+                onSubmitEditing={() => lengthInputRef.current?.focus()}
+              />
+              <ItemText>x</ItemText>
+              <ItemWithTwoTextInput
+                ref={lengthInputRef}
+                keyboardType="number-pad"
+                placeholder="Comprimento"
+                value={length}
+                placeholderTextColor="#A0A0A0"
+                onChangeText={value => setLength(value)}
+              />
+
+              <UnitButton
+                onPress={() => toggleModal(setUnitModalPickerVisible)}
+              >
+                <UnitButtonText>{unit}</UnitButtonText>
+              </UnitButton>
+
+              <ListPickerModal
+                animationType="fade"
+                transparent
+                visible={unitModalPickerVisible}
+                handleCloseModal={() => toggleModal(setUnitModalPickerVisible)}
+                handleOnChange={handleChangeUnit}
+                options={unitOptions}
+              />
+            </ItemWithTwoTextInputWrapper>
+            <ItemBottomLine />
+          </ItemInput>
+          <ItemInput>
+            <ItemInputLabel>Acabamento</ItemInputLabel>
+            <SelectFinishingContainer>
+              <SelectFinishingBackground>
+                <FirstButtonWrapper>
+                  <FirstButton>
+                    <FirstButtonText>1</FirstButtonText>
+                  </FirstButton>
+                </FirstButtonWrapper>
+                <SecondAndThirdButtonWrapper>
+                  <SecondButton>
+                    <SecondButtonText>2</SecondButtonText>
+                  </SecondButton>
+                  <ThirdButton>
+                    <ThirdButtonText>3</ThirdButtonText>
+                  </ThirdButton>
+                </SecondAndThirdButtonWrapper>
+              </SelectFinishingBackground>
+            </SelectFinishingContainer>
+          </ItemInput>
+
+          <ButtonWrapper>
+            <Button onPress={handleSaveItem}>Salvar</Button>
+          </ButtonWrapper>
+        </Content>
+      </ScrollView>
     </Container>
   );
 };

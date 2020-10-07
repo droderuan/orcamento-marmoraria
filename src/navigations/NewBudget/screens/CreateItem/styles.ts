@@ -6,9 +6,11 @@ interface ItemInputButtonTextProps {
 }
 
 export const Container = styled.View`
-  flex: 1;
-  align-items: center;
   background-color: #fff;
+`;
+
+export const Content = styled.View`
+  align-items: center;
 `;
 
 export const ItemInput = styled.View`
@@ -87,3 +89,47 @@ export const ItemBottomLine = styled.View`
 export const ButtonWrapper = styled.View`
   margin-top: 40px;
 `;
+
+export const SelectFinishingContainer = styled.View`
+  width: 100%;
+  height: 180px;
+  margin: 10px 0;
+  padding: 10px 38px;
+`;
+
+export const SelectFinishingBackground = styled.ImageBackground`
+  flex: 1;
+  background-color: #9f9f9f;
+`;
+
+export const FirstButtonWrapper = styled.View`
+  width: 100%;
+  align-items: center;
+  background-color: #ff00;
+`;
+
+export const FirstButton = styled.View`
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  border-radius: 19px;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e4c75;
+`;
+
+export const FirstButtonText = styled.Text`
+  font-family: 'Heebo-Light';
+  font-size: 18px;
+  color: #fff;
+`;
+
+export const SecondAndThirdButtonWrapper = styled.View``;
+
+export const SecondButton = styled.View``;
+
+export const SecondButtonText = styled.Text``;
+
+export const ThirdButton = styled.View``;
+
+export const ThirdButtonText = styled.Text``;
