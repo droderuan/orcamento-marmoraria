@@ -5,7 +5,7 @@ import React, {
   useEffect,
   SetStateAction,
 } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import generateId from '@utils/GenerateID';
 
@@ -14,7 +14,6 @@ import Item from '@dtos/Item';
 
 import Button from '@components/Button';
 import ListPickerModal from '@components/ListPickerModal';
-import Room from '@dtos/Room';
 import { useBudget } from '../../hooks/budget';
 
 import {
@@ -35,14 +34,13 @@ import {
   ButtonWrapper,
   SelectFinishingContainer,
   SelectFinishingBackground,
-  FirstButtonWrapper,
+  EdgeFinishingButtonWrapper,
+  MiddleFinishingButtonWrapper,
+  ButtonText,
   FirstButton,
-  FirstButtonText,
-  SecondAndThirdButtonWrapper,
   SecondButton,
-  SecondButtonText,
   ThirdButton,
-  ThirdButtonText,
+  FourthButton,
 } from './styles';
 
 interface FirstClientInfoProps {
@@ -68,8 +66,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
-  const [room, setRoom] = useState({} as Room);
-
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState<string>('1');
   const [stone, setStone] = useState<string>();
@@ -82,6 +78,9 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
   const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
   const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
+  const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
+    false,
+  );
 
   const toggleModal = useCallback(
     (toggleModalStateFunction: React.Dispatch<SetStateAction<boolean>>) => {
@@ -105,14 +104,6 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const handleChangeStone = useCallback((option: string) => {
     setStone(option);
   }, []);
-
-  const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
-    false,
-  );
-
-  const openMarbleModal = useCallback(() => {
-    setMarbleModalPickerVisible(true);
-  }, [setMarbleModalPickerVisible]);
 
   const handleChangeMarble = useCallback((option: string) => {
     setMarble(option);
@@ -234,7 +225,9 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
 
           <ItemInput>
             <ItemInputLabel>Mármore</ItemInputLabel>
-            <ItemInputButton onPress={openMarbleModal}>
+            <ItemInputButton
+              onPress={() => toggleModal(setMarbleModalPickerVisible)}
+            >
               <ItemInputButtonWrapper>
                 <ItemInputButtonText isOptionSelected={!!marble}>
                   {marble || 'Escolha o mármore'}
@@ -322,19 +315,26 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
             <ItemInputLabel>Acabamento</ItemInputLabel>
             <SelectFinishingContainer>
               <SelectFinishingBackground>
-                <FirstButtonWrapper>
-                  <FirstButton>
-                    <FirstButtonText>1</FirstButtonText>
+                <EdgeFinishingButtonWrapper>
+                  <FirstButton onPress={() => {}}>
+                    <ButtonText>1</ButtonText>
                   </FirstButton>
-                </FirstButtonWrapper>
-                <SecondAndThirdButtonWrapper>
+                </EdgeFinishingButtonWrapper>
+
+                <MiddleFinishingButtonWrapper>
+                  <FourthButton>
+                    <ButtonText>4</ButtonText>
+                  </FourthButton>
                   <SecondButton>
-                    <SecondButtonText>2</SecondButtonText>
+                    <ButtonText>2</ButtonText>
                   </SecondButton>
+                </MiddleFinishingButtonWrapper>
+
+                <EdgeFinishingButtonWrapper>
                   <ThirdButton>
-                    <ThirdButtonText>3</ThirdButtonText>
+                    <ButtonText>3</ButtonText>
                   </ThirdButton>
-                </SecondAndThirdButtonWrapper>
+                </EdgeFinishingButtonWrapper>
               </SelectFinishingBackground>
             </SelectFinishingContainer>
           </ItemInput>

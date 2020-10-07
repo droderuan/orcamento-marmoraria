@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import { primary900 } from '@styles/theme/colors';
 
 interface ItemInputButtonTextProps {
   isOptionSelected: boolean;
@@ -11,6 +12,7 @@ export const Container = styled.View`
 
 export const Content = styled.View`
   align-items: center;
+  padding-bottom: 20px;
 `;
 
 export const ItemInput = styled.View`
@@ -99,37 +101,65 @@ export const SelectFinishingContainer = styled.View`
 
 export const SelectFinishingBackground = styled.ImageBackground`
   flex: 1;
+  justify-content: space-between;
+  border-radius: 10px;
   background-color: #9f9f9f;
 `;
 
-export const FirstButtonWrapper = styled.View`
+export const ButtonText = styled.Text`
+  font-family: 'Heebo-Light';
+  font-size: 18px;
+  color: #fff;
+`;
+
+export const EdgeFinishingButtonWrapper = styled.View`
   width: 100%;
   align-items: center;
   background-color: #ff00;
 `;
 
-export const FirstButton = styled.View`
+export const MiddleFinishingButtonWrapper = styled.View`
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+export const FirstButton = styled(RectButton)`
   width: 38px;
   height: 38px;
   margin-top: -19px;
   border-radius: 19px;
   align-items: center;
   justify-content: center;
-  background-color: #1e4c75;
+  background-color: ${primary900};
 `;
 
-export const FirstButtonText = styled.Text`
-  font-family: 'Heebo-Light';
-  font-size: 18px;
-  color: #fff;
+export const SecondButton = styled.View`
+  width: 38px;
+  height: 38px;
+  margin-right: -19px;
+  border-radius: 19px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${primary900};
 `;
 
-export const SecondAndThirdButtonWrapper = styled.View``;
+export const ThirdButton = styled.View`
+  width: 38px;
+  height: 38px;
+  margin-bottom: -19px;
+  border-radius: 19px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${primary900};
+`;
 
-export const SecondButton = styled.View``;
-
-export const SecondButtonText = styled.Text``;
-
-export const ThirdButton = styled.View``;
-
-export const ThirdButtonText = styled.Text``;
+export const FourthButton = styled.View`
+  width: 38px;
+  height: 38px;
+  margin-left: -19px;
+  border-radius: 19px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${primary900};
+`;
