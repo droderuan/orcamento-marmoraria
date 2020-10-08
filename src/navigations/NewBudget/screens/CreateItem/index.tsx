@@ -4,6 +4,7 @@ import React, {
   useRef,
   useEffect,
   SetStateAction,
+  useMemo,
 } from 'react';
 import { ScrollView, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -37,13 +38,10 @@ import {
   EdgeFinishingButtonWrapper,
   MiddleFinishingButtonWrapper,
   ButtonText,
-  FirstButton,
-  SecondButton,
-  ThirdButton,
-  FourthButton,
+  FinishingSelectButton,
 } from './styles';
 
-interface FirstClientInfoProps {
+interface CreateItemProps {
   navigation: StackNavigationProp<any, any>;
 }
 
@@ -53,19 +51,13 @@ interface RouteParams {
   itemId: string;
 }
 
-interface Measure {
-  width: string;
-  length: string;
+interface FinishingPosition {
+  position: string;
+  type: string;
+  hasFinishing: boolean;
 }
 
-interface Modals {
-  unit: false;
-  shape: false;
-  stone: false;
-  marble: false;
-}
-
-const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
+const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
   const { addItemToProduct, getItem } = useBudget();
   const route = useRoute();
 
@@ -81,6 +73,22 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
   const [length, setLength] = useState<string>();
   const [shape, setShape] = useState<string>();
   const [unit, setUnit] = useState<string>('cm');
+  const [positionOne, setPositionOne] = useState({
+    position: 'top',
+    hasFinishing: false,
+  } as FinishingPosition);
+  const [positionTwo, setPositionTwo] = useState({
+    position: 'rigth',
+    hasFinishing: false,
+  } as FinishingPosition);
+  const [positionThree, setPositionThree] = useState({
+    position: 'bottom',
+    hasFinishing: false,
+  } as FinishingPosition);
+  const [positionFour, setPositionFour] = useState({
+    position: 'left',
+    hasFinishing: false,
+  } as FinishingPosition);
 
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
   const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
@@ -318,29 +326,75 @@ const CreateItem: React.FC<FirstClientInfoProps> = ({ navigation }) => {
             </ItemWithTwoTextInputWrapper>
             <ItemBottomLine />
           </ItemInput>
+
           <ItemInput>
             <ItemInputLabel>Acabamento</ItemInputLabel>
+
             <SelectFinishingContainer>
               <SelectFinishingBackground>
                 <EdgeFinishingButtonWrapper>
-                  <FirstButton onPress={() => {}}>
-                    <ButtonText>1</ButtonText>
-                  </FirstButton>
+                  <FinishingSelectButton
+                    onPress={() =>
+                      setPositionOne(oldProps => ({
+                        ...oldProps,
+                        hasFinishing: !oldProps.hasFinishing,
+                      }))
+                    }
+                    isSelected={positionOne.hasFinishing}
+                    style={{ marginTop: -19 }}
+                  >
+                    <ButtonText isSelected={positionOne.hasFinishing}>
+                      1
+                    </ButtonText>
+                  </FinishingSelectButton>
                 </EdgeFinishingButtonWrapper>
 
                 <MiddleFinishingButtonWrapper>
-                  <FourthButton>
-                    <ButtonText>4</ButtonText>
-                  </FourthButton>
-                  <SecondButton>
-                    <ButtonText>2</ButtonText>
-                  </SecondButton>
+                  <FinishingSelectButton
+                    isSelected={positionFour.hasFinishing}
+                    style={{ marginLeft: -19 }}
+                    onPress={() =>
+                      setPositionFour(oldProps => ({
+                        ...oldProps,
+                        hasFinishing: !oldProps.hasFinishing,
+                      }))
+                    }
+                  >
+                    <ButtonText isSelected={positionFour.hasFinishing}>
+                      4
+                    </ButtonText>
+                  </FinishingSelectButton>
+                  <FinishingSelectButton
+                    isSelected={positionTwo.hasFinishing}
+                    style={{ marginRight: -19 }}
+                    onPress={() =>
+                      setPositionTwo(oldProps => ({
+                        ...oldProps,
+                        hasFinishing: !oldProps.hasFinishing,
+                      }))
+                    }
+                  >
+                    <ButtonText isSelected={positionTwo.hasFinishing}>
+                      2
+                    </ButtonText>
+                  </FinishingSelectButton>
                 </MiddleFinishingButtonWrapper>
 
                 <EdgeFinishingButtonWrapper>
-                  <ThirdButton>
-                    <ButtonText>3</ButtonText>
-                  </ThirdButton>
+                  <FinishingSelectButton
+                    isSelected={positionThree.hasFinishing}
+                    style={{ marginBottom: -19 }}
+                    onPress={() =>
+                      setPositionThree(oldProps => ({
+                        ...oldProps,
+                        hasFinishing: !oldProps.hasFinishing,
+                      }))
+                    }
+                  >
+                    <ButtonText isSelected={positionThree.hasFinishing}>
+                      3
+                    </ButtonText>
+                  </FinishingSelectButton>
                 </EdgeFinishingButtonWrapper>
               </SelectFinishingBackground>
             </SelectFinishingContainer>

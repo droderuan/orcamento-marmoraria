@@ -1,9 +1,13 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
-import { primary900 } from '@styles/theme/colors';
+import { primary900, primary100 } from '@styles/theme/colors';
 
 interface ItemInputButtonTextProps {
   isOptionSelected: boolean;
+}
+
+interface FinishingButtonProps {
+  isSelected: boolean;
 }
 
 export const Container = styled.View`
@@ -106,23 +110,16 @@ export const SelectFinishingContainer = styled.View`
   padding: 10px 38px;
 `;
 
-export const SelectFinishingBackground = styled.ImageBackground`
+export const SelectFinishingBackground = styled.View`
   flex: 1;
   justify-content: space-between;
   border-radius: 10px;
   background-color: #9f9f9f;
 `;
 
-export const ButtonText = styled.Text`
-  font-family: 'Heebo-Light';
-  font-size: 18px;
-  color: #fff;
-`;
-
 export const EdgeFinishingButtonWrapper = styled.View`
   width: 100%;
   align-items: center;
-  background-color: #ff00;
 `;
 
 export const MiddleFinishingButtonWrapper = styled.View`
@@ -131,42 +128,23 @@ export const MiddleFinishingButtonWrapper = styled.View`
   justify-content: space-between;
 `;
 
-export const FirstButton = styled(RectButton)`
+export const FinishingSelectButton = styled(RectButton)<FinishingButtonProps>`
+  position: relative;
   width: 38px;
   height: 38px;
-  margin-top: -19px;
   border-radius: 19px;
   align-items: center;
   justify-content: center;
-  background-color: ${primary900};
+  ${props =>
+    props.isSelected
+      ? `background-color: ${primary900}`
+      : `background-color: ${primary100}`};
+  border-width: 1px;
+  border-color: ${primary900};
 `;
 
-export const SecondButton = styled.View`
-  width: 38px;
-  height: 38px;
-  margin-right: -19px;
-  border-radius: 19px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${primary900};
-`;
-
-export const ThirdButton = styled.View`
-  width: 38px;
-  height: 38px;
-  margin-bottom: -19px;
-  border-radius: 19px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${primary900};
-`;
-
-export const FourthButton = styled.View`
-  width: 38px;
-  height: 38px;
-  margin-left: -19px;
-  border-radius: 19px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${primary900};
+export const ButtonText = styled.Text<FinishingButtonProps>`
+  font-family: 'Heebo-Light';
+  font-size: 18px;
+  ${props => (props.isSelected ? `color: #fff` : `color: #000`)};
 `;
