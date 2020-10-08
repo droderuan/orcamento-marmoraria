@@ -4,7 +4,6 @@ import React, {
   useRef,
   useEffect,
   SetStateAction,
-  useMemo,
 } from 'react';
 import { ScrollView, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -65,14 +64,32 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
+  const unitOptions = ['cm', 'm', 'mm'];
+  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
+  const stoneOptions = ['Mármore', 'Granito'];
+  const marbleOptions = [
+    'Rosso Verona',
+    'Travertino ',
+    'Travertino Bege Bahia',
+    'Crema Marfil ',
+    'Botticino ',
+    'Branco Nacional ',
+    'Pighês  ',
+    'Carrara ',
+    'Branco Thassos ',
+    'Marrom Emperador ',
+    'Marrom Emperador Light ',
+    'Nero Marquina',
+  ];
+
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState<string>('1');
-  const [stone, setStone] = useState<string>();
+  const [stone, setStone] = useState<string>(stoneOptions[0]);
   const [marble, setMarble] = useState<string>();
   const [width, setWidth] = useState<string>();
   const [length, setLength] = useState<string>();
-  const [shape, setShape] = useState<string>();
-  const [unit, setUnit] = useState<string>('cm');
+  const [shape, setShape] = useState<string>(shapeOptions[0]);
+  const [unit, setUnit] = useState<string>(unitOptions[0]);
   const [positionOne, setPositionOne] = useState({
     position: 'top',
     hasFinishing: false,
@@ -168,24 +185,6 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     }
   }, [getItem, itemId, productId, roomId]);
 
-  const unitOptions = ['cm', 'm'];
-  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
-  const stoneOptions = ['Mármore', 'Granito'];
-  const marbleOptions = [
-    'Rosso Verona',
-    'Travertino ',
-    'Travertino Bege Bahia',
-    'Crema Marfil ',
-    'Botticino ',
-    'Branco Nacional ',
-    'Pighês  ',
-    'Carrara ',
-    'Branco Thassos ',
-    'Marrom Emperador ',
-    'Marrom Emperador Light ',
-    'Nero Marquina',
-  ];
-
   return (
     <Container>
       <ScrollView>
@@ -239,7 +238,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
           </ItemInput>
 
           <ItemInput>
-            <ItemInputLabel>Mármore</ItemInputLabel>
+            <ItemInputLabel>Tipo</ItemInputLabel>
             <ItemInputButton
               onPress={() => toggleModal(setMarbleModalPickerVisible)}
             >
@@ -351,22 +350,8 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
 
                 <MiddleFinishingButtonWrapper>
                   <FinishingSelectButton
-                    isSelected={positionFour.hasFinishing}
-                    style={{ marginLeft: -19 }}
-                    onPress={() =>
-                      setPositionFour(oldProps => ({
-                        ...oldProps,
-                        hasFinishing: !oldProps.hasFinishing,
-                      }))
-                    }
-                  >
-                    <ButtonText isSelected={positionFour.hasFinishing}>
-                      4
-                    </ButtonText>
-                  </FinishingSelectButton>
-                  <FinishingSelectButton
                     isSelected={positionTwo.hasFinishing}
-                    style={{ marginRight: -19 }}
+                    style={{ marginLeft: -19 }}
                     onPress={() =>
                       setPositionTwo(oldProps => ({
                         ...oldProps,
@@ -378,12 +363,9 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                       2
                     </ButtonText>
                   </FinishingSelectButton>
-                </MiddleFinishingButtonWrapper>
-
-                <EdgeFinishingButtonWrapper>
                   <FinishingSelectButton
                     isSelected={positionThree.hasFinishing}
-                    style={{ marginBottom: -19 }}
+                    style={{ marginRight: -19 }}
                     onPress={() =>
                       setPositionThree(oldProps => ({
                         ...oldProps,
@@ -393,6 +375,23 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                   >
                     <ButtonText isSelected={positionThree.hasFinishing}>
                       3
+                    </ButtonText>
+                  </FinishingSelectButton>
+                </MiddleFinishingButtonWrapper>
+
+                <EdgeFinishingButtonWrapper>
+                  <FinishingSelectButton
+                    isSelected={positionFour.hasFinishing}
+                    style={{ marginBottom: -19 }}
+                    onPress={() =>
+                      setPositionFour(oldProps => ({
+                        ...oldProps,
+                        hasFinishing: !oldProps.hasFinishing,
+                      }))
+                    }
+                  >
+                    <ButtonText isSelected={positionFour.hasFinishing}>
+                      4
                     </ButtonText>
                   </FinishingSelectButton>
                 </EdgeFinishingButtonWrapper>
