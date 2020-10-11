@@ -5,13 +5,14 @@ import React, {
   useEffect,
   SetStateAction,
 } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import generateId from '@utils/GenerateID';
 
 import { useRoute } from '@react-navigation/native';
 import Item from '@dtos/Item';
 
+import { RadioButton } from 'react-native-paper';
 import Button from '@components/Button';
 import ListPickerModal from '@components/ListPickerModal';
 import { useBudget } from '../../hooks/budget';
@@ -31,6 +32,8 @@ import {
   ItemInputButtonWrapper,
   ItemInputButtonText,
   ItemBottomLine,
+  RadioButtomItem,
+  RadioButtomText,
   ButtonWrapper,
   SelectFinishingContainer,
   SelectFinishingBackground,
@@ -38,6 +41,8 @@ import {
   MiddleFinishingButtonWrapper,
   ButtonText,
   FinishingSelectButton,
+  FinishingSelectType,
+  FinishingNumber,
 } from './styles';
 
 interface CreateItemProps {
@@ -65,7 +70,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
   const lengthInputRef = useRef<TextInput | null>(null);
 
   const unitOptions = ['cm', 'm', 'mm'];
-  const shapeOptions = ['Retangular', 'Circular', 'Triangular'];
+  const shapeOptions = ['Retangular', 'Circular'];
   const stoneOptions = ['Mármore', 'Granito'];
   const marbleOptions = [
     'Rosso Verona',
@@ -264,7 +269,21 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
 
           <ItemInput>
             <ItemInputLabel>Formato</ItemInputLabel>
-            <ItemInputButton
+            <RadioButton.Group
+              onValueChange={value => handleChangeShape(value)}
+              value={shape}
+            >
+              {shapeOptions.map(shapeOption => (
+                <RadioButtomItem key={shapeOption}>
+                  <RadioButton.Item
+                    label={shapeOption}
+                    value={shapeOption}
+                    labelStyle={{ fontSize: 20 }}
+                  />
+                </RadioButtomItem>
+              ))}
+            </RadioButton.Group>
+            {/* <ItemInputButton
               onPress={() => toggleModal(setShapeModalPickerVisible)}
             >
               <ItemInputButtonWrapper>
@@ -283,7 +302,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                   options={shapeOptions}
                 />
               </ItemInputButtonWrapper>
-            </ItemInputButton>
+            </ItemInputButton> */}
             <ItemBottomLine />
           </ItemInput>
 
@@ -397,6 +416,28 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                 </EdgeFinishingButtonWrapper>
               </SelectFinishingBackground>
             </SelectFinishingContainer>
+
+            {positionOne.hasFinishing && (
+              <FinishingSelectType>
+                <FinishingNumber>1</FinishingNumber>
+              </FinishingSelectType>
+            )}
+            {positionTwo.hasFinishing && (
+              <FinishingSelectType>
+                <FinishingNumber>2</FinishingNumber>
+              </FinishingSelectType>
+            )}
+            {positionThree.hasFinishing && (
+              <FinishingSelectType>
+                <FinishingNumber>3</FinishingNumber>
+              </FinishingSelectType>
+            )}
+            {positionFour.hasFinishing && (
+              <FinishingSelectType>
+                <FinishingNumber>4</FinishingNumber>
+              </FinishingSelectType>
+            )}
+            <ItemBottomLine />
           </ItemInput>
 
           <ButtonWrapper>

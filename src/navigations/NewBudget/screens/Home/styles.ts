@@ -2,6 +2,8 @@ import styled from 'styled-components/native';
 import { RectButton, FlatList } from 'react-native-gesture-handler';
 import RoomProps from '@dtos/Room';
 
+import { primary500 } from '@styles/theme/colors';
+
 interface Product {
   type: string;
 }
@@ -17,14 +19,6 @@ export const ModalButtons = styled.View`
   margin-top: 20px;
   flex-direction: row;
   justify-content: space-around;
-`;
-
-export const ModalButton = styled(RectButton)`
-  width: 100px;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #1e4c75;
 `;
 
 export const ModalContent = styled.View`
@@ -50,6 +44,8 @@ export const ModalInputTextContainer = styled.View`
   height: 60px;
   width: 100%;
   background-color: #7f9cb5;
+  border-radius: 5px;
+
   padding: 0 16px;
   flex-direction: row;
   align-items: center;
@@ -68,14 +64,15 @@ export const HeaderButtons = styled.View`
   margin: 15px 0;
 `;
 
-export const HeaderButton = styled.TouchableOpacity`
+export const HeaderButton = styled(RectButton)`
   padding: 12px 15px;
   height: 50px;
   margin: 0 20px;
-  background: #1e4c75;
+  border-radius: 5px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  background: ${primary500};
 `;
 
 export const HeaderButtonText = styled.Text`

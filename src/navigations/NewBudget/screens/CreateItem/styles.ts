@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
-import { primary900, primary100 } from '@styles/theme/colors';
+import { primary900, primary500, primary100 } from '@styles/theme/colors';
 
 interface ItemInputButtonTextProps {
   isOptionSelected: boolean;
@@ -69,7 +69,7 @@ export const UnitButton = styled(RectButton)`
   width: 40px;
   height: 40px;
   border-radius: 5px;
-  background-color: ${primary900};
+  background-color: ${primary500};
 `;
 
 export const UnitButtonText = styled.Text`
@@ -97,6 +97,11 @@ export const ItemBottomLine = styled.View`
   width: 100%;
   height: 1px;
   background-color: #487195;
+`;
+
+export const RadioButtomItem = styled.View`
+  width: 100%;
+  margin-top: 5px;
 `;
 
 export const ButtonWrapper = styled.View`
@@ -147,4 +152,17 @@ export const ButtonText = styled.Text<FinishingButtonProps>`
   font-family: 'Heebo-Light';
   font-size: 18px;
   ${props => (props.isSelected ? `color: #fff` : `color: #000`)};
+`;
+
+export const FinishingSelectType = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const FinishingNumber = styled.Text`
+  margin-left: 38px;
+  font-family: 'Heebo-Light';
+  font-size: 28px;
+  color: #000;
 `;
