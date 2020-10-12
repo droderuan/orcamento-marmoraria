@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { ModalProps } from 'react-native';
+import { Divider } from 'react-native-paper';
 
 import Modal from '../Modal';
 
@@ -59,7 +60,7 @@ const ListPickerModal: React.FC<ListPickerModalProps> = ({
                 <ListOptionItem selected={selected === option}>
                   <ListOptionItemText>{option}</ListOptionItemText>
                 </ListOptionItem>
-                {index !== options.length - 1 && <ItemBottomLine />}
+                {index !== options.length - 1 && <Divider />}
               </>
             </ListOptionItemButton>
           ))}

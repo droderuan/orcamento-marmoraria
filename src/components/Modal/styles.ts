@@ -13,6 +13,7 @@ export const ModalBackground = styled.View`
 export const CloseModalTouchable = styled.TouchableWithoutFeedback``;
 
 export const ModalContent = styled.View`
+  border-radius: 10px;
   justify-content: center;
   background-color: #fff;
 `;

@@ -15,8 +15,8 @@ export const ListOptionItemButton = styled.TouchableOpacity``;
 export const ListOptionItem = styled.View<ListOptionItemProps>`
   justify-content: center;
   padding-top: 12px;
-  width: 300px;
   border-radius: 5px;
+  max-width: 350px;
   ${props => props.selected && 'background-color: rgba(0,0,0, 0.1)'}
 `;
 
