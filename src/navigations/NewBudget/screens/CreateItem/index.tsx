@@ -4,9 +4,12 @@ import React, {
   useRef,
   useEffect,
   SetStateAction,
+  useMemo,
 } from 'react';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
 import generateId from '@utils/GenerateID';
 
 import { useRoute } from '@react-navigation/native';
@@ -33,7 +36,6 @@ import {
   ItemInputButtonText,
   ItemBottomLine,
   RadioButtomItem,
-  RadioButtomText,
   ButtonWrapper,
   SelectFinishingContainer,
   SelectFinishingBackground,
@@ -64,6 +66,7 @@ interface FinishingPosition {
 const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
   const { addItemToProduct, getItem } = useBudget();
   const route = useRoute();
+  const bottomSheetRef = useRef(null);
 
   const { productId, roomId, itemId } = route.params as RouteParams;
 
@@ -86,37 +89,92 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     'Marrom Emperador Light ',
     'Nero Marquina',
   ];
+  const finishingOptions = [
+    'sanduiche',
+    'simples duplo',
+    'sanduiche recuado',
+    'reto simples',
+    'reto duplo',
+    'reto com encaixe',
+    'rebaixo invertido',
+    'rebaixo',
+    'reto 45 graus 10cm',
+    'reto 45 graus',
+    'espelho 1 2',
+    'chanfrado simples',
+    'chanfrado invertido',
+    'chanfrado duplo',
+    'boleado triplo3',
+    'boleado',
+    'boleado triplo1',
+    'boleado triplo2',
+    'boleado simples',
+    'boleado duplo2',
+    'boleado duplo1',
+    'boleado com rebaixo',
+    'bisoto',
+    '45 grau',
+    '1/2 cana',
+    '1/2 cana dupla 2',
+    '1/2 boleado simples',
+    '1/2 cana com frisos',
+    '1/2 cana invertida',
+    '1/2 cana dupla',
+    '1/2 cana tripla',
+    '1/2 cana com boleado',
+  ];
 
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState<string>('1');
-  const [stone, setStone] = useState<string>(stoneOptions[0]);
-  const [marble, setMarble] = useState<string>();
-  const [width, setWidth] = useState<string>();
-  const [length, setLength] = useState<string>();
-  const [shape, setShape] = useState<string>(shapeOptions[0]);
-  const [unit, setUnit] = useState<string>(unitOptions[0]);
-  const [positionOne, setPositionOne] = useState({
-    position: 'top',
-    hasFinishing: false,
-  } as FinishingPosition);
-  const [positionTwo, setPositionTwo] = useState({
-    position: 'rigth',
-    hasFinishing: false,
-  } as FinishingPosition);
-  const [positionThree, setPositionThree] = useState({
-    position: 'bottom',
-    hasFinishing: false,
-  } as FinishingPosition);
-  const [positionFour, setPositionFour] = useState({
-    position: 'left',
-    hasFinishing: false,
-  } as FinishingPosition);
+  const [item, setItem] = useState(() => {
+    if (itemId) {
+      const findItem = getItem({ roomId, productId, itemId });
+      if (findItem) {
+        return findItem;
+      }
+    }
+    return {
+      id: generateId(),
+      name: '',
+      finishing: [],
+      quantity: '1',
+      shape: 'Retangular',
+      stone: '',
+      type: '',
+      measures: {
+        unit: 'cm',
+        length: '',
+        width: '',
+      },
+    } as Item;
+  });
 
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
-  const [shapeModalPickerVisible, setShapeModalPickerVisible] = useState(false);
   const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
   const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
     false,
+  );
+
+  const positionOne = useMemo(
+    () => !!item.finishing.find(finish => finish.position === '1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(item.finishing), item.finishing],
+  );
+
+  const positionTwo = useMemo(
+    () => !!item.finishing.find(finish => finish.position === '2'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(item.finishing), item.finishing],
+  );
+
+  const positionThree = useMemo(
+    () => !!item.finishing.find(finish => finish.position === '3'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(item.finishing), item.finishing],
+  );
+
+  const positionFour = useMemo(
+    () => !!item.finishing.find(finish => finish.position === '4'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(item.finishing), item.finishing],
   );
 
   const toggleModal = useCallback(
@@ -126,66 +184,73 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     [],
   );
 
+  const handleChangeName = useCallback((value: string) => {
+    setItem(oldItem => ({ ...oldItem, name: value }));
+  }, []);
+
   const handleChangeQuantity = useCallback((value: string) => {
-    setQuantity(value);
+    setItem(oldItem => ({ ...oldItem, quantity: value }));
   }, []);
 
-  const handleChangeShape = useCallback((option: string) => {
-    setShape(option);
+  const handleChangeShape = useCallback((value: string) => {
+    setItem(oldItem => ({ ...oldItem, shape: value }));
   }, []);
 
-  const handleChangeStone = useCallback((option: string) => {
-    setStone(option);
+  const handleChangeStone = useCallback((value: string) => {
+    setItem(oldItem => ({ ...oldItem, stone: value }));
   }, []);
 
-  const handleChangeMarble = useCallback((option: string) => {
-    setMarble(option);
+  const handleChangeMarble = useCallback((value: string) => {
+    setItem(oldItem => ({ ...oldItem, type: value }));
   }, []);
 
-  const handleChangeUnit = useCallback((option: string) => {
-    setUnit(option);
-  }, []);
+  const handleChangeMeasure = useCallback(
+    ({
+      unit = item.measures.unit,
+      width = item.measures.width,
+      length = item.measures.length,
+    }) => {
+      setItem(oldItem => ({
+        ...oldItem,
+        measures: { unit, width, length },
+      }));
+    },
+    [item.measures.unit, item.measures.width, item.measures.length],
+  );
+
+  const handleChangeFinishingPosition = useCallback(
+    (position: string) => {
+      const toUpdatefinishing = item.finishing;
+      const checkExist = toUpdatefinishing.findIndex(
+        finishing => finishing.position === position,
+      );
+      if (checkExist !== -1) {
+        toUpdatefinishing.splice(checkExist, 1);
+      } else {
+        toUpdatefinishing.push({ position, type: '' });
+      }
+
+      setItem(oldItem => ({
+        ...oldItem,
+        finishing: toUpdatefinishing.sort(
+          (a, b) => parseInt(a.position, 10) - parseInt(b.position, 10),
+        ),
+      }));
+    },
+    [item.finishing],
+  );
 
   const handleSaveItem = useCallback(() => {
-    const newItem = {
-      id: generateId(),
-      name,
-      shape,
-      stone,
-      type: marble,
-      quantity: parseInt(quantity, 10),
-      measures: { width, length, unit },
-    } as Item;
-    addItemToProduct({ roomId, productId, item: newItem });
+    addItemToProduct({ roomId, productId, item });
 
     navigation.goBack();
-  }, [
-    addItemToProduct,
-    roomId,
-    productId,
-    name,
-    shape,
-    quantity,
-    length,
-    width,
-    unit,
-    marble,
-    stone,
-    navigation,
-  ]);
+  }, [addItemToProduct, roomId, productId, navigation, item]);
 
   useEffect(() => {
     if (itemId) {
       const findItem = getItem({ roomId, productId, itemId });
       if (findItem) {
-        setName(findItem.name);
-        setStone(findItem.stone);
-        setMarble(findItem.type);
-        setWidth(findItem.measures.width);
-        setLength(findItem.measures.length);
-        setUnit(findItem.measures.unit);
-        setQuantity(findItem.quantity.toString(10));
-        setShape(findItem.shape);
+        setItem(findItem);
       }
     }
   }, [getItem, itemId, productId, roomId]);
@@ -199,8 +264,8 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
             <ItemTextInput
               placeholder="Digite o nome da peça"
               placeholderTextColor="#A0A0A0"
-              value={name}
-              onChangeText={value => setName(value)}
+              value={item.name}
+              onChangeText={value => handleChangeName(value)}
             />
             <ItemBottomLine />
           </ItemInput>
@@ -210,7 +275,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
             <ItemTextInput
               keyboardType="number-pad"
               placeholderTextColor="#A0A0A0"
-              value={quantity.toString()}
+              value={item.quantity.toString()}
               maxLength={10}
               onChangeText={value => handleChangeQuantity(value)}
             />
@@ -223,13 +288,13 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
               onPress={() => toggleModal(setStoneModalPickerVisible)}
             >
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!stone}>
-                  {stone || 'Escolha o tipo da pedra'}
+                <ItemInputButtonText isOptionSelected={!!item?.stone}>
+                  {item.stone || 'Escolha o tipo da pedra'}
                 </ItemInputButtonText>
                 <ListPickerModal
                   animationType="fade"
                   transparent
-                  selectDefault={stone}
+                  selectDefault={item.stone}
                   visible={stoneModalPickerVisible}
                   handleCloseModal={() =>
                     toggleModal(setStoneModalPickerVisible)
@@ -248,13 +313,13 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
               onPress={() => toggleModal(setMarbleModalPickerVisible)}
             >
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!marble}>
-                  {marble || 'Escolha o mármore'}
+                <ItemInputButtonText isOptionSelected={!!item.type}>
+                  {item.type || 'Escolha o mármore'}
                 </ItemInputButtonText>
                 <ListPickerModal
                   animationType="fade"
                   transparent
-                  selectDefault={marble}
+                  selectDefault={item.type}
                   visible={marbleModalPickerVisible}
                   handleCloseModal={() =>
                     toggleModal(setMarbleModalPickerVisible)
@@ -271,7 +336,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
             <ItemInputLabel>Formato</ItemInputLabel>
             <RadioButton.Group
               onValueChange={value => handleChangeShape(value)}
-              value={shape}
+              value={item.shape}
             >
               {shapeOptions.map(shapeOption => (
                 <RadioButtomItem key={shapeOption}>
@@ -279,30 +344,16 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                     label={shapeOption}
                     value={shapeOption}
                     labelStyle={{ fontSize: 20 }}
+                    style={{
+                      flexDirection: 'row-reverse',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                    }}
                   />
                 </RadioButtomItem>
               ))}
             </RadioButton.Group>
-            {/* <ItemInputButton
-              onPress={() => toggleModal(setShapeModalPickerVisible)}
-            >
-              <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!shape}>
-                  {shape || 'Escolha o formato'}
-                </ItemInputButtonText>
-                <ListPickerModal
-                  animationType="fade"
-                  transparent
-                  selectDefault={shape}
-                  visible={shapeModalPickerVisible}
-                  handleCloseModal={() =>
-                    toggleModal(setShapeModalPickerVisible)
-                  }
-                  handleOnChange={handleChangeShape}
-                  options={shapeOptions}
-                />
-              </ItemInputButtonWrapper>
-            </ItemInputButton> */}
+
             <ItemBottomLine />
           </ItemInput>
 
@@ -312,9 +363,9 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
               <ItemWithTwoTextInput
                 keyboardType="number-pad"
                 placeholder="Largura"
-                value={width}
+                value={item.measures.width}
                 placeholderTextColor="#A0A0A0"
-                onChangeText={value => setWidth(value)}
+                onChangeText={value => handleChangeMeasure({ width: value })}
                 onSubmitEditing={() => lengthInputRef.current?.focus()}
               />
               <ItemText>x</ItemText>
@@ -322,23 +373,24 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                 ref={lengthInputRef}
                 keyboardType="number-pad"
                 placeholder="Comprimento"
-                value={length}
+                value={item.measures.length}
                 placeholderTextColor="#A0A0A0"
-                onChangeText={value => setLength(value)}
+                onChangeText={value => handleChangeMeasure({ length: value })}
               />
 
               <UnitButton
                 onPress={() => toggleModal(setUnitModalPickerVisible)}
               >
-                <UnitButtonText>{unit}</UnitButtonText>
+                <UnitButtonText>{item.measures?.unit}</UnitButtonText>
               </UnitButton>
 
               <ListPickerModal
                 animationType="fade"
                 transparent
+                selectDefault="cm"
                 visible={unitModalPickerVisible}
                 handleCloseModal={() => toggleModal(setUnitModalPickerVisible)}
-                handleOnChange={handleChangeUnit}
+                handleOnChange={value => handleChangeMeasure({ unit: value })}
                 options={unitOptions}
               />
             </ItemWithTwoTextInputWrapper>
@@ -352,91 +404,49 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
               <SelectFinishingBackground>
                 <EdgeFinishingButtonWrapper>
                   <FinishingSelectButton
-                    onPress={() =>
-                      setPositionOne(oldProps => ({
-                        ...oldProps,
-                        hasFinishing: !oldProps.hasFinishing,
-                      }))
-                    }
-                    isSelected={positionOne.hasFinishing}
+                    onPress={() => handleChangeFinishingPosition('1')}
+                    isSelected={!!positionOne}
                     style={{ marginTop: -19 }}
                   >
-                    <ButtonText isSelected={positionOne.hasFinishing}>
-                      1
-                    </ButtonText>
+                    <ButtonText isSelected={!!positionOne}>1</ButtonText>
                   </FinishingSelectButton>
                 </EdgeFinishingButtonWrapper>
 
                 <MiddleFinishingButtonWrapper>
                   <FinishingSelectButton
-                    isSelected={positionTwo.hasFinishing}
+                    isSelected={positionTwo}
                     style={{ marginLeft: -19 }}
-                    onPress={() =>
-                      setPositionTwo(oldProps => ({
-                        ...oldProps,
-                        hasFinishing: !oldProps.hasFinishing,
-                      }))
-                    }
+                    onPress={() => handleChangeFinishingPosition('2')}
                   >
-                    <ButtonText isSelected={positionTwo.hasFinishing}>
-                      2
-                    </ButtonText>
+                    <ButtonText isSelected={positionTwo}>2</ButtonText>
                   </FinishingSelectButton>
                   <FinishingSelectButton
-                    isSelected={positionThree.hasFinishing}
+                    isSelected={positionThree}
                     style={{ marginRight: -19 }}
-                    onPress={() =>
-                      setPositionThree(oldProps => ({
-                        ...oldProps,
-                        hasFinishing: !oldProps.hasFinishing,
-                      }))
-                    }
+                    onPress={() => handleChangeFinishingPosition('3')}
                   >
-                    <ButtonText isSelected={positionThree.hasFinishing}>
-                      3
-                    </ButtonText>
+                    <ButtonText isSelected={positionThree}>3</ButtonText>
                   </FinishingSelectButton>
                 </MiddleFinishingButtonWrapper>
 
                 <EdgeFinishingButtonWrapper>
                   <FinishingSelectButton
-                    isSelected={positionFour.hasFinishing}
+                    isSelected={positionFour}
                     style={{ marginBottom: -19 }}
-                    onPress={() =>
-                      setPositionFour(oldProps => ({
-                        ...oldProps,
-                        hasFinishing: !oldProps.hasFinishing,
-                      }))
-                    }
+                    onPress={() => handleChangeFinishingPosition('4')}
                   >
-                    <ButtonText isSelected={positionFour.hasFinishing}>
-                      4
-                    </ButtonText>
+                    <ButtonText isSelected={positionFour}>4</ButtonText>
                   </FinishingSelectButton>
                 </EdgeFinishingButtonWrapper>
               </SelectFinishingBackground>
             </SelectFinishingContainer>
 
-            {positionOne.hasFinishing && (
-              <FinishingSelectType>
-                <FinishingNumber>1</FinishingNumber>
+            {item.finishing.map(finish => (
+              <FinishingSelectType key={finish.position}>
+                <FinishingNumber>{finish.position}</FinishingNumber>
               </FinishingSelectType>
-            )}
-            {positionTwo.hasFinishing && (
-              <FinishingSelectType>
-                <FinishingNumber>2</FinishingNumber>
-              </FinishingSelectType>
-            )}
-            {positionThree.hasFinishing && (
-              <FinishingSelectType>
-                <FinishingNumber>3</FinishingNumber>
-              </FinishingSelectType>
-            )}
-            {positionFour.hasFinishing && (
-              <FinishingSelectType>
-                <FinishingNumber>4</FinishingNumber>
-              </FinishingSelectType>
-            )}
+            ))}
+
             <ItemBottomLine />
           </ItemInput>
 
