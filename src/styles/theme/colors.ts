@@ -22,6 +22,8 @@ export const secondary50 = '#ddf2f3';
 
 export const error = '#B00020';
 
+export const green = '#388E3C';
+
 export const notification = '#ff3d00';
 
 export const surface = '#FFFFFF';

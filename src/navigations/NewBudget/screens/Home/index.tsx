@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { TouchableOpacity, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Button } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { error, green } from '@styles/theme/colors';
 import RoomProps from '@dtos/Room';
 import Modal from '@components/Modal';
 
@@ -154,17 +156,23 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
           </ModalInputTextContainer>
 
           <ModalButtons>
-            <TouchableOpacity onPress={closeAddRoomModal}>
-              <MaterialCommunityIcons name="cancel" size={40} color="#dd3030" />
-            </TouchableOpacity>
+            <Button
+              icon="cancel"
+              mode="contained"
+              style={{ backgroundColor: error }}
+              onPress={closeAddRoomModal}
+            >
+              Cancelar
+            </Button>
 
-            <TouchableOpacity onPress={addRoom}>
-              <MaterialCommunityIcons
-                name="check-all"
-                size={40}
-                color="#30dd30"
-              />
-            </TouchableOpacity>
+            <Button
+              icon="check"
+              mode="contained"
+              style={{ backgroundColor: green }}
+              onPress={addRoom}
+            >
+              Confirmar
+            </Button>
           </ModalButtons>
         </ModalContent>
       </Modal>
@@ -201,17 +209,23 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
           </ModalInputTextContainer>
 
           <ModalButtons>
-            <TouchableOpacity onPress={closeEditRoomModal}>
-              <MaterialCommunityIcons name="cancel" size={48} color="#dd3030" />
-            </TouchableOpacity>
+            <Button
+              icon="cancel"
+              mode="contained"
+              style={{ backgroundColor: error }}
+              onPress={closeEditRoomModal}
+            >
+              Cancelar
+            </Button>
 
-            <TouchableOpacity onPress={handleEditRoom}>
-              <MaterialCommunityIcons
-                name="check-all"
-                size={48}
-                color="#30dd30"
-              />
-            </TouchableOpacity>
+            <Button
+              icon="check"
+              mode="contained"
+              style={{ backgroundColor: green }}
+              onPress={handleEditRoom}
+            >
+              Confirmar
+            </Button>
           </ModalButtons>
         </ModalContent>
       </Modal>
