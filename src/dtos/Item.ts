@@ -8,6 +8,7 @@ export default interface Item {
   };
   stone: string;
   type: string;
+  surfaceFinish: string;
   finishing: {
     position: string;
     type: string;
