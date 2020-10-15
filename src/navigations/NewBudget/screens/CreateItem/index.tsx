@@ -6,16 +6,14 @@ import React, {
   SetStateAction,
   useMemo,
 } from 'react';
-import { ScrollView, TextInput, Text } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
+import { RadioButton } from 'react-native-paper';
+import { ScrollView, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 import generateId from '@utils/GenerateID';
 
 import { useRoute } from '@react-navigation/native';
 import Item from '@dtos/Item';
 
-import { RadioButton } from 'react-native-paper';
 import Button from '@components/Button';
 import ListPickerModal from '@components/ListPickerModal';
 import { useBudget } from '../../hooks/budget';
@@ -47,10 +45,6 @@ import {
   FinishingNumber,
 } from './styles';
 
-interface CreateItemProps {
-  navigation: StackNavigationProp<any, any>;
-}
-
 interface RouteParams {
   roomId: string;
   productId: string;
@@ -63,33 +57,26 @@ interface FinishingPosition {
   hasFinishing: boolean;
 }
 
-const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
-  const { addItemToProduct, getItem } = useBudget();
+const CreateItem: React.FC = () => {
+  const { addOrSaveItem, getItem } = useBudget();
   const route = useRoute();
-  const bottomSheetRef = useRef(null);
-
+  const { navigate, goBack } = useNavigation();
   const { productId, roomId, itemId } = route.params as RouteParams;
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
   const unitOptions = ['cm', 'm', 'mm'];
   const shapeOptions = ['Retangular', 'Circular'];
-  const stoneOptions = ['Mármore', 'Granito'];
-  const marbleOptions = [
-    'Rosso Verona',
-    'Travertino ',
-    'Travertino Bege Bahia',
-    'Crema Marfil ',
-    'Botticino ',
-    'Branco Nacional ',
-    'Pighês  ',
-    'Carrara ',
-    'Branco Thassos ',
-    'Marrom Emperador ',
-    'Marrom Emperador Light ',
-    'Nero Marquina',
-  ];
   const finishingOptions = [
+    'Apicoado',
+    'Bruto',
+    'Flameado',
+    'Jateado',
+    'Levigado',
+    'Polido',
+    'Resinado',
+  ];
+  const finishingEdgeOptions = [
     'sanduiche',
     'simples duplo',
     'sanduiche recuado',
@@ -134,11 +121,12 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     return {
       id: generateId(),
       name: '',
-      finishing: [],
       quantity: '1',
       shape: 'Retangular',
       stone: '',
       type: '',
+      surfaceFinish: '',
+      finishing: [],
       measures: {
         unit: 'cm',
         length: '',
@@ -148,7 +136,10 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
   });
 
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
-  const [stoneModalPickerVisible, setStoneModalPickerVisible] = useState(false);
+  const [
+    finishingModalPickerVisible,
+    setFinishingModalPickerVisible,
+  ] = useState(false);
   const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
     false,
   );
@@ -196,12 +187,12 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     setItem(oldItem => ({ ...oldItem, shape: value }));
   }, []);
 
-  const handleChangeStone = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, stone: value }));
+  const handleChangeStone = useCallback(({ type, stone }) => {
+    setItem(oldItem => ({ ...oldItem, type, stone }));
   }, []);
 
-  const handleChangeMarble = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, type: value }));
+  const handleChangeSurfaceFinish = useCallback((value: string) => {
+    setItem(oldItem => ({ ...oldItem, surfaceFinish: value }));
   }, []);
 
   const handleChangeMeasure = useCallback(
@@ -240,11 +231,17 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
     [item.finishing],
   );
 
-  const handleSaveItem = useCallback(() => {
-    addItemToProduct({ roomId, productId, item });
+  const navigateToSelectStone = useCallback(() => {
+    navigate('SelectStone', {
+      handleChangeStone,
+    });
+  }, [navigate, handleChangeStone]);
 
-    navigation.goBack();
-  }, [addItemToProduct, roomId, productId, navigation, item]);
+  const handleSaveItem = useCallback(() => {
+    addOrSaveItem({ roomId, productId, item });
+
+    goBack();
+  }, [addOrSaveItem, roomId, productId, item, goBack]);
 
   useEffect(() => {
     if (itemId) {
@@ -284,49 +281,11 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
 
           <ItemInput>
             <ItemInputLabel>Pedra</ItemInputLabel>
-            <ItemInputButton
-              onPress={() => toggleModal(setStoneModalPickerVisible)}
-            >
+            <ItemInputButton onPress={() => navigateToSelectStone()}>
               <ItemInputButtonWrapper>
                 <ItemInputButtonText isOptionSelected={!!item?.stone}>
                   {item.stone || 'Escolha o tipo da pedra'}
                 </ItemInputButtonText>
-                <ListPickerModal
-                  animationType="fade"
-                  transparent
-                  selectDefault={item.stone}
-                  visible={stoneModalPickerVisible}
-                  handleCloseModal={() =>
-                    toggleModal(setStoneModalPickerVisible)
-                  }
-                  handleOnChange={handleChangeStone}
-                  options={stoneOptions}
-                />
-              </ItemInputButtonWrapper>
-            </ItemInputButton>
-            <ItemBottomLine />
-          </ItemInput>
-
-          <ItemInput>
-            <ItemInputLabel>Tipo</ItemInputLabel>
-            <ItemInputButton
-              onPress={() => toggleModal(setMarbleModalPickerVisible)}
-            >
-              <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!item.type}>
-                  {item.type || 'Escolha o mármore'}
-                </ItemInputButtonText>
-                <ListPickerModal
-                  animationType="fade"
-                  transparent
-                  selectDefault={item.type}
-                  visible={marbleModalPickerVisible}
-                  handleCloseModal={() =>
-                    toggleModal(setMarbleModalPickerVisible)
-                  }
-                  handleOnChange={handleChangeMarble}
-                  options={marbleOptions}
-                />
               </ItemInputButtonWrapper>
             </ItemInputButton>
             <ItemBottomLine />
@@ -394,6 +353,32 @@ const CreateItem: React.FC<CreateItemProps> = ({ navigation }) => {
                 options={unitOptions}
               />
             </ItemWithTwoTextInputWrapper>
+            <ItemBottomLine />
+          </ItemInput>
+
+          <ItemInput>
+            <ItemInputLabel>Acabamento de superfície</ItemInputLabel>
+            <ItemInputButton
+              onPress={() => toggleModal(setFinishingModalPickerVisible)}
+            >
+              <ItemInputButtonWrapper>
+                <ItemInputButtonText isOptionSelected={!!item.surfaceFinish}>
+                  {item.surfaceFinish || 'Escolha o tipo da pedra'}
+                </ItemInputButtonText>
+              </ItemInputButtonWrapper>
+            </ItemInputButton>
+            <ListPickerModal
+              animationType="fade"
+              transparent
+              selectDefault="Polido"
+              visible={finishingModalPickerVisible}
+              handleCloseModal={() =>
+                toggleModal(setFinishingModalPickerVisible)
+              }
+              handleOnChange={value => handleChangeSurfaceFinish(value)}
+              options={finishingOptions}
+            />
+
             <ItemBottomLine />
           </ItemInput>
 

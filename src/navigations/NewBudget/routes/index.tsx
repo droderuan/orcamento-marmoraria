@@ -7,6 +7,7 @@ import { BudgetProvider } from '../hooks/budget';
 import FirstClientInfo from '../screens/FirstClientInfo';
 import RoomProducts from '../screens/RoomProducts';
 import CreateItem from '../screens/CreateItem';
+import SelectStone from '../screens/SelectStone';
 import MainPage from './Tab.routes';
 
 const NewBudget = createStackNavigator();
@@ -44,6 +45,13 @@ const NewBudgetRoutes: React.FC = () => {
           component={CreateItem}
           options={{
             headerTitle: 'Nova Peça',
+          }}
+        />
+        <NewBudget.Screen
+          name="SelectStone"
+          component={SelectStone}
+          options={{
+            headerTitle: 'Escolha o tipo da Pedra',
           }}
         />
       </NewBudget.Navigator>

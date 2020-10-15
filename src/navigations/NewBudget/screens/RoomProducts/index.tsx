@@ -1,11 +1,10 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { TextInput, Keyboard, ScrollView } from 'react-native';
 
 import generateID from '@utils/GenerateID';
 
 import Icon from 'react-native-vector-icons/Feather';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Button from '@components/Button';
@@ -21,8 +20,6 @@ import {
   RoomName,
   ProductHeaderWrapper,
   ProductName,
-  AddItemButton,
-  AddItemButtonText,
   ItemCard,
   ItemCardRowHeader,
   ItemCardRow,
@@ -69,6 +66,10 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
     };
   });
 
+  useEffect(() => {
+    saveProduct({ product, roomId: room.id });
+  });
+
   // TODO: add input to pointer to start after blur
   const handleBlur = useCallback(() => {
     Keyboard.dismiss();
@@ -108,6 +109,18 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
     [navigation, room.id, product.id],
   );
 
+  const deleteItem = useCallback(
+    itemId => {
+      const productCopy = product;
+      const updatedItemList = productCopy.items.filter(
+        item => item.id !== itemId,
+      );
+
+      setProduct(oldProducts => ({ ...oldProducts, items: updatedItemList }));
+    },
+    [product],
+  );
+
   return (
     <KeyboardDismiss onPress={handleBlur}>
       <Container>
@@ -134,7 +147,7 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
                     <InfoLabel numberOfLines={1}>{item.name}</InfoLabel>
                   </Label>
                   <ButtonsItemCard>
-                    <ButtonItemCard>
+                    <ButtonItemCard onPress={() => deleteItem(item.id)}>
                       <MaterialCommunityIcons
                         name="delete-outline"
                         size={42}
