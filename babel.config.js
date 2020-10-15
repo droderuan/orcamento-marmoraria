@@ -19,6 +19,7 @@ module.exports = {
           '@dtos': './src/dtos/',
           '@utils': './src/utils/',
           '@styles': './src/styles/',
+          '@assets': './assets',
         },
       },
     ],
