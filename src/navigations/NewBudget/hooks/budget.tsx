@@ -19,13 +19,7 @@ interface DeleteProductDTO {
   productId: string;
 }
 
-interface AddItemToProductDTO {
-  roomId: string;
-  productId: string;
-  item: Item;
-}
-
-interface AddItemToProductDTO {
+interface AddOrSaveItemDTO {
   roomId: string;
   productId: string;
   item: Item;
@@ -46,8 +40,9 @@ interface BudgetContextData {
   createProduct({ roomId, product }: CreateProductDTO): void;
   saveProduct({ roomId, product }: CreateProductDTO): void;
   deleteProduct({ roomId, productId }: DeleteProductDTO): void;
-  addItemToProduct({ roomId, productId, item }: AddItemToProductDTO): void;
+  addOrSaveItem({ roomId, productId, item }: AddOrSaveItemDTO): void;
   getItem({ roomId, productId, itemId }: GetItemDTO): Item | undefined;
+  deleteItem({ roomId, productId, itemId }: GetItemDTO): void;
 }
 
 const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
@@ -137,8 +132,8 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [roomsInBudget],
   );
 
-  const addItemToProduct = useCallback(
-    ({ roomId, productId, item }: AddItemToProductDTO) => {
+  const addOrSaveItem = useCallback(
+    ({ roomId, productId, item }: AddOrSaveItemDTO) => {
       const roomsCopy = roomsInBudget;
       const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
 
@@ -179,6 +174,33 @@ export const BudgetProvider: React.FC = ({ children }) => {
     },
     [roomsInBudget],
   );
+  const deleteItem = useCallback(
+    ({ roomId, productId, itemId }: GetItemDTO) => {
+      const roomsCopy = roomsInBudget;
+      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+
+      if (roomIndex === -1) {
+        throw new Error(`Room with id ${roomId} was not find`);
+      }
+      const roomToSaveProduct = roomsCopy[roomIndex];
+      const productIndex = roomToSaveProduct.products.findIndex(
+        product => product.id === productId,
+      );
+      if (productIndex === -1) {
+        throw new Error(`Product with id ${productId} was not find`);
+      }
+      const productToUpdate = roomToSaveProduct.products[productIndex];
+      const updatedItemProduct = productToUpdate.items.filter(
+        itemToFind => itemToFind.id !== itemId,
+      );
+      productToUpdate.items = updatedItemProduct;
+      roomToSaveProduct.products[productIndex] = productToUpdate;
+
+      roomsCopy[roomIndex] = roomToSaveProduct;
+      setRoomsInBudget(roomsCopy);
+    },
+    [roomsInBudget],
+  );
 
   return (
     <BudgetContext.Provider
@@ -191,8 +213,9 @@ export const BudgetProvider: React.FC = ({ children }) => {
         createProduct,
         saveProduct,
         deleteProduct,
-        addItemToProduct,
+        addOrSaveItem,
         getItem,
+        deleteItem,
       }}
     >
       {children}
