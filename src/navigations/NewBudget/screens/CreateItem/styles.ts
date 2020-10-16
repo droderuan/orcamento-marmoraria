@@ -115,7 +115,7 @@ export const SelectFinishingContainer = styled.View`
   padding: 10px 38px;
 `;
 
-export const SelectFinishingBackground = styled.View`
+export const SelectFinishingBackground = styled.ImageBackground`
   flex: 1;
   justify-content: space-between;
   border-radius: 10px;

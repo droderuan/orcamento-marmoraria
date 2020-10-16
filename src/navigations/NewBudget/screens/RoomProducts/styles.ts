@@ -24,7 +24,21 @@ export const RoomName = styled.Text`
 
 export const ProductHeaderWrapper = styled.View`
   width: 100%;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+`;
+
+export const ProductHeaderButtons = styled.View`
+  flex-direction: row;
+`;
+
+export const HeaderButton = styled(RectButton)`
+  justify-content: center;
+  align-items: center;
+  width: 46px;
+  height: 46px;
+  margin: 10px 15px;
 `;
 
 export const ProductName = styled.TextInput`

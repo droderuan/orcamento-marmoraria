@@ -11,7 +11,7 @@ import Button from '@components/Button';
 import Room from '@dtos/Room';
 import Product from '@dtos/Product';
 
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/core';
 import { useBudget } from '../../hooks/budget';
 
 import {
@@ -19,6 +19,8 @@ import {
   KeyboardDismiss,
   RoomName,
   ProductHeaderWrapper,
+  ProductHeaderButtons,
+  HeaderButton,
   ProductName,
   ItemCard,
   ItemCardRowHeader,
@@ -32,24 +34,19 @@ import {
   ItemInfoButton,
 } from './styles';
 
-interface RoomProductsProps {
-  navigation: StackNavigationProp<any, any>;
-}
-
 interface RouteParams {
   room: Room;
   productId: string;
 }
 
-const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
-  const { saveRoom, saveProduct, createProduct } = useBudget();
+const RoomProducts: React.FC = () => {
+  const { goBack, navigate } = useNavigation();
+  const { deleteProduct, saveProduct } = useBudget();
   const inputRef = useRef<TextInput>(null);
   const route = useRoute();
   const routeParams = route.params as RouteParams;
 
   const { productId, room: routeRoom } = routeParams;
-
-  const [isNewProduct, setIsNewProduct] = useState(!!productId);
 
   const [room, setRoom] = useState(routeRoom);
   const [product, setProduct] = useState<Product>(() => {
@@ -76,13 +73,6 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
     inputRef.current?.blur();
   }, []);
 
-  const handleCreateOrSaveProduct = useCallback(() => {
-    isNewProduct
-      ? saveProduct({ roomId: room.id, product })
-      : createProduct({ roomId: room.id, product });
-    saveProduct({ product, roomId: room.id });
-  }, [product, room, saveProduct, createProduct, isNewProduct]);
-
   const handleChangeProductName = useCallback(value => {
     setProduct(oldProduct => ({ ...oldProduct, name: value }));
   }, []);
@@ -92,21 +82,22 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
   }, [product, room, saveProduct]);
 
   const handleCreateItem = useCallback(() => {
-    navigation.navigate('CreateItem', {
+    navigate('CreateItem', {
       roomId: room.id,
       productId: product.id,
+      stoneNumber: product.items.length,
     });
-  }, [navigation, room.id, product.id]);
+  }, [navigate, room.id, product.id]);
 
   const handleEditItem = useCallback(
     itemId => {
-      navigation.navigate('CreateItem', {
+      navigate('CreateItem', {
         roomId: room.id,
         productId: product.id,
         itemId,
       });
     },
-    [navigation, room.id, product.id],
+    [navigate, room.id, product.id],
   );
 
   const deleteItem = useCallback(
@@ -120,6 +111,11 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
     },
     [product],
   );
+
+  const deleteProductAndGoBack = useCallback(() => {
+    deleteProduct({ productId: product.id, roomId: room.id });
+    goBack();
+  }, [deleteProduct, goBack, product.id, room.id]);
 
   return (
     <KeyboardDismiss onPress={handleBlur}>
@@ -135,8 +131,24 @@ const RoomProducts: React.FC<RoomProductsProps> = ({ navigation }) => {
               value={product.name}
               onChangeText={handleChangeProductName}
             />
-            <Button onPress={handleCreateItem}>Adicionar item</Button>
+            <ProductHeaderButtons>
+              <HeaderButton onPress={() => deleteProductAndGoBack()}>
+                <MaterialCommunityIcons
+                  name="delete-outline"
+                  size={42}
+                  color="#dd3030"
+                />
+              </HeaderButton>
+              <HeaderButton>
+                <MaterialCommunityIcons
+                  name="content-duplicate"
+                  size={42}
+                  color="#355C8A"
+                />
+              </HeaderButton>
+            </ProductHeaderButtons>
           </ProductHeaderWrapper>
+          <Button onPress={handleCreateItem}>Adicionar item</Button>
 
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             {product.items.map(item => (

@@ -10,20 +10,19 @@ import { RadioButton } from 'react-native-paper';
 import { ScrollView, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import generateId from '@utils/GenerateID';
+import StonesImages from '@assets/images/pedra';
 
 import { useRoute } from '@react-navigation/native';
 import Item from '@dtos/Item';
 
 import Button from '@components/Button';
 import ListPickerModal from '@components/ListPickerModal';
+import Input from '../../components/Input';
 import { useBudget } from '../../hooks/budget';
 
 import {
   Container,
   Content,
-  ItemInput,
-  ItemInputLabel,
-  ItemTextInput,
   ItemWithTwoTextInput,
   ItemWithTwoTextInputWrapper,
   ItemText,
@@ -32,7 +31,6 @@ import {
   ItemInputButton,
   ItemInputButtonWrapper,
   ItemInputButtonText,
-  ItemBottomLine,
   RadioButtomItem,
   ButtonWrapper,
   SelectFinishingContainer,
@@ -49,9 +47,11 @@ interface RouteParams {
   roomId: string;
   productId: string;
   itemId: string;
+  stoneNumber: string;
   stoneType: {
     type: string;
     stone: string;
+    name: string;
   };
 }
 
@@ -64,7 +64,13 @@ interface FinishingPosition {
 const CreateItem: React.FC = () => {
   const { addOrSaveItem, getItem } = useBudget();
   const route = useRoute();
-  const { productId, roomId, itemId, stoneType } = route.params as RouteParams;
+  const {
+    productId,
+    roomId,
+    itemId,
+    stoneNumber,
+    stoneType,
+  } = route.params as RouteParams;
   const { navigate, goBack } = useNavigation();
 
   const lengthInputRef = useRef<TextInput | null>(null);
@@ -124,7 +130,7 @@ const CreateItem: React.FC = () => {
     }
     return {
       id: generateId(),
-      name: '',
+      name: `Pedra${stoneNumber}`,
       quantity: '1',
       shape: 'Retangular',
       stone: '',
@@ -139,14 +145,12 @@ const CreateItem: React.FC = () => {
     } as Item;
   });
 
+  const [stoneImage, setStoneImage] = useState<any>(null);
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
   const [
     finishingModalPickerVisible,
     setFinishingModalPickerVisible,
   ] = useState(false);
-  const [marbleModalPickerVisible, setMarbleModalPickerVisible] = useState(
-    false,
-  );
 
   const positionOne = useMemo(
     () => !!item.finishing.find(finish => finish.position === '1'),
@@ -245,50 +249,56 @@ const CreateItem: React.FC = () => {
     goBack();
   }, [addOrSaveItem, roomId, productId, item, goBack]);
 
+  const handleSetImage = useCallback(
+    ({ type, imageName }) => {
+      if (item.stone) {
+        const image = StonesImages.stonesType
+          .find(stones => stones.type === type)
+          ?.stones.find(stones => stones.display === imageName);
+        if (!image) {
+          throw new Error('Image does not exist');
+        }
+        setStoneImage(image?.img);
+      }
+    },
+    [item.stone],
+  );
+
   useEffect(() => {
     if (itemId) {
-      const findItem = getItem({ roomId, productId, itemId });
-      if (findItem) {
-        setItem(findItem);
-      }
+      handleSetImage({ type: item.type, imageName: item.stone });
     }
-  }, [getItem, itemId, productId, roomId]);
+  }, [itemId, item.type, item.stone, handleSetImage]);
 
   useEffect(() => {
     if (stoneType) {
       handleChangeStone({ type: stoneType.type, stone: stoneType.stone });
+      handleSetImage({ type: stoneType.type, imageName: stoneType.stone });
     }
-  }, [handleChangeStone, stoneType]);
+  }, [handleChangeStone, stoneType, handleSetImage]);
 
   return (
     <Container>
       <ScrollView>
         <Content>
-          <ItemInput>
-            <ItemInputLabel>Nome da Peça</ItemInputLabel>
-            <ItemTextInput
-              placeholder="Digite o nome da peça"
-              placeholderTextColor="#A0A0A0"
-              value={item.name}
-              onChangeText={value => handleChangeName(value)}
-            />
-            <ItemBottomLine />
-          </ItemInput>
+          <Input
+            label="Nome da Peça"
+            placeholder="Digite o nome da peça"
+            placeholderTextColor="#A0A0A0"
+            value={item.name}
+            onChangeText={value => handleChangeName(value)}
+          />
 
-          <ItemInput>
-            <ItemInputLabel>Quantidade</ItemInputLabel>
-            <ItemTextInput
-              keyboardType="number-pad"
-              placeholderTextColor="#A0A0A0"
-              value={item.quantity.toString()}
-              maxLength={10}
-              onChangeText={value => handleChangeQuantity(value)}
-            />
-            <ItemBottomLine />
-          </ItemInput>
+          <Input
+            label="Quantidade"
+            keyboardType="number-pad"
+            placeholderTextColor="#A0A0A0"
+            value={item.quantity.toString()}
+            maxLength={10}
+            onChangeText={value => handleChangeQuantity(value)}
+          />
 
-          <ItemInput>
-            <ItemInputLabel>Pedra</ItemInputLabel>
+          <Input label="Pedra">
             <ItemInputButton onPress={() => navigateToSelectStone()}>
               <ItemInputButtonWrapper>
                 <ItemInputButtonText isOptionSelected={!!item?.stone}>
@@ -296,11 +306,9 @@ const CreateItem: React.FC = () => {
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
-            <ItemBottomLine />
-          </ItemInput>
+          </Input>
 
-          <ItemInput>
-            <ItemInputLabel>Formato</ItemInputLabel>
+          <Input label="Formato">
             <RadioButton.Group
               onValueChange={value => handleChangeShape(value)}
               value={item.shape}
@@ -320,12 +328,9 @@ const CreateItem: React.FC = () => {
                 </RadioButtomItem>
               ))}
             </RadioButton.Group>
+          </Input>
 
-            <ItemBottomLine />
-          </ItemInput>
-
-          <ItemInput>
-            <ItemInputLabel>Medidas</ItemInputLabel>
+          <Input label="Medidas">
             <ItemWithTwoTextInputWrapper>
               <ItemWithTwoTextInput
                 keyboardType="number-pad"
@@ -361,11 +366,9 @@ const CreateItem: React.FC = () => {
                 options={unitOptions}
               />
             </ItemWithTwoTextInputWrapper>
-            <ItemBottomLine />
-          </ItemInput>
+          </Input>
 
-          <ItemInput>
-            <ItemInputLabel>Acabamento de superfície</ItemInputLabel>
+          <Input label="Acabamento de superfície">
             <ItemInputButton
               onPress={() => toggleModal(setFinishingModalPickerVisible)}
             >
@@ -386,15 +389,14 @@ const CreateItem: React.FC = () => {
               handleOnChange={value => handleChangeSurfaceFinish(value)}
               options={finishingOptions}
             />
+          </Input>
 
-            <ItemBottomLine />
-          </ItemInput>
-
-          <ItemInput>
-            <ItemInputLabel>Acabamento</ItemInputLabel>
-
+          <Input label="Acabamento">
             <SelectFinishingContainer>
-              <SelectFinishingBackground>
+              <SelectFinishingBackground
+                imageStyle={{ borderRadius: 10 }}
+                source={stoneImage}
+              >
                 <EdgeFinishingButtonWrapper>
                   <FinishingSelectButton
                     onPress={() => handleChangeFinishingPosition('1')}
@@ -439,9 +441,7 @@ const CreateItem: React.FC = () => {
                 <FinishingNumber>{finish.position}</FinishingNumber>
               </FinishingSelectType>
             ))}
-
-            <ItemBottomLine />
-          </ItemInput>
+          </Input>
 
           <ButtonWrapper>
             <Button onPress={handleSaveItem}>Salvar</Button>

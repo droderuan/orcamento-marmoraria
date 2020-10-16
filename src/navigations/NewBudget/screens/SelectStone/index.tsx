@@ -23,11 +23,12 @@ const SelectStone: React.FC = () => {
   const { navigate } = useNavigation();
 
   const selectStoneAndGoBack = useCallback(
-    ({ type, stone }) => {
+    ({ type, stone, name }) => {
       navigate('CreateItem', {
         stoneType: {
           type,
           stone,
+          name,
         },
       });
     },
@@ -58,6 +59,7 @@ const SelectStone: React.FC = () => {
                       selectStoneAndGoBack({
                         type: stoneType.type,
                         stone: item.display,
+                        name: item.name,
                       })
                     }
                   >
