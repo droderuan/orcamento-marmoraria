@@ -227,7 +227,7 @@ export function useBudget(): BudgetContextData {
   const context = useContext(BudgetContext);
 
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error('useBudget must be used within BudgetProvider');
   }
 
   return context;

@@ -5,7 +5,7 @@ import { Button } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { error, green } from '@styles/theme/colors';
+import { red, green } from '@styles/theme/colors';
 import RoomProps from '@dtos/Room';
 import Modal from '@components/Modal';
 
@@ -159,7 +159,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
             <Button
               icon="cancel"
               mode="contained"
-              style={{ backgroundColor: error }}
+              style={{ backgroundColor: red }}
               onPress={closeAddRoomModal}
             >
               Cancelar
@@ -212,7 +212,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
             <Button
               icon="cancel"
               mode="contained"
-              style={{ backgroundColor: error }}
+              style={{ backgroundColor: red }}
               onPress={closeEditRoomModal}
             >
               Cancelar

@@ -66,9 +66,8 @@ export const ButtonText = styled.Text<SelectedNavButtonProps>`
 
 export const BudgetContainer = styled.View`
   flex: 1;
-
   align-items: center;
-  padding: 18px 10px;
+  padding: 10px;
   background-color: #fff;
 `;
 

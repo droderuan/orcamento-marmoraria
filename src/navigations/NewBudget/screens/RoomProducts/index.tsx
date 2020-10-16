@@ -87,7 +87,7 @@ const RoomProducts: React.FC = () => {
       productId: product.id,
       stoneNumber: product.items.length,
     });
-  }, [navigate, room.id, product.id]);
+  }, [navigate, room.id, product.id, product.items.length]);
 
   const handleEditItem = useCallback(
     itemId => {
@@ -148,7 +148,10 @@ const RoomProducts: React.FC = () => {
               </HeaderButton>
             </ProductHeaderButtons>
           </ProductHeaderWrapper>
-          <Button onPress={handleCreateItem}>Adicionar item</Button>
+
+          <Button onPress={handleCreateItem} style={{ marginBottom: 5 }}>
+            Adicionar item
+          </Button>
 
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             {product.items.map(item => (
@@ -196,7 +199,7 @@ const RoomProducts: React.FC = () => {
                 <ItemCardRow>
                   <Label>
                     <TitleLabel>Acabamento</TitleLabel>
-                    <InfoLabel>MUDAR</InfoLabel>
+                    <InfoLabel>{item.surfaceFinish}</InfoLabel>
                   </Label>
                   <Label>
                     <TitleLabel>Quantidade</TitleLabel>

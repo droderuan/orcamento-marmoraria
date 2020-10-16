@@ -10,6 +10,7 @@ import {
 
 interface InputProps extends TextInputProps {
   label: string;
+  persistTextInput?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({ label, children, ...restProps }) => {
