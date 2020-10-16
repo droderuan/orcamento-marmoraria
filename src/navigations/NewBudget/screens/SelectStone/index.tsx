@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import StonesImages from '@assets/images/pedra';
 import { List } from 'react-native-paper';
-import { useNavigation, useRoute } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 import { useBudget } from '../../hooks/budget';
 
 import {
@@ -19,24 +19,19 @@ interface ChangeStoneDTO {
   stone: string;
 }
 
-interface RouteParams {
-  handleChangeStone({ type, stone }: ChangeStoneDTO): void;
-}
-
 const SelectStone: React.FC = () => {
-  const route = useRoute();
-  const { handleChangeStone } = route.params as RouteParams;
-  const { goBack } = useNavigation();
+  const { navigate } = useNavigation();
 
   const selectStoneAndGoBack = useCallback(
     ({ type, stone }) => {
-      handleChangeStone({
-        type,
-        stone,
+      navigate('CreateItem', {
+        stoneType: {
+          type,
+          stone,
+        },
       });
-      goBack();
     },
-    [goBack, handleChangeStone],
+    [navigate],
   );
 
   return (

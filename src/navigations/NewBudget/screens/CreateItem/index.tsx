@@ -49,6 +49,10 @@ interface RouteParams {
   roomId: string;
   productId: string;
   itemId: string;
+  stoneType: {
+    type: string;
+    stone: string;
+  };
 }
 
 interface FinishingPosition {
@@ -60,8 +64,8 @@ interface FinishingPosition {
 const CreateItem: React.FC = () => {
   const { addOrSaveItem, getItem } = useBudget();
   const route = useRoute();
+  const { productId, roomId, itemId, stoneType } = route.params as RouteParams;
   const { navigate, goBack } = useNavigation();
-  const { productId, roomId, itemId } = route.params as RouteParams;
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
@@ -125,7 +129,7 @@ const CreateItem: React.FC = () => {
       shape: 'Retangular',
       stone: '',
       type: '',
-      surfaceFinish: '',
+      surfaceFinish: 'Polido',
       finishing: [],
       measures: {
         unit: 'cm',
@@ -232,10 +236,8 @@ const CreateItem: React.FC = () => {
   );
 
   const navigateToSelectStone = useCallback(() => {
-    navigate('SelectStone', {
-      handleChangeStone,
-    });
-  }, [navigate, handleChangeStone]);
+    navigate('SelectStone');
+  }, [navigate]);
 
   const handleSaveItem = useCallback(() => {
     addOrSaveItem({ roomId, productId, item });
@@ -251,6 +253,12 @@ const CreateItem: React.FC = () => {
       }
     }
   }, [getItem, itemId, productId, roomId]);
+
+  useEffect(() => {
+    if (stoneType) {
+      handleChangeStone({ type: stoneType.type, stone: stoneType.stone });
+    }
+  }, [handleChangeStone, stoneType]);
 
   return (
     <Container>
@@ -363,14 +371,14 @@ const CreateItem: React.FC = () => {
             >
               <ItemInputButtonWrapper>
                 <ItemInputButtonText isOptionSelected={!!item.surfaceFinish}>
-                  {item.surfaceFinish || 'Escolha o tipo da pedra'}
+                  {item.surfaceFinish || 'Escolha o acabamento da superfície'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
             <ListPickerModal
               animationType="fade"
               transparent
-              selectDefault="Polido"
+              selectDefault={item.surfaceFinish}
               visible={finishingModalPickerVisible}
               handleCloseModal={() =>
                 toggleModal(setFinishingModalPickerVisible)
