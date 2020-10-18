@@ -1,21 +1,8 @@
 import Room from './Room';
+import Client from './Client';
 
 export default interface Budget {
   id: string;
-  room: Room[];
-  client: {
-    name: string;
-    cpf: string;
-    phone: string;
-    email: string;
-    adress: [
-      {
-        street: string;
-        complement: string;
-        city: string;
-        state: string;
-        zip: string;
-      },
-    ];
-  };
+  rooms: Room[];
+  client: Client;
 }

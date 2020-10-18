@@ -5,10 +5,10 @@ import { primary500 } from '@styles/theme/colors';
 import { BudgetProvider } from '../hooks/budget';
 import { ClientProvider } from '../hooks/client';
 
-import FirstClientInfo from '../screens/FirstClientInfo';
 import RoomProducts from '../screens/RoomProducts';
 import CreateItem from '../screens/CreateItem';
 import SelectStone from '../screens/SelectStone';
+import ManageAdress from '../screens/ManageAdress';
 import MainPage from './Tab.routes';
 
 const NewBudget = createStackNavigator();
@@ -30,11 +30,7 @@ const NewBudgetRoutes: React.FC = () => {
             component={MainPage}
             options={{ headerTitle: 'Orçamento' }}
           />
-          <NewBudget.Screen
-            name="FirstClientInfo"
-            component={FirstClientInfo}
-            options={{ headerTitle: 'Informações do cliente' }}
-          />
+
           <NewBudget.Screen
             name="RoomProducts"
             component={RoomProducts}
@@ -54,6 +50,13 @@ const NewBudgetRoutes: React.FC = () => {
             component={SelectStone}
             options={{
               headerTitle: 'Escolha o tipo da Pedra',
+            }}
+          />
+          <NewBudget.Screen
+            name="ManageAdress"
+            component={ManageAdress}
+            options={{
+              headerTitle: 'Endereço',
             }}
           />
         </NewBudget.Navigator>

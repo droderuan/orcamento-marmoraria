@@ -40,8 +40,12 @@ interface RouteParams {
 }
 
 const RoomProducts: React.FC = () => {
-  const { goBack, navigate } = useNavigation();
-  const { deleteProduct, saveProduct } = useBudget();
+  const { goBack, navigate, setOptions } = useNavigation();
+  const {
+    deleteProduct,
+    saveProduct,
+    deleteItem: deleteItemContext,
+  } = useBudget();
   const inputRef = useRef<TextInput>(null);
   const route = useRoute();
   const routeParams = route.params as RouteParams;
@@ -65,6 +69,7 @@ const RoomProducts: React.FC = () => {
 
   useEffect(() => {
     saveProduct({ product, roomId: room.id });
+    setOptions({ headerTitle: room.name });
   });
 
   // TODO: add input to pointer to start after blur
@@ -102,14 +107,13 @@ const RoomProducts: React.FC = () => {
 
   const deleteItem = useCallback(
     itemId => {
-      const productCopy = product;
-      const updatedItemList = productCopy.items.filter(
-        item => item.id !== itemId,
-      );
-
-      setProduct(oldProducts => ({ ...oldProducts, items: updatedItemList }));
+      deleteItemContext({
+        roomId: routeRoom.id,
+        productId: product.id,
+        itemId,
+      });
     },
-    [product],
+    [deleteItemContext, routeRoom.id, product.id],
   );
 
   const deleteProductAndGoBack = useCallback(() => {
@@ -121,7 +125,6 @@ const RoomProducts: React.FC = () => {
     <KeyboardDismiss onPress={handleBlur}>
       <Container>
         <>
-          <RoomName>{room.name}</RoomName>
           <ProductHeaderWrapper>
             <ProductName
               ref={inputRef}

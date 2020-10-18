@@ -23,6 +23,7 @@ export const RoomName = styled.Text`
 `;
 
 export const ProductHeaderWrapper = styled.View`
+  margin-bottom: 20px;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
@@ -42,7 +43,9 @@ export const HeaderButton = styled(RectButton)`
 `;
 
 export const ProductName = styled.TextInput`
-  font-size: 26px;
+  flex: 1;
+
+  font-size: 32px;
   font-family: 'Heebo-Light';
   color: #000;
 `;

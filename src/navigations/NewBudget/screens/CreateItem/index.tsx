@@ -147,6 +147,7 @@ const CreateItem: React.FC = () => {
 
   const [stoneImage, setStoneImage] = useState<any>(null);
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
+
   const [
     finishingModalPickerVisible,
     setFinishingModalPickerVisible,

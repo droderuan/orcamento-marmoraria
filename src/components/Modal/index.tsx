@@ -8,7 +8,7 @@ import {
 } from './styles';
 
 interface ModalProps extends ModalBaseProps {
-  closeModal(): void;
+  closeModal?: () => void;
   visible: boolean;
 }
 
