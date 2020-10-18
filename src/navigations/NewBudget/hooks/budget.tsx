@@ -11,6 +11,7 @@ import Product from '@dtos/Product';
 import Item from '@dtos/Item';
 import generateID from '@utils/GenerateID';
 import Client from '@dtos/Client';
+import ClientAddress from '@dtos/ClientAddress';
 
 import { getDataFromStorage, saveDataIntoStorage } from '@services/Storage';
 
@@ -54,6 +55,8 @@ interface BudgetContextData {
   getItem({ roomId, productId, itemId }: GetItemDTO): Item | undefined;
   deleteItem({ roomId, productId, itemId }: GetItemDTO): void;
   saveClient(clientToSave: Client): void;
+  saveOrCreateAddress(address: ClientAddress): void;
+  deleteAddress(addressId: string): void;
 }
 
 const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
@@ -264,6 +267,37 @@ export const BudgetProvider: React.FC = ({ children }) => {
     setClient(clientToSave);
   }, []);
 
+  const saveOrCreateAddress = useCallback(
+    (address: ClientAddress) => {
+      const clientCopy = { ...client };
+      const checkAddressExists = clientCopy.address.findIndex(
+        addressFromClient => addressFromClient.id === address.id,
+      );
+
+      if (checkAddressExists === -1) {
+        clientCopy.address.push(address);
+      } else {
+        clientCopy.address[checkAddressExists] = address;
+      }
+      setClient(clientCopy);
+    },
+    [client],
+  );
+
+  const deleteAddress = useCallback(
+    (addressId: string) => {
+      const clientCopy = { ...client };
+      const checkAddressExists = clientCopy.address.filter(
+        addressFromClient => addressFromClient.id !== addressId,
+      );
+
+      clientCopy.address = checkAddressExists;
+
+      setClient(clientCopy);
+    },
+    [client],
+  );
+
   return (
     <BudgetContext.Provider
       value={{
@@ -280,6 +314,8 @@ export const BudgetProvider: React.FC = ({ children }) => {
         getItem,
         deleteItem,
         saveClient,
+        saveOrCreateAddress,
+        deleteAddress,
       }}
     >
       {children}

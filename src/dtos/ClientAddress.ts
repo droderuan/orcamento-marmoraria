@@ -1,4 +1,5 @@
 export default interface ClientAddress {
+  id: string;
   state: string;
   city: string;
   neighborhood: string;

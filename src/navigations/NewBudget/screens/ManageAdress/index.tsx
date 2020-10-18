@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import cep from 'cep-promise';
 import { secondary300 } from '@styles/theme/colors';
+import { useNavigation } from '@react-navigation/core';
+
+import generateID from '@utils/GenerateID';
 
 import ClientAddress from '@dtos/ClientAddress';
 import Button from '@components/Button';
 import Modal from '@components/Modal';
-import { useClient } from '../../hooks/client';
+import { useBudget } from '../../hooks/budget';
 
 import Input from '../../components/Input';
 import SectionLabel from '../../components/SectionLabel';
@@ -19,7 +22,9 @@ import {
 } from './styles';
 
 const ManageAdress: React.FC = () => {
-  const { client: contextClient, saveClient } = useClient();
+  const { goBack } = useNavigation();
+  const { client: contextClient, saveOrCreateAddress } = useBudget();
+
   const [address, setAddress] = useState<ClientAddress>({} as ClientAddress);
   const [loading, setLoading] = useState(false);
 
@@ -92,6 +97,11 @@ const ManageAdress: React.FC = () => {
     [address],
   );
 
+  const saveAddress = useCallback(() => {
+    saveOrCreateAddress({ ...address, id: generateID() });
+    goBack();
+  }, [saveOrCreateAddress, address, goBack]);
+
   return (
     <Container>
       <ScrollView>
@@ -151,7 +161,7 @@ const ManageAdress: React.FC = () => {
         </SectionLabel>
 
         <ButtonAdressWrapper>
-          <Button>Salvar</Button>
+          <Button onPress={saveAddress}>Salvar</Button>
         </ButtonAdressWrapper>
       </ScrollView>
     </Container>

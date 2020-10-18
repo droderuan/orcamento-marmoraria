@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { Button } from 'react-native-paper';
+import React, { useCallback, useMemo } from 'react';
+import { Button, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
 
 import { useBudget } from '../../hooks/budget';
@@ -7,11 +7,35 @@ import { useBudget } from '../../hooks/budget';
 import Input from '../../components/Input';
 import SectionLabel from '../../components/SectionLabel';
 
-import { Container, ScrollView, ButtonAdressWrapper } from './styles';
+import {
+  Container,
+  ScrollView,
+  ButtonAdressWrapper,
+  AddressInfoContainer,
+  AddressFirstLine,
+  AddressSecondLine,
+} from './styles';
 
 const Client: React.FC = () => {
   const { navigate } = useNavigation();
-  const { saveClient, client } = useBudget();
+  const { saveClient, client, deleteAddress } = useBudget();
+
+  const parsedAddress = useMemo(() => {
+    return client.address.map(each => {
+      const parsedText = {
+        firstLine: '',
+        secondLine: '',
+        id: '',
+      };
+
+      parsedText.firstLine += `${each.street}`;
+      parsedText.firstLine += each.complement ? ` - ${each.complement}` : '';
+      parsedText.secondLine += `${each.state} - ${each.city} - ${each.neighborhood}`;
+      parsedText.id = each.id;
+
+      return parsedText;
+    });
+  }, [client.address, JSON.stringify(client.address)]);
 
   const handleChangeName = useCallback(
     (value: string) => {
@@ -42,7 +66,7 @@ const Client: React.FC = () => {
   );
 
   const navigateToManageAdress = useCallback(() => {
-    navigate('ManageAdress');
+    navigate('ManageAddress');
   }, [navigate]);
 
   return (
@@ -79,6 +103,18 @@ const Client: React.FC = () => {
           />
         </SectionLabel>
         <SectionLabel title="Endereço">
+          {parsedAddress.map(eachAddress => (
+            <>
+              <AddressInfoContainer
+                onPress={() => deleteAddress(eachAddress.id)}
+                key={`${eachAddress.id}`}
+              >
+                <AddressFirstLine>{eachAddress.firstLine}</AddressFirstLine>
+                <AddressSecondLine>{eachAddress.secondLine}</AddressSecondLine>
+                <Divider />
+              </AddressInfoContainer>
+            </>
+          ))}
           <ButtonAdressWrapper>
             <Button
               icon="plus"
