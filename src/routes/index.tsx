@@ -1,5 +1,5 @@
 import React from 'react';
-import Auth from '@navigations/Authorization/routes';
+import Auth from './Auth.routes';
 import { useAuth } from '../hooks/Auth';
 
 import App from './Drawer.routes';

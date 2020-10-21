@@ -1,4 +1,4 @@
-import React, { ReactComponentElement } from 'react';
+import React from 'react';
 
 import Icon from 'react-native-vector-icons/Fontisto';
 import { Text } from 'react-native';

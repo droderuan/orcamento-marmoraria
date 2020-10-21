@@ -10,7 +10,6 @@ import {
   ListOptionItemButton,
   ListOptionItem,
   ListOptionItemText,
-  ItemBottomLine,
 } from './styles';
 
 interface ListPickerModalProps extends ModalProps {

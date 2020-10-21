@@ -20,7 +20,7 @@ module.exports = {
           '@utils': './src/utils/',
           '@styles': './src/styles/',
           '@services': './src/services/',
-          '@assets': './assets/',
+          '@assets': './src/assets/',
         },
       },
     ],
