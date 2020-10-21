@@ -16,7 +16,6 @@ export const ButtonAdressWrapper = styled.View`
 `;
 
 export const AddressInfoContainer = styled(RectButton)`
-  align-items: center;
   justify-content: center;
   width: 100%;
   padding: 12px 10px;

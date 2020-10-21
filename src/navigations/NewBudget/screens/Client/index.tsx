@@ -29,8 +29,9 @@ const Client: React.FC = () => {
       };
 
       parsedText.firstLine += `${each.street}`;
+      parsedText.firstLine += each.number ? ` - ${each.number}` : '';
       parsedText.firstLine += each.complement ? ` - ${each.complement}` : '';
-      parsedText.secondLine += `${each.state} - ${each.city} - ${each.neighborhood}`;
+      parsedText.secondLine += `${each.cep} - ${each.state} - ${each.city} - ${each.neighborhood}`;
       parsedText.id = each.id;
 
       return parsedText;

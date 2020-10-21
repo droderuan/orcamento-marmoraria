@@ -63,6 +63,7 @@ interface BudgetContextData {
   deleteItem({ roomId, productId, itemId }: GetItemDTO): void;
   saveClient(clientToSave: Client): void;
   saveOrCreateAddress(address: ClientAddress): void;
+  getAddress(addressId: string): ClientAddress;
   deleteAddress(addressId: string): void;
 }
 
@@ -308,6 +309,22 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [client],
   );
 
+  const getAddress = useCallback(
+    (addressId: string): ClientAddress => {
+      const clientCopy = { ...client };
+      const checkAddressExists = clientCopy.address.find(
+        addressFromClient => addressFromClient.id === addressId,
+      );
+
+      if (!checkAddressExists) {
+        throw new Error(`Invalid address id: ${addressId}`);
+      }
+
+      return checkAddressExists;
+    },
+    [client],
+  );
+
   const deleteAddress = useCallback(
     (addressId: string) => {
       const clientCopy = { ...client };
@@ -340,6 +357,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
         deleteItem,
         saveClient,
         saveOrCreateAddress,
+        getAddress,
         deleteAddress,
       }}
     >

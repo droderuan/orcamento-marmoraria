@@ -26,22 +26,30 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
         <LeftBudgetCard>
           <Label>
             <TitleLabel>Cliente</TitleLabel>
-            <InfoLabel>{budget.client.name}</InfoLabel>
+            <InfoLabel numberOfLines={1} ellipsizeMode="tail">
+              {budget.client.name}
+            </InfoLabel>
           </Label>
           <Label>
             <TitleLabel>Local</TitleLabel>
-            <InfoLabel>RJ - Rio de Janeiro</InfoLabel>
+            <InfoLabel numberOfLines={1} ellipsizeMode="tail">
+              RJ - Rio de Janeiro
+            </InfoLabel>
           </Label>
         </LeftBudgetCard>
         <Line />
         <RightBudgetCard>
           <Label>
             <TitleLabel>Data do orçamento</TitleLabel>
-            <InfoLabel>25/12/2021</InfoLabel>
+            <InfoLabel numberOfLines={1} ellipsizeMode="tail">
+              25/12/2021
+            </InfoLabel>
           </Label>
           <Label>
             <TitleLabel>Produtos</TitleLabel>
-            <InfoLabel>10</InfoLabel>
+            <InfoLabel numberOfLines={1} ellipsizeMode="tail">
+              10
+            </InfoLabel>
           </Label>
         </RightBudgetCard>
       </InfoWrapper>

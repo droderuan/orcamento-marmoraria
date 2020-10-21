@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import cep from 'cep-promise';
-import { secondary300 } from '@styles/theme/colors';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 
 import generateID from '@utils/GenerateID';
 
 import ClientAddress from '@dtos/ClientAddress';
 import Button from '@components/Button';
 import Modal from '@components/Modal';
+import { secondary300 } from '@styles/theme/colors';
 import { useBudget } from '../../hooks/budget';
 
 import Input from '../../components/Input';
@@ -21,14 +21,26 @@ import {
   LoadingIndicator,
 } from './styles';
 
+interface RouteParamsProps {
+  addressId: string;
+}
+
 const ManageAdress: React.FC = () => {
   const { goBack } = useNavigation();
-  const { client: contextClient, saveOrCreateAddress } = useBudget();
+  const route = useRoute();
+  const { addressId } = route.params as RouteParamsProps;
+  const { saveOrCreateAddress, getAddress } = useBudget();
 
   const [address, setAddress] = useState<ClientAddress>({
     id: generateID(),
   } as ClientAddress);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (addressId) {
+      setAddress(getAddress(addressId));
+    }
+  }, [addressId, getAddress]);
 
   const handleChangeCEP = useCallback(
     (value: string) => {
