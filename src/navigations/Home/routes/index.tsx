@@ -12,9 +12,9 @@ const Home: React.FC = () => (
       headerShown: false,
       cardStyle: { backgroundColor: '#FFF' },
     }}
-    initialRouteName="Home"
+    initialRouteName="MainPage"
   >
-    <App.Screen name="Home" component={HomePage} />
+    <App.Screen name="MainPage" component={HomePage} />
     <App.Screen name="NewBudget" component={NewBudgetRoutes} />
   </App.Navigator>
 );

@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const BudgetCard = styled.View`
+export const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   background-color: #efefef;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRoute } from '@react-navigation/core';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { primary500 } from '@styles/theme/colors';
@@ -10,9 +11,15 @@ import SelectStone from '../screens/SelectStone';
 import ManageAddress from '../screens/ManageAdress';
 import MainPage from './Tab.routes';
 
+interface RouteParamsProps {
+  budgetId?: string;
+}
+
 const NewBudget = createStackNavigator();
 
 const NewBudgetRoutes: React.FC = () => {
+  const route = useRoute();
+  const { budgetId } = route?.params as RouteParamsProps;
   return (
     <BudgetProvider>
       <NewBudget.Navigator
@@ -24,9 +31,10 @@ const NewBudgetRoutes: React.FC = () => {
         }}
       >
         <NewBudget.Screen
-          name="MainPage"
+          name="TabRoutes"
           component={MainPage}
           options={{ headerTitle: 'Orçamento' }}
+          initialParams={{ budgetId }}
         />
 
         <NewBudget.Screen

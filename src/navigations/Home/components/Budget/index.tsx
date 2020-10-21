@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/Feather';
+import Budget from '@dtos/Budget';
 import {
-  BudgetCard,
+  Container,
   InfoWrapper,
   Label,
   TitleLabel,
@@ -12,14 +14,19 @@ import {
   BudgetInfoButton,
 } from './styles';
 
-const Budget: React.FC = () => {
+interface BudgetCardProps {
+  budget: Budget;
+}
+
+const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
+  const { navigate } = useNavigation();
   return (
-    <BudgetCard>
+    <Container>
       <InfoWrapper>
         <LeftBudgetCard>
           <Label>
             <TitleLabel>Cliente</TitleLabel>
-            <InfoLabel>Ruan Ferreira</InfoLabel>
+            <InfoLabel>{budget.client.name}</InfoLabel>
           </Label>
           <Label>
             <TitleLabel>Local</TitleLabel>
@@ -38,11 +45,13 @@ const Budget: React.FC = () => {
           </Label>
         </RightBudgetCard>
       </InfoWrapper>
-      <BudgetInfoButton>
+      <BudgetInfoButton
+        onPress={() => navigate('NewBudget', { budgetId: budget.id })}
+      >
         <Icon name="chevron-right" size={32} color="#fff" />
       </BudgetInfoButton>
-    </BudgetCard>
+    </Container>
   );
 };
 
-export default Budget;
+export default BudgetCard;

@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { TouchableOpacity, TextInput } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/core';
 import { Button } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -44,16 +44,12 @@ import {
   ProductCardAddText,
 } from './styles';
 
-interface HomeProps {
-  navigation: StackNavigationProp<any, any>;
-}
-
 interface EditRoomDTO {
   room: RoomProps;
   index: number;
 }
 
-const Home: React.FC<HomeProps> = ({ navigation }) => {
+const BudgetProductList: React.FC = () => {
   const {
     roomsInBudget,
     createRoom,
@@ -61,7 +57,7 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
     deleteRoom,
     createProduct,
   } = useBudget();
-
+  const { navigate } = useNavigation();
   const [writedRoomName, setwritedRoomName] = useState('');
   const [editRoom, setEditRoom] = useState<RoomProps>({} as RoomProps);
 
@@ -116,9 +112,9 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
 
   const handleNavigateToProduct = useCallback(
     (room, productId = null) => {
-      navigation.navigate('RoomProducts', { room, productId });
+      navigate('RoomProducts', { room, productId });
     },
-    [navigation],
+    [navigate],
   );
 
   const handleCreateAndNavigateToProduct = useCallback(
@@ -128,10 +124,10 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
         name: 'Novo Produto',
         items: [],
       } as Product;
-      navigation.navigate('RoomProducts', { room, productId: product.id });
+      navigate('RoomProducts', { room, productId: product.id });
       createProduct({ roomId: room.id, product });
     },
-    [navigation, createProduct],
+    [navigate, createProduct],
   );
 
   return (
@@ -297,4 +293,4 @@ const Home: React.FC<HomeProps> = ({ navigation }) => {
   );
 };
 
-export default Home;
+export default BudgetProductList;

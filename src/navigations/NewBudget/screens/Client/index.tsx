@@ -76,6 +76,7 @@ const Client: React.FC = () => {
           <Input
             label="Nome do cliente"
             placeholder="Digite o nome do cliente"
+            autoCapitalize="words"
             value={client.name}
             onChangeText={handleChangeName}
           />
@@ -98,22 +99,22 @@ const Client: React.FC = () => {
           <Input
             label="E-mail"
             placeholder="Digite o e-mail"
+            keyboardType="email-address"
+            autoCapitalize="none"
             value={client.email}
             onChangeText={handleChangeEmail}
           />
         </SectionLabel>
         <SectionLabel title="Endereço">
           {parsedAddress.map(eachAddress => (
-            <>
-              <AddressInfoContainer
-                onPress={() => deleteAddress(eachAddress.id)}
-                key={`${eachAddress.id}`}
-              >
-                <AddressFirstLine>{eachAddress.firstLine}</AddressFirstLine>
-                <AddressSecondLine>{eachAddress.secondLine}</AddressSecondLine>
-                <Divider />
-              </AddressInfoContainer>
-            </>
+            <AddressInfoContainer
+              onPress={() => deleteAddress(eachAddress.id)}
+              key={`${eachAddress.id}`}
+            >
+              <AddressFirstLine>{eachAddress.firstLine}</AddressFirstLine>
+              <AddressSecondLine>{eachAddress.secondLine}</AddressSecondLine>
+              <Divider />
+            </AddressInfoContainer>
           ))}
           <ButtonAdressWrapper>
             <Button

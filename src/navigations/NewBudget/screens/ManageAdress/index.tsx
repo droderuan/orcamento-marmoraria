@@ -25,7 +25,9 @@ const ManageAdress: React.FC = () => {
   const { goBack } = useNavigation();
   const { client: contextClient, saveOrCreateAddress } = useBudget();
 
-  const [address, setAddress] = useState<ClientAddress>({} as ClientAddress);
+  const [address, setAddress] = useState<ClientAddress>({
+    id: generateID(),
+  } as ClientAddress);
   const [loading, setLoading] = useState(false);
 
   const handleChangeCEP = useCallback(
@@ -90,6 +92,13 @@ const ManageAdress: React.FC = () => {
     [address],
   );
 
+  const handleChangeNumber = useCallback(
+    (value: string) => {
+      setAddress({ ...address, number: value });
+    },
+    [address],
+  );
+
   const handleChangeComplement = useCallback(
     (value: string) => {
       setAddress({ ...address, complement: value });
@@ -124,6 +133,7 @@ const ManageAdress: React.FC = () => {
           <Input
             label="Estado"
             placeholder="Selecione o Estado"
+            autoCapitalize="none"
             value={address.state}
             onChangeText={handleChangeState}
           />
@@ -148,6 +158,14 @@ const ManageAdress: React.FC = () => {
             placeholder="Digite a rua"
             value={address.street}
             onChangeText={handleChangeStreet}
+            keyboardType="default"
+          />
+
+          <Input
+            label="Número"
+            placeholder="Digite o número"
+            value={address.number}
+            onChangeText={handleChangeNumber}
             keyboardType="default"
           />
 

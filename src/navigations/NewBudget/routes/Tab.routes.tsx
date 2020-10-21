@@ -1,16 +1,23 @@
 import React from 'react';
 
+import { useRoute } from '@react-navigation/core';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Home from '../screens/Home';
+import BudgetProductList from '../screens/BudgetProductList';
 import Client from '../screens/Client';
-import Finish from '../screens/Finish';
+import ManageBudget from '../screens/ManageBudget';
+
+interface RouteParamsProps {
+  budgetId?: string;
+}
 
 const Tab = createBottomTabNavigator();
 
 const MainPage: React.FC = () => {
+  const route = useRoute();
+  const { budgetId } = route?.params as RouteParamsProps;
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -26,8 +33,9 @@ const MainPage: React.FC = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="BudgetProductList"
+        component={BudgetProductList}
+        initialParams={{ budgetId }}
         options={{
           title: 'Orçamento',
           tabBarIcon: ({ color }) => (
@@ -46,8 +54,8 @@ const MainPage: React.FC = () => {
         }}
       />
       <Tab.Screen
-        name="Finish"
-        component={Finish}
+        name="ManageBudget"
+        component={ManageBudget}
         options={{
           title: 'Finalizar',
           tabBarIcon: ({ color }) => (

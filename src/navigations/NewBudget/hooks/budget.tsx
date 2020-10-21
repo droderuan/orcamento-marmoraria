@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+
 import Budget from '@dtos/Budget';
 import Room from '@dtos/Room';
 import Product from '@dtos/Product';
@@ -13,7 +14,12 @@ import generateID from '@utils/GenerateID';
 import Client from '@dtos/Client';
 import ClientAddress from '@dtos/ClientAddress';
 
-import { getDataFromStorage, saveDataIntoStorage } from '@services/Storage';
+import {
+  getBudgetFromStorage,
+  saveBudgetFromStorage,
+  deleteBudgetFromStorage,
+} from '@services/Storage';
+import { useRoute } from '@react-navigation/core';
 
 interface CreateRoomDTO {
   name: string;
@@ -45,6 +51,7 @@ interface BudgetContextData {
   budget: Budget;
   roomsInBudget: Room[];
   client: Client;
+  deleteBudget(): void;
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomDTO): void;
   deleteRoom(roomToDelete: Room): void;
@@ -59,51 +66,68 @@ interface BudgetContextData {
   deleteAddress(addressId: string): void;
 }
 
+interface RouteParamsProps {
+  budgetId?: string;
+}
+
 const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
 
 export const BudgetProvider: React.FC = ({ children }) => {
-  const [budget, setBudget] = useState<Budget>({} as Budget);
+  const route = useRoute();
+  const { budgetId } = route?.params as RouteParamsProps;
   const [roomsInBudget, setRoomsInBudget] = useState<Room[]>([]);
-  const [client, setClient] = useState({
-    name: '',
-    cpf: '',
-    phone: '',
-    address: [],
-    email: '',
-  } as Client);
+  const [client, setClient] = useState({} as Client);
+
+  const [budget, setBudget] = useState<Budget>({} as Budget);
+
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    console.log('recuperou');
+    async function fetchBudget() {
+      if (budgetId) {
+        console.log(budgetId);
+        const recoveryBudget = await getBudgetFromStorage(budgetId);
 
-    async function fetchData() {
-      const getBudget = await getDataFromStorage<Budget>(
-        '@apporcamento:budget',
-      );
-
-      if (getBudget) {
-        console.log(getBudget);
-        setBudget(getBudget);
-        setRoomsInBudget(getBudget.rooms);
-        setClient(getBudget.client);
+        if (recoveryBudget) {
+          setBudget(recoveryBudget);
+          setRoomsInBudget(recoveryBudget.rooms);
+          setClient(recoveryBudget.client);
+        }
+      } else {
+        setBudget({ id: generateID(), client: {} as Client, rooms: [] });
+        console.log('passou pelo budget');
+        setRoomsInBudget([]);
+        console.log('passou pelo room');
+        setClient({
+          name: '',
+          cpf: '',
+          phone: '',
+          address: [],
+          email: '',
+        } as Client);
+        console.log('passou pelo client');
       }
+      setLoaded(true);
     }
 
-    fetchData();
-  }, []);
+    if (!loaded) fetchBudget();
+  }, [budgetId, budget, client, roomsInBudget, loaded]);
 
   useEffect(() => {
     function saveData() {
-      console.log('salvou');
-      const saveBudget = {
+      const parsedBudget = {
         ...budget,
         client,
         rooms: roomsInBudget,
       } as Budget;
-      saveDataIntoStorage<Budget>('@apporcamento:budget', saveBudget);
+      saveBudgetFromStorage(parsedBudget);
     }
+    if (loaded) saveData();
+  }, [budgetId, budget, roomsInBudget, client, loaded]);
 
-    saveData();
-  }, [budget, roomsInBudget, client]);
+  const deleteBudget = useCallback(() => {
+    deleteBudgetFromStorage(budget.id);
+  }, [budget.id]);
 
   const createRoom = useCallback(({ name }: CreateRoomDTO) => {
     const newRoom = { id: generateID(), name, products: [] as Product[] };
@@ -304,6 +328,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
         budget,
         roomsInBudget,
         client,
+        deleteBudget,
         createRoom,
         saveRoom,
         deleteRoom,

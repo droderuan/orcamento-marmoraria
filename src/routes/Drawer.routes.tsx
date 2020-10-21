@@ -10,10 +10,10 @@ const Drawer = createDrawerNavigator();
 const DrawerRoutes: React.FC = () => {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
+      initialRouteName="MainApp"
       screenOptions={{ swipeEnabled: false }}
     >
-      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="MainApp" component={Home} />
       <Drawer.Screen
         name="SignOut"
         component={SignOut}

@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { getAllBudgetsFromStorage } from '@services/Storage';
 
 import Button from '@components/Button';
 
+import Budget from '@dtos/Budget';
 import BudgetCard from '../components/Budget';
 
 import {
@@ -27,11 +29,22 @@ interface Filters {
   selected: 'pendant' | 'accomplished';
 }
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState<
     'pendant' | 'accomplished'
   >('pendant');
+  const [budgets, setBudgets] = useState<Budget[]>([] as Budget[]);
+
+  useEffect(() => {
+    async function LoadBudgets() {
+      const allBudgets = await getAllBudgetsFromStorage();
+
+      allBudgets && setBudgets(allBudgets);
+    }
+
+    LoadBudgets();
+  }, []);
 
   const toggleDrawer = useCallback(() => {
     navigation.dispatch(DrawerActions.toggleDrawer());
@@ -75,15 +88,15 @@ const Home: React.FC = () => {
       </NavButtons>
       <ScrollView style={{ flex: 1 }}>
         <BudgetContainer>
-          <BudgetCard />
-          <BudgetCard />
-          <BudgetCard />
-          <BudgetCard />
+          {budgets &&
+            budgets.map(budget => (
+              <BudgetCard budget={budget} key={budget.id} />
+            ))}
         </BudgetContainer>
       </ScrollView>
 
       <ButtonContainer>
-        <Button onPress={() => navigation.navigate('NewBudget')}>
+        <Button onPress={() => navigation.navigate('NewBudget', {})}>
           Novo orçamento
         </Button>
       </ButtonContainer>
@@ -91,4 +104,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;
