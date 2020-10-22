@@ -36,6 +36,11 @@ import {
 interface RouteParams {
   room: Room;
   productId: string;
+  lastStonePicked: {
+    type: string;
+    stone: string;
+    name: string;
+  };
 }
 
 const RoomProducts: React.FC = () => {
@@ -49,8 +54,9 @@ const RoomProducts: React.FC = () => {
   const route = useRoute();
   const routeParams = route.params as RouteParams;
 
-  const { productId, room: routeRoom } = routeParams;
+  const { productId, room: routeRoom, lastStonePicked } = routeParams;
 
+  const [lastStone, setLastStone] = useState({});
   const [room, setRoom] = useState(routeRoom);
   const [product, setProduct] = useState<Product>(() => {
     if (productId) {
@@ -71,6 +77,12 @@ const RoomProducts: React.FC = () => {
     setOptions({ headerTitle: room.name });
   });
 
+  useEffect(() => {
+    if (lastStonePicked) {
+      setLastStone(lastStonePicked);
+    }
+  }, [lastStonePicked]);
+
   // TODO: add input to pointer to start after blur
   const handleBlur = useCallback(() => {
     Keyboard.dismiss();
@@ -86,12 +98,14 @@ const RoomProducts: React.FC = () => {
   }, [product, room, saveProduct]);
 
   const handleCreateItem = useCallback(() => {
+    console.log(lastStone);
     navigate('CreateItem', {
       roomId: room.id,
       productId: product.id,
       stoneNumber: product.items.length,
+      stoneType: lastStone,
     });
-  }, [navigate, room.id, product.id, product.items.length]);
+  }, [navigate, room.id, product.id, product.items.length, lastStone]);
 
   const handleEditItem = useCallback(
     itemId => {

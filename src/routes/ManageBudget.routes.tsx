@@ -1,8 +1,10 @@
 import React from 'react';
 import { useRoute } from '@react-navigation/core';
+import { RouteProp } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { primary500 } from '@styles/theme/colors';
+
 import { BudgetProvider } from '../hooks/budget';
 
 import RoomProducts from '../screens/ManageBudget/RoomProducts';
@@ -15,7 +17,21 @@ interface RouteParamsProps {
   budgetId?: string;
 }
 
-const ManageBudget = createStackNavigator();
+type ManageAddressRouteParams = {
+  ManageAddress: {
+    addressId: string;
+  };
+  TabRoutes: {
+    budgetId: string;
+  };
+  RoomProducts: undefined;
+  CreateItem: undefined;
+  SelectStone: undefined;
+};
+
+type ManageAddressProps = RouteProp<ManageAddressRouteParams, 'ManageAddress'>;
+
+const ManageBudget = createStackNavigator<ManageAddressRouteParams>();
 
 const ManageBudgetRoutes: React.FC = () => {
   const route = useRoute();

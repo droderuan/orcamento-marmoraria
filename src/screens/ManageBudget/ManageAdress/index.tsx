@@ -13,6 +13,9 @@ import { useBudget } from '@hooks/budget';
 import Input from '@components/Input';
 import SectionLabel from '@components/SectionLabel';
 
+import { RadioButton } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 import {
   Container,
   ScrollView,
@@ -20,27 +23,51 @@ import {
   LoadingIndicatorContainer,
   LoadingIndicator,
 } from './styles';
+import { RadioButtomItem } from '../CreateItem/styles';
 
 interface RouteParamsProps {
-  addressId: string;
+  addressId?: string;
 }
 
 const ManageAdress: React.FC = () => {
-  const { goBack } = useNavigation();
+  const { goBack, setOptions } = useNavigation();
   const route = useRoute();
-  const { addressId } = route.params as RouteParamsProps;
-  const { saveOrCreateAddress, getAddress } = useBudget();
+  const { addressId } = route?.params as RouteParamsProps;
+  const { saveOrCreateAddress, getAddress, deleteAddress } = useBudget();
 
   const [address, setAddress] = useState<ClientAddress>({
     id: generateID(),
+    deliveryAddress: true,
   } as ClientAddress);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (addressId) {
       setAddress(getAddress(addressId));
     }
-  }, [addressId, getAddress]);
+  }, []);
+
+  useEffect(() => {
+    if (address) {
+      setOptions({
+        headerRight: () => (
+          <TouchableNativeFeedback
+            onPress={() => {
+              deleteAddress(address.id);
+              goBack();
+            }}
+          >
+            <MaterialCommunityIcons
+              name="delete-outline"
+              size={42}
+              color="#fff"
+            />
+          </TouchableNativeFeedback>
+        ),
+      });
+    }
+  }, [setOptions, address, deleteAddress, goBack]);
 
   const handleChangeCEP = useCallback(
     (value: string) => {
@@ -118,6 +145,16 @@ const ManageAdress: React.FC = () => {
     [address],
   );
 
+  const handleSetDeliveryAddress = useCallback(
+    (value: string) => {
+      setAddress({
+        ...address,
+        deliveryAddress: value === 'true',
+      });
+    },
+    [address],
+  );
+
   const saveAddress = useCallback(() => {
     saveOrCreateAddress({ ...address, id: generateID() });
     goBack();
@@ -188,6 +225,35 @@ const ManageAdress: React.FC = () => {
             onChangeText={handleChangeComplement}
             keyboardType="default"
           />
+          <Input label="Endereço de entrega?">
+            <RadioButton.Group
+              onValueChange={value => handleSetDeliveryAddress(value)}
+              value="true"
+            >
+              <RadioButtomItem>
+                <RadioButton.Item
+                  label="Sim"
+                  value="true"
+                  labelStyle={{ fontSize: 20 }}
+                  style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                />
+                <RadioButton.Item
+                  label="Não"
+                  value="false"
+                  labelStyle={{ fontSize: 20 }}
+                  style={{
+                    flexDirection: 'row-reverse',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                />
+              </RadioButtomItem>
+            </RadioButton.Group>
+          </Input>
         </SectionLabel>
 
         <ButtonAdressWrapper>

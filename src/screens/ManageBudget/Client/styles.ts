@@ -1,6 +1,10 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
 
+interface AddressProps {
+  isDelivery: boolean;
+}
+
 export const Container = styled.View`
   flex: 1;
 `;
@@ -15,10 +19,10 @@ export const ButtonAdressWrapper = styled.View`
   align-items: center;
 `;
 
-export const AddressInfoContainer = styled(RectButton)`
+export const AddressInfoContainer = styled(RectButton)<AddressProps>`
   justify-content: center;
   width: 100%;
-  padding: 12px 10px;
+  padding: 12px 10px 0;
 `;
 
 export const AddressFirstLine = styled.Text`
@@ -29,4 +33,10 @@ export const AddressFirstLine = styled.Text`
 export const AddressSecondLine = styled.Text`
   font-family: 'Roboto-Light';
   font-size: 18px;
+`;
+
+export const DeliveryAddressText = styled.Text`
+  margin-bottom: 10px;
+  font-family: 'Roboto-Light';
+  font-size: 16px;
 `;

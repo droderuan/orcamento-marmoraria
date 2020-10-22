@@ -72,7 +72,7 @@ const CreateItem: React.FC = () => {
     stoneNumber,
     stoneType,
   } = route.params as RouteParams;
-  const { navigate, goBack } = useNavigation();
+  const { navigate } = useNavigation();
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
@@ -245,12 +245,6 @@ const CreateItem: React.FC = () => {
     navigate('SelectStone');
   }, [navigate]);
 
-  const handleSaveItem = useCallback(() => {
-    addOrSaveItem({ roomId, productId, item });
-
-    goBack();
-  }, [addOrSaveItem, roomId, productId, item, goBack]);
-
   const handleSetImage = useCallback(
     ({ type, imageName }) => {
       if (item.stone) {
@@ -265,6 +259,12 @@ const CreateItem: React.FC = () => {
     },
     [item.stone],
   );
+
+  const handleSaveItem = useCallback(() => {
+    addOrSaveItem({ roomId, productId, item });
+
+    navigate('RoomProducts', { lastStonePicked: stoneType });
+  }, [addOrSaveItem, roomId, productId, item, navigate, stoneType]);
 
   useEffect(() => {
     if (itemId) {

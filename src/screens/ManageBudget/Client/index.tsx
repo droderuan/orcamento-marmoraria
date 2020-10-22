@@ -14,6 +14,7 @@ import {
   AddressInfoContainer,
   AddressFirstLine,
   AddressSecondLine,
+  DeliveryAddressText,
 } from './styles';
 
 const Client: React.FC = () => {
@@ -25,6 +26,7 @@ const Client: React.FC = () => {
       const parsedText = {
         firstLine: '',
         secondLine: '',
+        isDelivery: false,
         id: '',
       };
 
@@ -32,6 +34,7 @@ const Client: React.FC = () => {
       parsedText.firstLine += each.number ? ` - ${each.number}` : '';
       parsedText.firstLine += each.complement ? ` - ${each.complement}` : '';
       parsedText.secondLine += `${each.cep} - ${each.state} - ${each.city} - ${each.neighborhood}`;
+      parsedText.isDelivery = each.deliveryAddress;
       parsedText.id = each.id;
 
       return parsedText;
@@ -67,7 +70,7 @@ const Client: React.FC = () => {
   );
 
   const navigateToManageAdress = useCallback(() => {
-    navigate('ManageAddress');
+    navigate('ManageAddress', {});
   }, [navigate]);
 
   return (
@@ -109,9 +112,16 @@ const Client: React.FC = () => {
         <SectionLabel title="Endereço">
           {parsedAddress.map(eachAddress => (
             <AddressInfoContainer
-              onPress={() => deleteAddress(eachAddress.id)}
+              onPress={() =>
+                navigate('ManageAddress', { addressId: eachAddress.id })
+              }
               key={`${eachAddress.id}`}
+              isDelivery={eachAddress.isDelivery}
             >
+              {eachAddress.isDelivery && (
+                <DeliveryAddressText>Endereço de entrega</DeliveryAddressText>
+              )}
+
               <AddressFirstLine>{eachAddress.firstLine}</AddressFirstLine>
               <AddressSecondLine>{eachAddress.secondLine}</AddressSecondLine>
               <Divider />
