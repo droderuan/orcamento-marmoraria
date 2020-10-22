@@ -1,6 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import {
+  useNavigation,
+  DrawerActions,
+  useIsFocused,
+} from '@react-navigation/native';
 import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
@@ -30,11 +34,13 @@ interface Filters {
 }
 
 const HomePage: React.FC = () => {
-  const navigation = useNavigation();
+  const { navigate, dispatch } = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState<
     'pendant' | 'accomplished'
   >('pendant');
   const [budgets, setBudgets] = useState<Budget[]>([] as Budget[]);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     async function LoadBudgets() {
@@ -43,12 +49,12 @@ const HomePage: React.FC = () => {
       allBudgets && setBudgets(allBudgets);
     }
 
-    LoadBudgets();
-  }, []);
+    isFocused && LoadBudgets();
+  }, [isFocused]);
 
   const toggleDrawer = useCallback(() => {
-    navigation.dispatch(DrawerActions.toggleDrawer());
-  }, [navigation]);
+    dispatch(DrawerActions.toggleDrawer());
+  }, [dispatch]);
 
   const changeFilter = useCallback((filter: 'pendant' | 'accomplished') => {
     setSelectedFilter(filter);
@@ -97,7 +103,7 @@ const HomePage: React.FC = () => {
       </ScrollView>
 
       <ButtonContainer>
-        <Button onPress={() => navigation.navigate('ManageBudget', {})}>
+        <Button onPress={() => navigate('ManageBudget', {})}>
           Novo orçamento
         </Button>
       </ButtonContainer>
