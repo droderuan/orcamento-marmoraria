@@ -86,7 +86,6 @@ export const BudgetProvider: React.FC = ({ children }) => {
   useEffect(() => {
     async function fetchBudget() {
       if (budgetId) {
-        console.log(budgetId);
         const recoveryBudget = await getBudgetFromStorage(budgetId);
 
         if (recoveryBudget) {
@@ -95,10 +94,13 @@ export const BudgetProvider: React.FC = ({ children }) => {
           setClient(recoveryBudget.client);
         }
       } else {
-        setBudget({ id: generateID(), client: {} as Client, rooms: [] });
-        console.log('passou pelo budget');
+        setBudget({
+          id: generateID(),
+          client: {} as Client,
+          rooms: [],
+          created_at: new Date(),
+        });
         setRoomsInBudget([]);
-        console.log('passou pelo room');
         setClient({
           name: '',
           cpf: '',
@@ -106,7 +108,6 @@ export const BudgetProvider: React.FC = ({ children }) => {
           address: [],
           email: '',
         } as Client);
-        console.log('passou pelo client');
       }
       setLoaded(true);
     }

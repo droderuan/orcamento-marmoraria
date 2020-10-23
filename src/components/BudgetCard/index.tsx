@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/Feather';
 import Budget from '@dtos/Budget';
+import { format } from 'date-fns';
+
 import {
   Container,
   InfoWrapper,
@@ -20,6 +22,11 @@ interface BudgetCardProps {
 
 const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   const { navigate } = useNavigation();
+
+  const parsedDate = useMemo(() => {
+    return format(new Date(budget.created_at), 'dd/MM/yyyy');
+  }, [budget.created_at]);
+
   return (
     <Container>
       <InfoWrapper>
@@ -42,7 +49,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
           <Label>
             <TitleLabel>Data do orçamento</TitleLabel>
             <InfoLabel numberOfLines={1} ellipsizeMode="tail">
-              25/12/2021
+              {parsedDate}
             </InfoLabel>
           </Label>
           <Label>

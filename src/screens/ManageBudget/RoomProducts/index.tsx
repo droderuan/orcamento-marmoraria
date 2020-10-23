@@ -36,7 +36,7 @@ import {
 interface RouteParams {
   room: Room;
   productId: string;
-  lastStonePicked: {
+  stoneType: {
     type: string;
     stone: string;
     name: string;
@@ -54,9 +54,8 @@ const RoomProducts: React.FC = () => {
   const route = useRoute();
   const routeParams = route.params as RouteParams;
 
-  const { productId, room: routeRoom, lastStonePicked } = routeParams;
+  const { productId, room: routeRoom, stoneType } = routeParams;
 
-  const [lastStone, setLastStone] = useState({});
   const [room, setRoom] = useState(routeRoom);
   const [product, setProduct] = useState<Product>(() => {
     if (productId) {
@@ -77,12 +76,6 @@ const RoomProducts: React.FC = () => {
     setOptions({ headerTitle: room.name });
   });
 
-  useEffect(() => {
-    if (lastStonePicked) {
-      setLastStone(lastStonePicked);
-    }
-  }, [lastStonePicked]);
-
   // TODO: add input to pointer to start after blur
   const handleBlur = useCallback(() => {
     Keyboard.dismiss();
@@ -98,14 +91,13 @@ const RoomProducts: React.FC = () => {
   }, [product, room, saveProduct]);
 
   const handleCreateItem = useCallback(() => {
-    console.log(lastStone);
     navigate('CreateItem', {
       roomId: room.id,
       productId: product.id,
       stoneNumber: product.items.length,
-      stoneType: lastStone,
+      stoneType,
     });
-  }, [navigate, room.id, product.id, product.items.length, lastStone]);
+  }, [navigate, room.id, product.id, product.items, stoneType]);
 
   const handleEditItem = useCallback(
     itemId => {
@@ -198,10 +190,8 @@ const RoomProducts: React.FC = () => {
                 <ItemCardRow>
                   <Label>
                     <TitleLabel>Tipo</TitleLabel>
-                    <InfoLabel numberOfLines={1}>
-                      {item.type.length < 20
-                        ? item.type
-                        : `${item.type.substring(0, 15)}...`}
+                    <InfoLabel numberOfLines={1} ellipsizeMode="tail">
+                      {item.stoneType.stone}
                     </InfoLabel>
                   </Label>
                   <Label>

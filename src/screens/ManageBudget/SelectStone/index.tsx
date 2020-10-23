@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import StonesImages from '@assets/images/pedra';
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
-import { useBudget } from '@hooks/budget';
 
 import {
   Container,

@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import { StatusBar } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import { primary500 } from '@styles/theme/colors';
 
 interface SelectedNavButtonProps {
   isSelected: boolean;
@@ -18,7 +19,7 @@ export const Header = styled.View`
   width: 100%;
   height: 55px;
   padding: 0 16px;
-  background-color: #487195;
+  background-color: ${primary500};
 `;
 
 export const DrawerMenuButton = styled.TouchableOpacity``;

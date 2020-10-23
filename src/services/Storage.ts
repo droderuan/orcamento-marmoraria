@@ -27,11 +27,17 @@ export async function getAllBudgetsFromStorage(): Promise<Budget[] | null> {
       return JSON.parse(foundBudget);
     }),
   );
-  budgets.map(budget =>
-    console.log(`id: ${budget.id} \n client: ${budget.client.name}`),
-  );
+  const sortedBudgets = budgets.sort((a, b) => {
+    if (a.created_at < b.created_at) {
+      return 1;
+    }
+    if (a.created_at > b.created_at) {
+      return -1;
+    }
+    return 0;
+  });
 
-  return budgets;
+  return sortedBudgets;
 }
 
 export async function getBudgetFromStorage(id: string): Promise<Budget | null> {

@@ -6,8 +6,6 @@ export default interface Item {
     width: string;
     length: string;
   };
-  stone: string;
-  type: string;
   surfaceFinish: string;
   finishing: {
     position: string;
@@ -15,4 +13,8 @@ export default interface Item {
   }[];
   quantity: string;
   shape: string;
+  stoneType: {
+    type: string;
+    stone: string;
+  };
 }

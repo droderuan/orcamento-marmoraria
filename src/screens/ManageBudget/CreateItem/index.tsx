@@ -134,14 +134,16 @@ const CreateItem: React.FC = () => {
       name: `Pedra${stoneNumber}`,
       quantity: '1',
       shape: 'Retangular',
-      stone: '',
-      type: '',
       surfaceFinish: 'Polido',
       finishing: [],
       measures: {
         unit: 'cm',
         length: '',
         width: '',
+      },
+      stoneType: {
+        stone: '',
+        type: '',
       },
     } as Item;
   });
@@ -198,7 +200,7 @@ const CreateItem: React.FC = () => {
   }, []);
 
   const handleChangeStone = useCallback(({ type, stone }) => {
-    setItem(oldItem => ({ ...oldItem, type, stone }));
+    setItem(oldItem => ({ ...oldItem, stoneType: { type, stone } }));
   }, []);
 
   const handleChangeSurfaceFinish = useCallback((value: string) => {
@@ -247,7 +249,7 @@ const CreateItem: React.FC = () => {
 
   const handleSetImage = useCallback(
     ({ type, imageName }) => {
-      if (item.stone) {
+      if (item.stoneType.stone) {
         const image = StonesImages.stonesType
           .find(stones => stones.type === type)
           ?.stones.find(stones => stones.display === imageName);
@@ -257,20 +259,23 @@ const CreateItem: React.FC = () => {
         setStoneImage(image?.img);
       }
     },
-    [item.stone],
+    [item.stoneType.stone],
   );
 
   const handleSaveItem = useCallback(() => {
     addOrSaveItem({ roomId, productId, item });
 
-    navigate('RoomProducts', { lastStonePicked: stoneType });
+    navigate('RoomProducts', { stoneType });
   }, [addOrSaveItem, roomId, productId, item, navigate, stoneType]);
 
   useEffect(() => {
     if (itemId) {
-      handleSetImage({ type: item.type, imageName: item.stone });
+      handleSetImage({
+        type: item.stoneType.type,
+        imageName: item.stoneType.stone,
+      });
     }
-  }, [itemId, item.type, item.stone, handleSetImage]);
+  }, [itemId, item.stoneType.type, item.stoneType.stone, handleSetImage]);
 
   useEffect(() => {
     if (stoneType) {
@@ -303,8 +308,8 @@ const CreateItem: React.FC = () => {
           <Input label="Pedra">
             <ItemInputButton onPress={() => navigateToSelectStone()}>
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!item?.stone}>
-                  {item.stone || 'Escolha o tipo da pedra'}
+                <ItemInputButtonText isOptionSelected={!!item?.stoneType.stone}>
+                  {item.stoneType.stone || 'Escolha o tipo da pedra'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
