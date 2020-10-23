@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "218459406026",
+    "firebase_url": "https://app-orcamento-marmoraria.firebaseio.com",
+    "project_id": "app-orcamento-marmoraria",
+    "storage_bucket": "app-orcamento-marmoraria.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218459406026:android:48bdf92ff62920d1b6fe33",
+        "android_client_info": {
+          "package_name": "com.apporcamento"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218459406026-2fnbhcighsugplim10m0tve94mh6oa2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apporcamento",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "218459406026-simi46fp02hlnnjfrqj2okn9b5appj3a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCE_djYnovnTaNGpHspveLY0ztZt4GuSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218459406026-simi46fp02hlnnjfrqj2okn9b5appj3a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
