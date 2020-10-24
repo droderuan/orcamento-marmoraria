@@ -156,7 +156,7 @@ const ManageAdress: React.FC = () => {
   );
 
   const saveAddress = useCallback(() => {
-    saveOrCreateAddress({ ...address, id: generateID() });
+    saveOrCreateAddress({ ...address });
     goBack();
   }, [saveOrCreateAddress, address, goBack]);
 
