@@ -13,7 +13,11 @@ const DrawerRoutes: React.FC = () => {
       initialRouteName="MainApp"
       screenOptions={{ swipeEnabled: false }}
     >
-      <Drawer.Screen name="MainApp" component={App} />
+      <Drawer.Screen
+        name="MainApp"
+        component={App}
+        options={{ drawerLabel: 'Orçamentos' }}
+      />
       <Drawer.Screen
         name="SignOut"
         component={SignOut}
