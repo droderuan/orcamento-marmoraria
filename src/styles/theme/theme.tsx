@@ -1,6 +1,5 @@
 import { shade } from 'polished';
 import { DefaultTheme } from 'react-native-paper';
-import configureFonts from './fonts';
 
 import * as colors from './colors';
 
@@ -10,8 +9,8 @@ const theme = {
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.primary900,
-    accent: colors.secondary500,
+    primary: colors.primary600,
+    accent: colors.secondary900,
     background: '#f6f6f6',
     surface: colors.surface,
     error: colors.error,

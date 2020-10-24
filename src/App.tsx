@@ -4,7 +4,7 @@ import React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { primary500 } from './styles/theme/colors';
+import { primary900 } from './styles/theme/colors';
 import Theme from './styles/theme/theme';
 import AppProvider from './hooks';
 
@@ -17,7 +17,7 @@ const App: React.FC = () => (
     <AppProvider>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={primary500}
+        backgroundColor={primary900}
         translucent
       />
       <PaperProvider theme={Theme}>

@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { secondary700 } from '@styles/theme/colors';
+import { primary50 } from '@styles/theme/colors';
 
 export const Container = styled.View`
   flex: 1;
@@ -27,7 +27,7 @@ export const ButtonContainerDivider = styled.View`
 export const Line = styled.View`
   flex: 1;
   height: 2px;
-  background-color: ${secondary700};
+  background-color: ${primary50};
 `;
 
 export const ButtonContainerDividerText = styled.Text`

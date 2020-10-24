@@ -11,7 +11,7 @@ export const ScrollView = styled.ScrollView`
 
 export const ButtonAdressWrapper = styled.View`
   flex: 1;
-  margin-top: 10px;
+  margin: 20px 0;
   align-items: center;
 `;
 export const LoadingIndicatorContainer = styled.View`

@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/core';
 import { RouteProp } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { primary500 } from '@styles/theme/colors';
+import { primary900 } from '@styles/theme/colors';
 
 import { BudgetProvider } from '../hooks/budget';
 
@@ -41,7 +41,7 @@ const ManageBudgetRoutes: React.FC = () => {
       <ManageBudget.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: primary500,
+            backgroundColor: primary900,
           },
           headerTintColor: '#fff',
         }}

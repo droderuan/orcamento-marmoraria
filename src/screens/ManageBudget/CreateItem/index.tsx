@@ -293,6 +293,7 @@ const CreateItem: React.FC = () => {
             placeholder="Digite o nome da peça"
             placeholderTextColor="#A0A0A0"
             value={item.name}
+            selectTextOnFocus
             onChangeText={value => handleChangeName(value)}
           />
 

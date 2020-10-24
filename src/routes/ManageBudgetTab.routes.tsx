@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { primary900 } from '@styles/theme/colors';
 import BudgetProductList from '../screens/ManageBudget/BudgetProductList';
 import Client from '../screens/ManageBudget/Client';
 import ManageBudget from '../screens/ManageBudget/ManageBudget';
@@ -21,7 +22,7 @@ const MainPage: React.FC = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
-        activeBackgroundColor: '#1E4C75',
+        activeBackgroundColor: primary900,
         inactiveBackgroundColor: '#EFEFEF',
         activeTintColor: '#FFF',
         style: { height: 60 },

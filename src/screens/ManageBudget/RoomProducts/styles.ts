@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import Product from '@dtos/Product';
+import { secondary700 } from '@styles/theme/colors';
 
 interface ProductCardProps {
   width: number;
@@ -67,6 +68,7 @@ export const AddItemButtonText = styled.Text`
 export const ItemCard = styled.View`
   width: 100%;
   margin: 10px 0;
+  border-radius: 5px;
   justify-content: space-between;
   background-color: #efefef;
 `;
@@ -125,5 +127,7 @@ export const ItemInfoButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   padding-right: 2px;
-  background: #7f9cb5;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: ${secondary700};
 `;

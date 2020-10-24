@@ -228,7 +228,7 @@ const ManageAdress: React.FC = () => {
           <Input label="Endereço de entrega?">
             <RadioButton.Group
               onValueChange={value => handleSetDeliveryAddress(value)}
-              value="true"
+              value={address.deliveryAddress ? 'true' : 'false'}
             >
               <RadioButtomItem>
                 <RadioButton.Item
@@ -241,6 +241,8 @@ const ManageAdress: React.FC = () => {
                     alignItems: 'center',
                   }}
                 />
+              </RadioButtomItem>
+              <RadioButtomItem>
                 <RadioButton.Item
                   label="Não"
                   value="false"

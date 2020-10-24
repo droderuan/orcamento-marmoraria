@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { primary300 } from '@styles/theme/colors';
 
 export const Container = styled.View`
   width: 100%;
@@ -8,13 +9,13 @@ export const Container = styled.View`
 export const InputLabel = styled.Text`
   font-size: 18px;
   margin-bottom: 6px;
-  font-family: 'Roboto-Regular';
+  font-family: 'Heebo-Light';
 `;
 
 export const InputContainer = styled.View`
   height: 45px;
   width: 100%;
-  background-color: #7f9cb5;
+  background-color: ${primary300};
   padding: 0 16px;
   flex-direction: row;
   align-items: center;

@@ -66,12 +66,12 @@ const HomePage: React.FC = () => {
         <DrawerMenuButton onPress={toggleDrawer}>
           <Icon name="player-settings" size={32} color="#fff" />
         </DrawerMenuButton>
-        <SearchArea>
+        {/* <SearchArea>
           <SearchInput placeholder="Procure pelo nome do cliente" />
           <SearchButton>
             <IconAntDesign name="search1" size={20} color="#fff" />
           </SearchButton>
-        </SearchArea>
+        </SearchArea> */}
       </Header>
 
       {/* <NavButtons style={{ elevation: 5 }}>
