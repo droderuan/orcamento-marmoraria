@@ -1,26 +1,61 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
+import auth from '@react-native-firebase/auth';
+import { onGoogleButtonPress } from '@services/FirebaseService';
+import { saveUser, deleteUser } from '@services/Storage';
 
 interface AuthContextData {
-  user: boolean;
+  user: any;
+  initializing: boolean;
   signIn(): void;
   signOut(): void;
+  signInWithGoogle(): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState<{} | null>(null);
+  const [initializing, setInitializing] = useState(true);
+
+  const onAuthStateChanged = useCallback(
+    authUser => {
+      setUser(authUser);
+      if (initializing) setInitializing(false);
+    },
+    [initializing],
+  );
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, [onAuthStateChanged]);
 
   const signIn = useCallback(() => {
-    setUser(true);
+    // setUser(true);
+  }, []);
+
+  const signInWithGoogle = useCallback(async () => {
+    const { user: responseUser } = await onGoogleButtonPress();
+    // saveUser(responseUser);
+    console.tron.log(responseUser);
+    setUser(responseUser);
   }, []);
 
   const signOut = useCallback(() => {
-    setUser(false);
+    auth().signOut();
+    setUser(null);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, initializing, signIn, signOut, signInWithGoogle }}
+    >
       {children}
     </AuthContext.Provider>
   );

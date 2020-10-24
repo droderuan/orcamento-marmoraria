@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/Auth';
 import App from './Drawer.routes';
 
 const Routes: React.FC = () => {
-  const { user } = useAuth();
+  const { user, initializing } = useAuth();
 
   return user ? <App /> : <Auth />;
 };

@@ -8,6 +8,8 @@ import { primary500 } from './styles/theme/colors';
 import Theme from './styles/theme/theme';
 import AppProvider from './hooks';
 
+import './config/ReactotronConfig';
+
 import Routes from './routes';
 
 const App: React.FC = () => (

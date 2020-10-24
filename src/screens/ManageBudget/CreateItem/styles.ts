@@ -48,7 +48,7 @@ export const ItemWithTwoTextInputWrapper = styled.View`
 export const ItemWithTwoTextInput = styled.TextInput`
   text-align: center;
   margin-right: 0px;
-  width: 130px;
+  width: 40%;
   height: 45px;
   font-family: 'Roboto-Medium';
   font-size: 20px;

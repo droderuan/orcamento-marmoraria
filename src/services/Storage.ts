@@ -1,9 +1,24 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Budget from '@dtos/Budget';
+import Client from '@dtos/Client';
 
 const storageKeys = {
   budget: '@apporcamento:budget:id:',
+  user: '@apporcamento:user:',
 };
+
+export async function saveUser(data: any): Promise<void> {
+  await AsyncStorage.setItem(storageKeys.user, JSON.stringify(data));
+}
+
+export async function getUser(): Promise<void> {
+  const user = await AsyncStorage.getItem(storageKeys.user);
+  return user ? JSON.parse(user) : null;
+}
+
+export function deleteUser(): void {
+  AsyncStorage.removeItem(storageKeys.user);
+}
 
 export function getAllKeysFromStorage(): Promise<string[] | null> {
   return AsyncStorage.getAllKeys();
