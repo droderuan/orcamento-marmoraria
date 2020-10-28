@@ -9,10 +9,15 @@ import {
   FinishingSelectButton,
 } from './styles';
 
+interface EdgeFinishingPosition {
+  position: string;
+  name: string;
+}
+
 interface RectangularProps {
   stoneImage: any;
   edgeFinishing: { position: string }[];
-  handleChangeFinishingPosition(position: string): void;
+  handleChangeFinishingPosition(options: EdgeFinishingPosition): void;
 }
 
 const Rectangular: React.FC<RectangularProps> = ({
@@ -44,7 +49,9 @@ const Rectangular: React.FC<RectangularProps> = ({
       >
         <EdgeFinishingButtonWrapper>
           <FinishingSelectButton
-            onPress={() => handleChangeFinishingPosition('1')}
+            onPress={() =>
+              handleChangeFinishingPosition({ position: '1', name: 'Topo' })
+            }
             isSelected={positionOne}
             style={{
               marginTop: -19,
@@ -65,7 +72,7 @@ const Rectangular: React.FC<RectangularProps> = ({
 
         <MiddleFinishingButtonWrapper>
           <FinishingSelectButton
-            isSelected={positionTwo}
+            isSelected={positionFour}
             style={{
               marginLeft: -19,
               shadowColor: '#000',
@@ -78,12 +85,15 @@ const Rectangular: React.FC<RectangularProps> = ({
 
               elevation: 6,
             }}
-            onPress={() => handleChangeFinishingPosition('2')}
+            onPress={() =>
+              handleChangeFinishingPosition({ position: '4', name: 'Esquerda' })
+            }
           >
-            <ButtonText isSelected={positionTwo}>2</ButtonText>
+            <ButtonText isSelected={positionFour}>4</ButtonText>
           </FinishingSelectButton>
+
           <FinishingSelectButton
-            isSelected={positionThree}
+            isSelected={positionTwo}
             style={{
               marginRight: -19,
               shadowColor: '#000',
@@ -96,15 +106,17 @@ const Rectangular: React.FC<RectangularProps> = ({
 
               elevation: 6,
             }}
-            onPress={() => handleChangeFinishingPosition('3')}
+            onPress={() =>
+              handleChangeFinishingPosition({ position: '2', name: 'Direita' })
+            }
           >
-            <ButtonText isSelected={positionThree}>3</ButtonText>
+            <ButtonText isSelected={positionTwo}>2</ButtonText>
           </FinishingSelectButton>
         </MiddleFinishingButtonWrapper>
 
         <EdgeFinishingButtonWrapper>
           <FinishingSelectButton
-            isSelected={positionFour}
+            isSelected={positionThree}
             style={{
               marginBottom: -19,
               shadowColor: '#000',
@@ -117,9 +129,11 @@ const Rectangular: React.FC<RectangularProps> = ({
 
               elevation: 6,
             }}
-            onPress={() => handleChangeFinishingPosition('4')}
+            onPress={() =>
+              handleChangeFinishingPosition({ position: '3', name: 'Baixo' })
+            }
           >
-            <ButtonText isSelected={positionFour}>4</ButtonText>
+            <ButtonText isSelected={positionThree}>3</ButtonText>
           </FinishingSelectButton>
         </EdgeFinishingButtonWrapper>
       </SelectFinishingBackground>

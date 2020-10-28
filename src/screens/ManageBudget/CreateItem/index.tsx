@@ -8,6 +8,7 @@ import React, {
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/core';
 import { ScrollView, TextInput } from 'react-native';
+import Reactotron from 'reactotron-react-native';
 import { RadioButton } from 'react-native-paper';
 
 import generateId from '@utils/GenerateID';
@@ -49,14 +50,19 @@ interface RouteParams {
   };
 }
 
-interface FinishingPosition {
+interface EdgeFinishingPosition {
   position: string;
-  type: string;
-  hasFinishing: boolean;
+  name: string;
 }
 
 const CreateItem: React.FC = () => {
-  const { saveItem, createItem, getItem } = useBudget();
+  const {
+    saveItem,
+    createItem,
+    getItem,
+    editingItem,
+    saveEditingItem,
+  } = useBudget();
 
   const route = useRoute();
 
@@ -67,38 +73,43 @@ const CreateItem: React.FC = () => {
     stoneNumber,
     stoneType,
   } = route.params as RouteParams;
-  const { navigate } = useNavigation();
+  const { navigate, setOptions } = useNavigation();
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
   const [isNewItem, setIsNewItem] = useState(true);
 
-  const [item, setItem] = useState(() => {
+  useEffect(() => {
     if (itemId) {
       const findItem = getItem({ roomId, productId, itemId });
       if (findItem) {
-        return findItem;
+        saveEditingItem(findItem);
       }
+    } else {
+      saveEditingItem({
+        id: generateId(),
+        name: `Pedra${stoneNumber}`,
+        quantity: '1',
+        shape: 'Retangular',
+        surfaceFinish: 'Polido',
+        edgeFinishing: '',
+        edgeFinishingPosition: [],
+        measures: {
+          unit: 'cm',
+          length: '',
+          width: '',
+        },
+        stoneType: {
+          stone: '',
+          type: '',
+        },
+      } as Item);
     }
-    return {
-      id: generateId(),
-      name: `Pedra${stoneNumber}`,
-      quantity: '1',
-      shape: 'Retangular',
-      surfaceFinish: 'Polido',
-      edgeFinishing: '',
-      edgeFinishingPosition: [],
-      measures: {
-        unit: 'cm',
-        length: '',
-        width: '',
-      },
-      stoneType: {
-        stone: '',
-        type: '',
-      },
-    } as Item;
-  });
+  }, []);
+
+  useEffect(() => {
+    setOptions({ headerTitle: `Editar/Salvar Peça` });
+  }, [editingItem.name, setOptions]);
 
   const [stoneImage, setStoneImage] = useState<any>(null);
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
@@ -127,43 +138,62 @@ const CreateItem: React.FC = () => {
     [],
   );
 
-  const handleChangeName = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, name: value }));
-  }, []);
+  const handleChangeName = useCallback(
+    (value: string) => {
+      saveEditingItem({ name: value });
+    },
+    [saveEditingItem],
+  );
 
-  const handleChangeQuantity = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, quantity: value }));
-  }, []);
+  const handleChangeQuantity = useCallback(
+    (value: string) => {
+      saveEditingItem({ quantity: value });
+    },
+    [saveEditingItem],
+  );
 
-  const handleChangeShape = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, shape: value }));
-  }, []);
+  const handleChangeShape = useCallback(
+    (value: string) => {
+      saveEditingItem({ shape: value });
+    },
+    [saveEditingItem],
+  );
 
-  const handleChangeStone = useCallback(({ type, stone }) => {
-    setItem(oldItem => ({ ...oldItem, stoneType: { type, stone } }));
-  }, []);
+  const handleChangeStone = useCallback(
+    ({ type, stone }) => {
+      saveEditingItem({ stoneType: { type, stone } });
+    },
+    [saveEditingItem],
+  );
 
-  const handleChangeSurfaceFinish = useCallback((value: string) => {
-    setItem(oldItem => ({ ...oldItem, surfaceFinish: value }));
-  }, []);
+  const handleChangeSurfaceFinish = useCallback(
+    (value: string) => {
+      saveEditingItem({ surfaceFinish: value });
+    },
+    [saveEditingItem],
+  );
 
   const handleChangeMeasure = useCallback(
     ({
-      unit = item.measures.unit,
-      width = item.measures.width,
-      length = item.measures.length,
+      unit = editingItem.measures.unit,
+      width = editingItem.measures.width,
+      length = editingItem.measures.length,
     }) => {
-      setItem(oldItem => ({
-        ...oldItem,
+      saveEditingItem({
         measures: { unit, width, length },
-      }));
+      });
     },
-    [item.measures.unit, item.measures.width, item.measures.length],
+    [
+      saveEditingItem,
+      editingItem.measures.unit,
+      editingItem.measures.width,
+      editingItem.measures.length,
+    ],
   );
 
   const handleChangeFinishingPosition = useCallback(
-    (position: string) => {
-      const toUpdatefinishing = [...item.edgeFinishingPosition];
+    ({ name, position }: EdgeFinishingPosition) => {
+      const toUpdatefinishing = [...editingItem.edgeFinishingPosition];
       const checkExist = toUpdatefinishing.findIndex(
         finishing => finishing.position === position,
       );
@@ -171,17 +201,14 @@ const CreateItem: React.FC = () => {
       if (checkExist !== -1) {
         toUpdatefinishing.splice(checkExist, 1);
       } else {
-        toUpdatefinishing.push({ position });
+        toUpdatefinishing.push({ position, name });
       }
 
-      setItem(oldItem => ({
-        ...oldItem,
-        edgeFinishingPosition: toUpdatefinishing.sort(
-          (a, b) => parseInt(a.position, 10) - parseInt(b.position, 10),
-        ),
-      }));
+      saveEditingItem({
+        edgeFinishingPosition: toUpdatefinishing,
+      });
     },
-    [item.edgeFinishingPosition],
+    [editingItem.edgeFinishingPosition, saveEditingItem],
   );
 
   const navigateToSelectStone = useCallback(() => {
@@ -194,7 +221,7 @@ const CreateItem: React.FC = () => {
 
   const handleSetImage = useCallback(
     ({ type, imageName }) => {
-      if (item.stoneType.stone) {
+      if (editingItem.stoneType.stone) {
         const image = StonesImages.stonesType
           .find(stones => stones.type === type)
           ?.stones.find(stones => stones.display === imageName);
@@ -204,14 +231,20 @@ const CreateItem: React.FC = () => {
         setStoneImage(image?.img);
       }
     },
-    [item.stoneType.stone],
+    [editingItem.stoneType.stone],
   );
 
   const handleSaveItem = useCallback(() => {
+    Reactotron.display({
+      name: 'Item to save',
+      value: editingItem,
+      important: true,
+    });
+
     if (isNewItem) {
-      createItem({ roomId, productId, item });
+      createItem({ roomId, productId, item: editingItem });
     } else {
-      saveItem({ roomId, productId, item });
+      saveItem({ roomId, productId, item: editingItem });
     }
 
     navigate('RoomProducts', { stoneType });
@@ -221,20 +254,25 @@ const CreateItem: React.FC = () => {
     isNewItem,
     roomId,
     productId,
-    item,
     navigate,
     stoneType,
+    editingItem,
   ]);
 
   useEffect(() => {
     if (itemId) {
       handleSetImage({
-        type: item.stoneType.type,
-        imageName: item.stoneType.stone,
+        type: editingItem.stoneType.type,
+        imageName: editingItem.stoneType.stone,
       });
       setIsNewItem(false);
     }
-  }, [itemId, item.stoneType.type, item.stoneType.stone, handleSetImage]);
+  }, [
+    itemId,
+    editingItem.stoneType.type,
+    editingItem.stoneType.stone,
+    handleSetImage,
+  ]);
 
   useEffect(() => {
     if (stoneType) {
@@ -251,7 +289,7 @@ const CreateItem: React.FC = () => {
             label="Nome da Peça"
             placeholder="Digite o nome da peça"
             placeholderTextColor="#A0A0A0"
-            value={item.name}
+            value={editingItem.name}
             selectTextOnFocus
             onChangeText={value => handleChangeName(value)}
           />
@@ -260,7 +298,7 @@ const CreateItem: React.FC = () => {
             label="Quantidade"
             keyboardType="number-pad"
             placeholderTextColor="#A0A0A0"
-            value={item.quantity.toString()}
+            value={editingItem.quantity.toString()}
             maxLength={10}
             onChangeText={value => handleChangeQuantity(value)}
           />
@@ -268,8 +306,10 @@ const CreateItem: React.FC = () => {
           <Input label="Pedra">
             <ItemInputButton onPress={() => navigateToSelectStone()}>
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!item?.stoneType.stone}>
-                  {item.stoneType.stone || 'Escolha o tipo da pedra'}
+                <ItemInputButtonText
+                  isOptionSelected={!!editingItem?.stoneType.stone}
+                >
+                  {editingItem.stoneType.stone || 'Escolha o tipo da pedra'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
@@ -278,7 +318,7 @@ const CreateItem: React.FC = () => {
           <Input label="Formato">
             <RadioButton.Group
               onValueChange={value => handleChangeShape(value)}
-              value={item.shape}
+              value={editingItem.shape}
             >
               {shapeOptions.map(shapeOption => (
                 <RadioButtomItem key={shapeOption}>
@@ -302,7 +342,7 @@ const CreateItem: React.FC = () => {
               <ItemWithTwoTextInput
                 keyboardType="number-pad"
                 placeholder="Largura"
-                value={item.measures.width}
+                value={editingItem.measures.width}
                 placeholderTextColor="#A0A0A0"
                 onChangeText={value => handleChangeMeasure({ width: value })}
                 onSubmitEditing={() => lengthInputRef.current?.focus()}
@@ -312,7 +352,7 @@ const CreateItem: React.FC = () => {
                 ref={lengthInputRef}
                 keyboardType="number-pad"
                 placeholder="Comprimento"
-                value={item.measures.length}
+                value={editingItem.measures.length}
                 placeholderTextColor="#A0A0A0"
                 onChangeText={value => handleChangeMeasure({ length: value })}
               />
@@ -331,7 +371,7 @@ const CreateItem: React.FC = () => {
                   elevation: 4,
                 }}
               >
-                <UnitButtonText>{item.measures?.unit}</UnitButtonText>
+                <UnitButtonText>{editingItem.measures?.unit}</UnitButtonText>
               </UnitButton>
 
               <ListPickerModal
@@ -351,15 +391,18 @@ const CreateItem: React.FC = () => {
               onPress={() => toggleModal(setFinishingModalPickerVisible)}
             >
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!item.surfaceFinish}>
-                  {item.surfaceFinish || 'Escolha o acabamento da superfície'}
+                <ItemInputButtonText
+                  isOptionSelected={!!editingItem.surfaceFinish}
+                >
+                  {editingItem.surfaceFinish ||
+                    'Escolha o acabamento da superfície'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
             <ListPickerModal
               animationType="fade"
               transparent
-              selectDefault={item.surfaceFinish}
+              selectDefault={editingItem.surfaceFinish}
               visible={finishingModalPickerVisible}
               handleCloseModal={() =>
                 toggleModal(setFinishingModalPickerVisible)
@@ -372,17 +415,19 @@ const CreateItem: React.FC = () => {
           <Input label="Acabamento das bordas">
             <ItemInputButton onPress={() => navigateToSelectEdgeFinish()}>
               <ItemInputButtonWrapper>
-                <ItemInputButtonText isOptionSelected={!!item?.stoneType.stone}>
-                  {item.stoneType.stone ||
+                <ItemInputButtonText
+                  isOptionSelected={!!editingItem?.edgeFinishing}
+                >
+                  {editingItem.edgeFinishing ||
                     'Escolha o tipo do acabamento da borda'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
             </ItemInputButton>
 
-            {item.shape === 'Retangular' && (
+            {editingItem.shape === 'Retangular' && (
               <Rectangular
                 stoneImage={stoneImage}
-                edgeFinishing={item.edgeFinishingPosition}
+                edgeFinishing={editingItem.edgeFinishingPosition}
                 handleChangeFinishingPosition={handleChangeFinishingPosition}
               />
             )}

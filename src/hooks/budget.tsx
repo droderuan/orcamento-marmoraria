@@ -49,6 +49,8 @@ interface GetItemDTO {
 
 interface BudgetContextData {
   budget: Budget;
+  editingItem: Item;
+  saveEditingItem(item: any): void;
   deleteBudget(): void;
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomDTO): void;
@@ -77,6 +79,25 @@ export const BudgetProvider: React.FC = ({ children }) => {
   const { budgetId } = route?.params as RouteParamsProps;
 
   const [budget, setBudget] = useState<Budget>({} as Budget);
+
+  const [editingItem, setEditingItem] = useState<Item>({
+    id: '',
+    name: ``,
+    quantity: '1',
+    shape: 'Retangular',
+    surfaceFinish: 'Polido',
+    edgeFinishing: '',
+    edgeFinishingPosition: [],
+    measures: {
+      unit: 'cm',
+      length: '',
+      width: '',
+    },
+    stoneType: {
+      stone: '',
+      type: '',
+    },
+  } as Item);
 
   const [loaded, setLoaded] = useState(false);
 
@@ -165,6 +186,11 @@ export const BudgetProvider: React.FC = ({ children }) => {
     },
     [budget, getProductIndex],
   );
+
+  const saveEditingItem = useCallback(item => {
+    console.log('foi no salvar');
+    setEditingItem(oldEditingItem => ({ ...oldEditingItem, ...item }));
+  }, []);
 
   const deleteBudget = useCallback(() => {
     deleteBudgetFromStorage(budget.id);
@@ -371,6 +397,8 @@ export const BudgetProvider: React.FC = ({ children }) => {
     <BudgetContext.Provider
       value={{
         budget,
+        editingItem,
+        saveEditingItem,
         deleteBudget,
         createRoom,
         saveRoom,

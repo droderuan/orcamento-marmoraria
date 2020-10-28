@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import EdgeFinishImages from '@assets/images/EdgeFinishings';
 import { List } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/core';
+import { useBudget } from '@hooks/budget';
 
 import {
   Container,
@@ -13,20 +14,20 @@ import {
   StoneImageText,
 } from './styles';
 
+interface RouteParams {
+  handleSelectEdgeFinish({ option }: { option: string }): void;
+}
+
 const SelectEdgeFinish: React.FC = () => {
+  const { saveEditingItem } = useBudget();
   const { navigate } = useNavigation();
 
-  const selectEdgeFinishAndGoBack = useCallback(
-    ({ name, displayName, img }) => {
-      navigate('CreateItem', {
-        stoneType: {
-          name,
-          displayName,
-          img,
-        },
-      });
+  const handleSelectEdgeFinishAndGoBack = useCallback(
+    ({ option }) => {
+      saveEditingItem({ edgeFinishing: option });
+      navigate('CreateItem');
     },
-    [navigate],
+    [saveEditingItem, navigate],
   );
 
   return (
@@ -50,10 +51,8 @@ const SelectEdgeFinish: React.FC = () => {
                 renderItem={({ item }) => (
                   <ListItemButton
                     onPress={() =>
-                      selectEdgeFinishAndGoBack({
-                        type: finishType.type,
-                        stone: item.displayName,
-                        name: item.name,
+                      handleSelectEdgeFinishAndGoBack({
+                        option: item.displayName,
                       })
                     }
                   >

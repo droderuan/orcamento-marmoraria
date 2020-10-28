@@ -9,7 +9,7 @@ interface FinishingButtonProps {
 export const SelectFinishingContainer = styled.View`
   width: 100%;
   height: 180px;
-  margin: 10px 0;
+  margin: 20px 0;
   padding: 10px 38px;
 `;
 

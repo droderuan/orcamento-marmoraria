@@ -91,7 +91,6 @@ const RoomProducts: React.FC = () => {
 
   const handleEditItem = useCallback(
     itemId => {
-      console.log(routeRoom.id);
       navigate('CreateItem', {
         roomId: routeRoom.id,
         productId: product.id,
