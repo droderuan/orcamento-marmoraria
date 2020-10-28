@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { primary900 } from '@styles/theme/colors';
 import BudgetProductList from '../screens/ManageBudget/BudgetProductList';
 import Client from '../screens/ManageBudget/Client';
-import ManageBudget from '../screens/ManageBudget/ManageBudget';
+import BudgetOptions from '../screens/ManageBudget/BudgetOptions';
 
 interface RouteParamsProps {
   budgetId?: string;
@@ -55,8 +55,8 @@ const MainPage: React.FC = () => {
         }}
       />
       <Tab.Screen
-        name="ManageBudget"
-        component={ManageBudget}
+        name="BudgetOptions"
+        component={BudgetOptions}
         options={{
           title: 'Finalizar',
           tabBarIcon: ({ color }) => (

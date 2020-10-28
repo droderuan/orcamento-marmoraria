@@ -10,6 +10,7 @@ import { BudgetProvider } from '../hooks/budget';
 import RoomProducts from '../screens/ManageBudget/RoomProducts';
 import CreateItem from '../screens/ManageBudget/CreateItem';
 import SelectStone from '../screens/ManageBudget/SelectStone';
+import SelectEdgeFinish from '../screens/ManageBudget/SelectEdgeFinish';
 import ManageAddress from '../screens/ManageBudget/ManageAdress';
 import MainPage from './ManageBudgetTab.routes';
 
@@ -17,21 +18,7 @@ interface RouteParamsProps {
   budgetId?: string;
 }
 
-type ManageAddressRouteParams = {
-  ManageAddress: {
-    addressId: string;
-  };
-  TabRoutes: {
-    budgetId: string;
-  };
-  RoomProducts: undefined;
-  CreateItem: undefined;
-  SelectStone: undefined;
-};
-
-type ManageAddressProps = RouteProp<ManageAddressRouteParams, 'ManageAddress'>;
-
-const ManageBudget = createStackNavigator<ManageAddressRouteParams>();
+const ManageBudget = createStackNavigator();
 
 const ManageBudgetRoutes: React.FC = () => {
   const route = useRoute();
@@ -72,6 +59,13 @@ const ManageBudgetRoutes: React.FC = () => {
           component={SelectStone}
           options={{
             headerTitle: 'Escolha o tipo da Pedra',
+          }}
+        />
+        <ManageBudget.Screen
+          name="SelectEdgeFinish"
+          component={SelectEdgeFinish}
+          options={{
+            headerTitle: 'Escolha o acabamento da borda',
           }}
         />
         <ManageBudget.Screen

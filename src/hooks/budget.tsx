@@ -49,8 +49,6 @@ interface GetItemDTO {
 
 interface BudgetContextData {
   budget: Budget;
-  roomsInBudget: Room[];
-  client: Client;
   deleteBudget(): void;
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomDTO): void;
@@ -58,7 +56,8 @@ interface BudgetContextData {
   createProduct({ roomId, product }: CreateProductDTO): void;
   saveProduct({ roomId, product }: CreateProductDTO): void;
   deleteProduct({ roomId, productId }: DeleteProductDTO): void;
-  addOrSaveItem({ roomId, productId, item }: AddOrSaveItemDTO): void;
+  createItem({ roomId, productId, item }: AddOrSaveItemDTO): void;
+  saveItem({ roomId, productId, item }: AddOrSaveItemDTO): void;
   getItem({ roomId, productId, itemId }: GetItemDTO): Item | undefined;
   deleteItem({ roomId, productId, itemId }: GetItemDTO): void;
   saveClient(clientToSave: Client): void;
@@ -76,8 +75,6 @@ const BudgetContext = createContext<BudgetContextData>({} as BudgetContextData);
 export const BudgetProvider: React.FC = ({ children }) => {
   const route = useRoute();
   const { budgetId } = route?.params as RouteParamsProps;
-  const [roomsInBudget, setRoomsInBudget] = useState<Room[]>([]);
-  const [client, setClient] = useState({} as Client);
 
   const [budget, setBudget] = useState<Budget>({} as Budget);
 
@@ -90,42 +87,84 @@ export const BudgetProvider: React.FC = ({ children }) => {
 
         if (recoveryBudget) {
           setBudget(recoveryBudget);
-          setRoomsInBudget(recoveryBudget.rooms);
-          setClient(recoveryBudget.client);
         }
       } else {
         setBudget({
           id: generateID(),
-          client: {} as Client,
+          client: {
+            name: '',
+            cpf: '',
+            email: '',
+            phone: '',
+            address: [],
+          } as Client,
           rooms: [],
           created_at: new Date(),
         });
-        setRoomsInBudget([]);
-        setClient({
-          name: '',
-          cpf: '',
-          phone: '',
-          address: [],
-          email: '',
-        } as Client);
       }
       setLoaded(true);
     }
 
     if (!loaded) fetchBudget();
-  }, [budgetId, budget, client, roomsInBudget, loaded]);
+  }, [budgetId, budget, loaded]);
 
   useEffect(() => {
     function saveData() {
-      const parsedBudget = {
-        ...budget,
-        client,
-        rooms: roomsInBudget,
-      } as Budget;
-      saveBudgetFromStorage(parsedBudget);
+      saveBudgetFromStorage(budget);
     }
     if (loaded) saveData();
-  }, [budgetId, budget, roomsInBudget, client, loaded]);
+  }, [budgetId, budget, loaded]);
+
+  const getRoomIndex = useCallback(
+    (roomId: string) => {
+      const budgetCopy = { ...budget };
+
+      const roomIndex = budgetCopy.rooms.findIndex(room => room.id === roomId);
+      if (roomIndex !== -1) {
+        return roomIndex;
+      }
+      throw new Error('RoomIndex does not found');
+    },
+    [budget],
+  );
+
+  const getProductIndex = useCallback(
+    (roomId: string, productId: string) => {
+      const budgetCopy = { ...budget };
+
+      const roomIndex = getRoomIndex(roomId);
+
+      const productIndex = budgetCopy.rooms[roomIndex].products.findIndex(
+        item => item.id === productId,
+      );
+
+      if (productIndex === -1) {
+        throw new Error('Room does not exist');
+      }
+
+      return { roomIndex, productIndex };
+    },
+    [budget, getRoomIndex],
+  );
+
+  const getItemIndex = useCallback(
+    (roomId: string, productId: string, itemId: string) => {
+      const budgetCopy = { ...budget };
+
+      const { roomIndex, productIndex } = getProductIndex(roomId, productId);
+
+      const itemIndex = budgetCopy.rooms[roomIndex].products[
+        productIndex
+      ].items.findIndex(item => item.id === itemId);
+
+      if (productIndex === -1) {
+        throw new Error('Room does not exist');
+      }
+
+      return { roomIndex, productIndex, itemIndex };
+    },
+    [budget, getProductIndex],
+  );
 
   const deleteBudget = useCallback(() => {
     deleteBudgetFromStorage(budget.id);
@@ -134,168 +173,156 @@ export const BudgetProvider: React.FC = ({ children }) => {
   const createRoom = useCallback(({ name }: CreateRoomDTO) => {
     const newRoom = { id: generateID(), name, products: [] as Product[] };
 
-    setRoomsInBudget(oldRoomsInBudget => {
-      return [...oldRoomsInBudget, newRoom];
+    setBudget(oldBudget => {
+      return { ...oldBudget, rooms: [...oldBudget.rooms, newRoom] };
     });
   }, []);
 
-  const saveRoom = useCallback((updatedRoom: Room) => {
-    setRoomsInBudget(oldRoomsInBudget => {
-      const updatedRoomsInBudget = oldRoomsInBudget;
-      const roomIndex = oldRoomsInBudget.findIndex(
-        room => room.id === updatedRoom.id,
+  const saveRoom = useCallback(
+    (updatedRoom: Room) => {
+      const budgetCopy = { ...budget };
+      budgetCopy.rooms = budget.rooms.map(room =>
+        room.id === updatedRoom.id ? updatedRoom : room,
       );
-      updatedRoomsInBudget[roomIndex] = updatedRoom;
-      return updatedRoomsInBudget;
-    });
-  }, []);
+      setBudget(budgetCopy);
+    },
+    [budget],
+  );
 
   const deleteRoom = useCallback(
     (roomToDelete: Room) => {
-      const updatedRoomsInBudget = roomsInBudget.filter(
+      const budgetCopy = { ...budget };
+      budgetCopy.rooms = budget.rooms.filter(
         room => room.id !== roomToDelete.id,
       );
-      setRoomsInBudget([...updatedRoomsInBudget]);
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget],
   );
 
   const createProduct = useCallback(
     ({ roomId, product }: CreateProductDTO) => {
-      const roomsCopy = [...roomsInBudget];
-      const roomToAddProductIndex = roomsCopy.findIndex(
-        room => room.id === roomId,
-      );
-      if (roomToAddProductIndex !== -1) {
-        const roomToAddProduct = roomsCopy[roomToAddProductIndex];
-        roomToAddProduct.products.push(product);
-        roomsCopy[roomToAddProductIndex] = roomToAddProduct;
-        setRoomsInBudget([...roomsCopy]);
-      }
+      const budgetCopy = { ...budget };
+
+      const roomIndex = getRoomIndex(roomId);
+
+      budgetCopy.rooms[roomIndex].products.push(product);
+
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget, getRoomIndex],
   );
 
   const saveProduct = useCallback(
     ({ roomId, product }: CreateProductDTO) => {
-      const roomsCopy = roomsInBudget;
-      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+      const budgetCopy = { ...budget };
 
-      if (roomIndex !== -1) {
-        const roomToSaveProduct = roomsCopy[roomIndex];
-        const productIndex = roomToSaveProduct.products.findIndex(
-          item => item.id === product.id,
-        );
-        productIndex !== -1 &&
-          (roomToSaveProduct.products[productIndex] = product);
-        roomsCopy[roomIndex] = roomToSaveProduct;
-        setRoomsInBudget(roomsCopy);
-      }
+      const { roomIndex, productIndex } = getProductIndex(roomId, product.id);
+
+      budgetCopy.rooms[roomIndex].products[productIndex] = product;
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget, getProductIndex],
   );
 
   const deleteProduct = useCallback(
     ({ roomId, productId }: DeleteProductDTO) => {
-      const roomsCopy = [...roomsInBudget];
-      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+      const budgetCopy = { ...budget };
 
-      if (roomIndex !== -1) {
-        const updatedProducts = roomsCopy[roomIndex].products.filter(
-          item => item.id !== productId,
-        );
-        roomsCopy[roomIndex].products = updatedProducts;
+      const roomIndex = getRoomIndex(roomId);
 
-        setRoomsInBudget(roomsCopy);
-      }
+      const updatedProducts = budgetCopy.rooms[roomIndex].products.filter(
+        item => item.id !== productId,
+      );
+
+      budgetCopy.rooms[roomIndex].products = updatedProducts;
+
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget, getRoomIndex],
   );
 
-  const addOrSaveItem = useCallback(
+  const createItem = useCallback(
     ({ roomId, productId, item }: AddOrSaveItemDTO) => {
-      const roomsCopy = [...roomsInBudget];
-      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+      const budgetCopy = { ...budget };
 
-      if (roomIndex === -1) {
-        return;
-      }
-      const roomToSaveProduct = roomsCopy[roomIndex];
-      const productIndex = roomToSaveProduct.products.findIndex(
-        product => product.id === productId,
-      );
-      if (productIndex === -1) {
-        return;
-      }
-      const productToUpdate = roomToSaveProduct.products[productIndex];
-      const itemIndex = productToUpdate.items.findIndex(
-        itemToFind => itemToFind.id === item.id,
-      );
+      const { roomIndex, productIndex } = getProductIndex(roomId, productId);
 
-      if (itemIndex !== -1) {
-        productToUpdate.items[itemIndex] = item;
-      } else {
-        roomToSaveProduct.products[productIndex].items.push(item);
-      }
+      budgetCopy.rooms[roomIndex].products[productIndex].items.push(item);
 
-      roomsCopy[roomIndex] = roomToSaveProduct;
-      setRoomsInBudget(roomsCopy);
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget, getProductIndex],
+  );
+
+  const saveItem = useCallback(
+    ({ roomId, productId, item }: AddOrSaveItemDTO) => {
+      const budgetCopy = { ...budget };
+
+      const { roomIndex, productIndex, itemIndex } = getItemIndex(
+        roomId,
+        productId,
+        item.id,
+      );
+
+      budgetCopy.rooms[roomIndex].products[productIndex].items[
+        itemIndex
+      ] = item;
+
+      setBudget(budgetCopy);
+    },
+    [budget, getItemIndex],
   );
 
   const getItem = useCallback(
-    ({ productId, roomId, itemId }) => {
-      const findRoom = roomsInBudget.find(room => room.id === roomId);
-      const findProduct = findRoom?.products.find(
-        product => product.id === productId,
+    ({ productId, roomId, itemId }: GetItemDTO) => {
+      const budgetCopy = { ...budget };
+      const { roomIndex, productIndex, itemIndex } = getItemIndex(
+        roomId,
+        productId,
+        itemId,
       );
-      const findItem = findProduct?.items.find(item => item.id === itemId);
+      const item =
+        budgetCopy.rooms[roomIndex].products[productIndex].items[itemIndex];
 
-      return findItem;
+      return item;
     },
-    [roomsInBudget],
+    [budget, getItemIndex],
   );
+
   const deleteItem = useCallback(
     ({ roomId, productId, itemId }: GetItemDTO) => {
-      const roomsCopy = [...roomsInBudget];
-      const roomIndex = roomsCopy.findIndex(room => room.id === roomId);
+      const budgetCopy = { ...budget };
 
-      if (roomIndex === -1) {
-        throw new Error(`Room with id ${roomId} was not find`);
-      }
-
-      const roomToSaveProduct = { ...roomsCopy[roomIndex] };
-      const productIndex = roomToSaveProduct.products.findIndex(
-        product => product.id === productId,
+      const { roomIndex, productIndex, itemIndex } = getItemIndex(
+        roomId,
+        productId,
+        itemId,
       );
 
-      if (productIndex === -1) {
-        throw new Error(`Product with id ${productId} was not find`);
-      }
-
-      const productToUpdate = roomToSaveProduct.products[productIndex];
-
-      const updatedItemsProduct = productToUpdate.items.filter(
-        itemToFind => itemToFind.id !== itemId,
+      budgetCopy.rooms[roomIndex].products[productIndex].items.splice(
+        itemIndex,
+        1,
       );
 
-      productToUpdate.items = [...updatedItemsProduct];
-      roomToSaveProduct.products[productIndex] = productToUpdate;
-
-      roomsCopy[roomIndex] = roomToSaveProduct;
-      setRoomsInBudget(roomsCopy);
+      setBudget(budgetCopy);
     },
-    [roomsInBudget],
+    [budget, getItemIndex],
   );
 
-  const saveClient = useCallback((clientToSave: Client) => {
-    setClient(clientToSave);
-  }, []);
+  const saveClient = useCallback(
+    (clientToSave: Client) => {
+      setBudget(oldBudget => ({
+        ...oldBudget,
+        client: { ...budget.client, ...clientToSave },
+      }));
+    },
+    [budget.client],
+  );
 
   const saveOrCreateAddress = useCallback(
     (address: ClientAddress) => {
-      const clientCopy = { ...client };
+      const clientCopy = { ...budget.client };
       const checkAddressExists = clientCopy.address.findIndex(
         addressFromClient => addressFromClient.id === address.id,
       );
@@ -305,14 +332,14 @@ export const BudgetProvider: React.FC = ({ children }) => {
       } else {
         clientCopy.address[checkAddressExists] = address;
       }
-      setClient(clientCopy);
+      setBudget(oldBudget => ({ ...oldBudget, client: clientCopy }));
     },
-    [client],
+    [budget.client],
   );
 
   const getAddress = useCallback(
     (addressId: string): ClientAddress => {
-      const clientCopy = { ...client };
+      const clientCopy = { ...budget.client };
       const checkAddressExists = clientCopy.address.find(
         addressFromClient => addressFromClient.id === addressId,
       );
@@ -323,29 +350,27 @@ export const BudgetProvider: React.FC = ({ children }) => {
 
       return checkAddressExists;
     },
-    [client],
+    [budget.client],
   );
 
   const deleteAddress = useCallback(
     (addressId: string) => {
-      const clientCopy = { ...client };
+      const clientCopy = { ...budget.client };
       const checkAddressExists = clientCopy.address.filter(
         addressFromClient => addressFromClient.id !== addressId,
       );
 
       clientCopy.address = checkAddressExists;
 
-      setClient(clientCopy);
+      setBudget(oldBudget => ({ ...oldBudget, client: clientCopy }));
     },
-    [client],
+    [budget.client],
   );
 
   return (
     <BudgetContext.Provider
       value={{
         budget,
-        roomsInBudget,
-        client,
         deleteBudget,
         createRoom,
         saveRoom,
@@ -353,7 +378,8 @@ export const BudgetProvider: React.FC = ({ children }) => {
         createProduct,
         saveProduct,
         deleteProduct,
-        addOrSaveItem,
+        createItem,
+        saveItem,
         getItem,
         deleteItem,
         saveClient,

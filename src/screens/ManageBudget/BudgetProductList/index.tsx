@@ -51,7 +51,7 @@ interface EditRoomDTO {
 
 const BudgetProductList: React.FC = () => {
   const {
-    roomsInBudget,
+    budget,
     createRoom,
     saveRoom,
     deleteRoom,
@@ -235,7 +235,7 @@ const BudgetProductList: React.FC = () => {
 
       <ProductsContainer>
         <RoomList
-          data={roomsInBudget}
+          data={budget.rooms}
           keyExtractor={room => room.id}
           renderItem={({ item: room, index: roomIndex }) => (
             <Room>
@@ -252,6 +252,17 @@ const BudgetProductList: React.FC = () => {
                   <ProductCardContainer
                     onPress={() => handleNavigateToProduct(room, product.id)}
                     key={product.id}
+                    style={{
+                      shadowColor: '#000',
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 3.84,
+
+                      elevation: 6,
+                    }}
                   >
                     <ProductCardHeader>
                       <ProductCardTitle>{product.name}</ProductCardTitle>
@@ -278,6 +289,17 @@ const BudgetProductList: React.FC = () => {
 
                 <ProductCardContainer
                   onPress={() => handleCreateAndNavigateToProduct(room)}
+                  style={{
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+
+                    elevation: 6,
+                  }}
                 >
                   <ProductCardAdd>
                     <MaterialIcons name="add" size={48} color="#747171" />

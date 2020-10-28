@@ -10,7 +10,20 @@ interface ButtonProps extends RectButtonProperties {
 
 const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (
-    <Container {...props}>
+    <Container
+      {...props}
+      style={{
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+
+        elevation: 4,
+      }}
+    >
       <ButtonText>{children}</ButtonText>
     </Container>
   );

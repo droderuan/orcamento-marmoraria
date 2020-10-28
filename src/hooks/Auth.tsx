@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import auth from '@react-native-firebase/auth';
-import { onGoogleButtonPress } from '@services/FirebaseService';
+import { onGoogleButtonPress } from '@services/AuthFirebase';
 import { saveUser, deleteUser } from '@services/Storage';
 
 interface AuthContextData {
@@ -36,14 +36,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     return subscriber;
   }, [onAuthStateChanged]);
 
-  const signIn = useCallback(() => {
-    // setUser(true);
-  }, []);
+  const signIn = useCallback(() => {}, []);
 
   const signInWithGoogle = useCallback(async () => {
     const { user: responseUser } = await onGoogleButtonPress();
-    // saveUser(responseUser);
-    console.tron.log(responseUser);
     setUser(responseUser);
   }, []);
 

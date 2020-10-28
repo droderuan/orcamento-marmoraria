@@ -28,7 +28,19 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   }, [budget.created_at]);
 
   return (
-    <Container>
+    <Container
+      style={{
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+
+        elevation: 4,
+      }}
+    >
       <InfoWrapper>
         <LeftBudgetCard>
           <Label>

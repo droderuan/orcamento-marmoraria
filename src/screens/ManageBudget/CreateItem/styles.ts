@@ -64,9 +64,10 @@ export const ItemText = styled.Text`
 export const UnitButton = styled(RectButton)`
   margin-top: -10px;
   margin-left: 5px;
+  margin-right: 10px;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  padding: 0 5px;
   height: 40px;
   border-radius: 5px;
   background-color: ${primary500};
@@ -106,63 +107,4 @@ export const RadioButtomItem = styled.View`
 
 export const ButtonWrapper = styled.View`
   margin-top: 40px;
-`;
-
-export const SelectFinishingContainer = styled.View`
-  width: 100%;
-  height: 180px;
-  margin: 10px 0;
-  padding: 10px 38px;
-`;
-
-export const SelectFinishingBackground = styled.ImageBackground`
-  flex: 1;
-  justify-content: space-between;
-  border-radius: 10px;
-  background-color: #9f9f9f;
-`;
-
-export const EdgeFinishingButtonWrapper = styled.View`
-  width: 100%;
-  align-items: center;
-`;
-
-export const MiddleFinishingButtonWrapper = styled.View`
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-between;
-`;
-
-export const FinishingSelectButton = styled(RectButton)<FinishingButtonProps>`
-  position: relative;
-  width: 38px;
-  height: 38px;
-  border-radius: 19px;
-  align-items: center;
-  justify-content: center;
-  ${props =>
-    props.isSelected
-      ? `background-color: ${primary900}`
-      : `background-color: ${primary100}`};
-  border-width: 1px;
-  border-color: ${primary900};
-`;
-
-export const ButtonText = styled.Text<FinishingButtonProps>`
-  font-family: 'Heebo-Light';
-  font-size: 18px;
-  ${props => (props.isSelected ? `color: #fff` : `color: #000`)};
-`;
-
-export const FinishingSelectType = styled.View`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const FinishingNumber = styled.Text`
-  margin-left: 38px;
-  font-family: 'Heebo-Light';
-  font-size: 28px;
-  color: #000;
 `;

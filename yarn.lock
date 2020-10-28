@@ -1271,6 +1271,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-9.3.1.tgz#269d4755cb398e049b5014bf35adcc631a87d6d6"
   integrity sha512-TtCEwyO5+ZRvmlKMLz54qFshIWaDT9U162CjQX0mzybmogYKRM9UoB+mFnZLh7rKZQQgvVzzMfF+h2DUgN+9xQ==
 
+"@react-native-firebase/firestore@^7.8.7":
+  version "7.8.7"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-7.8.7.tgz#2bc4227b51dc8b788e4538168f7ec60670401e92"
+  integrity sha512-UuQHvzadFszs3cphDsUZ/t7XGo0wW48+SVVHe20HBz42bU6EiN7YgmdBTqwEI8P2go+0Uj9LLLDayhND7JSSyQ==
+
 "@react-navigation/bottom-tabs@^5.8.0":
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.9.2.tgz#b071d9f39b275d4ea256df7bfb1ee83bbddeebeb"
@@ -1444,6 +1449,19 @@
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
+
+"@types/react-native-html-to-pdf@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-html-to-pdf/-/react-native-html-to-pdf-0.8.0.tgz#a1a3436b137998e64f75a4dd7bc7c4b990a47f2e"
+  integrity sha512-BEkAykVATnC1KwmBl4QcKm1ce9k/YZFHdK6WdShJpvJ7bnW/g5IGj1GMrvY7fXrt2Ad1zZjIz4/kWwWNbTk26w==
+
+"@types/react-native-share@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-share/-/react-native-share-3.3.0.tgz#dc264315c28177e0262a13d5b957e0940cf715c4"
+  integrity sha512-qcmtUNOhIO0tlz7RVQR2FtWzFlblge8gsJED6dT16HdaHq+8ssm+onTVup7UYcE5DEvlmGXBuW2kZU41H+d3FA==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
 
 "@types/react-native-text-input-mask@^0.7.5":
   version "0.7.5"
@@ -6873,6 +6891,11 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-file-viewer@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-file-viewer/-/react-native-file-viewer-2.1.4.tgz#987b2902f0f0ac87b42f3ac3d3037c8ae98f17a6"
+  integrity sha512-G3ko9lmqxT+lWhsDNy2K3Jes6xSMsUvlYwuwnRCNk2wC6hgYMeoeaiwDt8R3CdON781hB6Ej1eu3ir1QATtHXg==
+
 react-native-flipper@^0.34.0:
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.34.0.tgz#7df1f38ba5d97a9321125fe0fccbe47d99e6fa1d"
@@ -6888,6 +6911,11 @@ react-native-gesture-handler@^1.8.0:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-html-to-pdf@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-html-to-pdf/-/react-native-html-to-pdf-0.8.0.tgz#c6e27296a05de76ac3800406144ebdfd77cfe054"
+  integrity sha512-64Hx7JbX3sZ1iXgouuCI25/C6o8BHyTzOO3RzvLfw4O8VcdpB+wJ4d24iWRtKjeJmArsubN9+WMOebBxQaPzJw==
+
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
@@ -6901,6 +6929,11 @@ react-native-paper@^4.2.0:
     "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
     react-native-safe-area-view "^0.14.9"
+
+react-native-permissions@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
+  integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
 
 react-native-reanimated@^1.13.1:
   version "1.13.1"
@@ -6925,6 +6958,11 @@ react-native-screens@^2.10.1:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.11.0.tgz#34b30b07c2d04aa100cba984b944b303bfa43ea6"
   integrity sha512-vJzJE3zI1XUtqthrX3Dh2TBQWB+xFyaGhF52KBq9FjJUN5ws4xpLZJxBWa1KbGV3DilmcSZ4jmZR5LGordwE7w==
+
+react-native-share@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-4.0.2.tgz#1a2287748083e08247e951d9ef8c7a100d39cc1c"
+  integrity sha512-2dbeyBx8bQoOu0V2fsj3xNv3Mta9KwGRUT/Yvb+SBRtwX3YSwYC65DqRPk1L1CeO7ABxiXZaEaL1MM7LIDuGSA==
 
 react-native-text-input-mask@^2.0.0:
   version "2.0.0"

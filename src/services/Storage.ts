@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Budget from '@dtos/Budget';
 import Client from '@dtos/Client';
+import { asyncStorage } from 'reactotron-react-native';
 
 const storageKeys = {
   budget: '@apporcamento:budget:id:',
@@ -68,7 +69,6 @@ export async function saveBudgetFromStorage(budget: Budget): Promise<void> {
 }
 
 export async function deleteBudgetFromStorage(budgetId: string): Promise<void> {
-  console.log(`deletado: ${budgetId}`);
   await AsyncStorage.removeItem(storageKeys.budget + budgetId);
 }
 

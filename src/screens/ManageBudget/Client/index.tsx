@@ -19,10 +19,10 @@ import {
 
 const Client: React.FC = () => {
   const { navigate } = useNavigation();
-  const { saveClient, client, deleteAddress } = useBudget();
+  const { saveClient, budget, deleteAddress } = useBudget();
 
   const parsedAddress = useMemo(() => {
-    return client.address.map(each => {
+    return budget.client.address.map(each => {
       const parsedText = {
         firstLine: '',
         secondLine: '',
@@ -39,34 +39,34 @@ const Client: React.FC = () => {
 
       return parsedText;
     });
-  }, [client.address, JSON.stringify(client.address)]);
+  }, [budget.client.address, JSON.stringify(budget.client.address)]);
 
   const handleChangeName = useCallback(
     (value: string) => {
-      saveClient({ ...client, name: value });
+      saveClient({ ...budget.client, name: value });
     },
-    [saveClient, client],
+    [saveClient, budget.client],
   );
 
   const handleChangeCPF = useCallback(
     (value: string) => {
-      saveClient({ ...client, cpf: value });
+      saveClient({ ...budget.client, cpf: value });
     },
-    [saveClient, client],
+    [saveClient, budget.client],
   );
 
   const handleChangePhone = useCallback(
     (value: string) => {
-      saveClient({ ...client, phone: value });
+      saveClient({ ...budget.client, phone: value });
     },
-    [saveClient, client],
+    [saveClient, budget.client],
   );
 
   const handleChangeEmail = useCallback(
     (value: string) => {
-      saveClient({ ...client, email: value });
+      saveClient({ ...budget.client, email: value });
     },
-    [saveClient, client],
+    [saveClient, budget.client],
   );
 
   const navigateToManageAdress = useCallback(() => {
@@ -81,13 +81,13 @@ const Client: React.FC = () => {
             label="Nome do cliente"
             placeholder="Digite o nome do cliente"
             autoCapitalize="words"
-            value={client.name}
+            value={budget.client.name}
             onChangeText={handleChangeName}
           />
           <Input
             label="CPF"
             placeholder="Digite o CPF"
-            value={client.cpf}
+            value={budget.client.cpf}
             onChangeText={handleChangeCPF}
             keyboardType="decimal-pad"
             maxLength={14}
@@ -96,7 +96,7 @@ const Client: React.FC = () => {
           <Input
             label="Telefone"
             placeholder="Digite o telefone"
-            value={client.phone}
+            value={budget.client.phone}
             onChangeText={handleChangePhone}
             keyboardType="decimal-pad"
           />
@@ -105,7 +105,7 @@ const Client: React.FC = () => {
             placeholder="Digite o e-mail"
             keyboardType="email-address"
             autoCapitalize="none"
-            value={client.email}
+            value={budget.client.email}
             onChangeText={handleChangeEmail}
           />
         </SectionLabel>

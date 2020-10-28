@@ -7,10 +7,8 @@ export default interface Item {
     length: string;
   };
   surfaceFinish: string;
-  finishing: {
-    position: string;
-    type: string;
-  }[];
+  edgeFinishing: string;
+  edgeFinishingPosition: { position: string }[];
   quantity: string;
   shape: string;
   stoneType: {

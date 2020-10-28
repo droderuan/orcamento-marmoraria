@@ -4,7 +4,6 @@ import React, {
   useRef,
   useEffect,
   SetStateAction,
-  useMemo,
 } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/core';
@@ -21,6 +20,8 @@ import ListPickerModal from '@components/ListPickerModal';
 import Input from '@components/Input';
 import { useBudget } from '@hooks/budget';
 
+import Rectangular from './components/Rectangular';
+
 import {
   Container,
   Content,
@@ -34,14 +35,6 @@ import {
   ItemInputButtonText,
   RadioButtomItem,
   ButtonWrapper,
-  SelectFinishingContainer,
-  SelectFinishingBackground,
-  EdgeFinishingButtonWrapper,
-  MiddleFinishingButtonWrapper,
-  ButtonText,
-  FinishingSelectButton,
-  FinishingSelectType,
-  FinishingNumber,
 } from './styles';
 
 interface RouteParams {
@@ -63,11 +56,13 @@ interface FinishingPosition {
 }
 
 const CreateItem: React.FC = () => {
-  const { addOrSaveItem, getItem } = useBudget();
+  const { saveItem, createItem, getItem } = useBudget();
+
   const route = useRoute();
+
   const {
-    productId,
     roomId,
+    productId,
     itemId,
     stoneNumber,
     stoneType,
@@ -76,51 +71,7 @@ const CreateItem: React.FC = () => {
 
   const lengthInputRef = useRef<TextInput | null>(null);
 
-  const unitOptions = ['cm', 'm', 'mm'];
-  const shapeOptions = ['Retangular', 'Circular'];
-  const finishingOptions = [
-    'Apicoado',
-    'Bruto',
-    'Flameado',
-    'Jateado',
-    'Levigado',
-    'Polido',
-    'Resinado',
-  ];
-  // const finishingEdgeOptions = [
-  //   'sanduiche',
-  //   'simples duplo',
-  //   'sanduiche recuado',
-  //   'reto simples',
-  //   'reto duplo',
-  //   'reto com encaixe',
-  //   'rebaixo invertido',
-  //   'rebaixo',
-  //   'reto 45 graus 10cm',
-  //   'reto 45 graus',
-  //   'espelho 1 2',
-  //   'chanfrado simples',
-  //   'chanfrado invertido',
-  //   'chanfrado duplo',
-  //   'boleado triplo3',
-  //   'boleado',
-  //   'boleado triplo1',
-  //   'boleado triplo2',
-  //   'boleado simples',
-  //   'boleado duplo2',
-  //   'boleado duplo1',
-  //   'boleado com rebaixo',
-  //   'bisoto',
-  //   '45 grau',
-  //   '1/2 cana',
-  //   '1/2 cana dupla 2',
-  //   '1/2 boleado simples',
-  //   '1/2 cana com frisos',
-  //   '1/2 cana invertida',
-  //   '1/2 cana dupla',
-  //   '1/2 cana tripla',
-  //   '1/2 cana com boleado',
-  // ];
+  const [isNewItem, setIsNewItem] = useState(true);
 
   const [item, setItem] = useState(() => {
     if (itemId) {
@@ -135,7 +86,8 @@ const CreateItem: React.FC = () => {
       quantity: '1',
       shape: 'Retangular',
       surfaceFinish: 'Polido',
-      finishing: [],
+      edgeFinishing: '',
+      edgeFinishingPosition: [],
       measures: {
         unit: 'cm',
         length: '',
@@ -156,29 +108,17 @@ const CreateItem: React.FC = () => {
     setFinishingModalPickerVisible,
   ] = useState(false);
 
-  const positionOne = useMemo(
-    () => !!item.finishing.find(finish => finish.position === '1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(item.finishing), item.finishing],
-  );
-
-  const positionTwo = useMemo(
-    () => !!item.finishing.find(finish => finish.position === '2'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(item.finishing), item.finishing],
-  );
-
-  const positionThree = useMemo(
-    () => !!item.finishing.find(finish => finish.position === '3'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(item.finishing), item.finishing],
-  );
-
-  const positionFour = useMemo(
-    () => !!item.finishing.find(finish => finish.position === '4'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(item.finishing), item.finishing],
-  );
+  const unitOptions = ['cm', 'm', 'mm'];
+  const shapeOptions = ['Retangular', 'Circular'];
+  const finishingOptions = [
+    'Apicoado',
+    'Bruto',
+    'Flameado',
+    'Jateado',
+    'Levigado',
+    'Polido',
+    'Resinado',
+  ];
 
   const toggleModal = useCallback(
     (toggleModalStateFunction: React.Dispatch<SetStateAction<boolean>>) => {
@@ -223,28 +163,33 @@ const CreateItem: React.FC = () => {
 
   const handleChangeFinishingPosition = useCallback(
     (position: string) => {
-      const toUpdatefinishing = item.finishing;
+      const toUpdatefinishing = [...item.edgeFinishingPosition];
       const checkExist = toUpdatefinishing.findIndex(
         finishing => finishing.position === position,
       );
+
       if (checkExist !== -1) {
         toUpdatefinishing.splice(checkExist, 1);
       } else {
-        toUpdatefinishing.push({ position, type: '' });
+        toUpdatefinishing.push({ position });
       }
 
       setItem(oldItem => ({
         ...oldItem,
-        finishing: toUpdatefinishing.sort(
+        edgeFinishingPosition: toUpdatefinishing.sort(
           (a, b) => parseInt(a.position, 10) - parseInt(b.position, 10),
         ),
       }));
     },
-    [item.finishing],
+    [item.edgeFinishingPosition],
   );
 
   const navigateToSelectStone = useCallback(() => {
     navigate('SelectStone');
+  }, [navigate]);
+
+  const navigateToSelectEdgeFinish = useCallback(() => {
+    navigate('SelectEdgeFinish');
   }, [navigate]);
 
   const handleSetImage = useCallback(
@@ -263,10 +208,23 @@ const CreateItem: React.FC = () => {
   );
 
   const handleSaveItem = useCallback(() => {
-    addOrSaveItem({ roomId, productId, item });
+    if (isNewItem) {
+      createItem({ roomId, productId, item });
+    } else {
+      saveItem({ roomId, productId, item });
+    }
 
     navigate('RoomProducts', { stoneType });
-  }, [addOrSaveItem, roomId, productId, item, navigate, stoneType]);
+  }, [
+    saveItem,
+    createItem,
+    isNewItem,
+    roomId,
+    productId,
+    item,
+    navigate,
+    stoneType,
+  ]);
 
   useEffect(() => {
     if (itemId) {
@@ -274,6 +232,7 @@ const CreateItem: React.FC = () => {
         type: item.stoneType.type,
         imageName: item.stoneType.stone,
       });
+      setIsNewItem(false);
     }
   }, [itemId, item.stoneType.type, item.stoneType.stone, handleSetImage]);
 
@@ -360,6 +319,17 @@ const CreateItem: React.FC = () => {
 
               <UnitButton
                 onPress={() => toggleModal(setUnitModalPickerVisible)}
+                style={{
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 2.5,
+
+                  elevation: 4,
+                }}
               >
                 <UnitButtonText>{item.measures?.unit}</UnitButtonText>
               </UnitButton>
@@ -399,56 +369,23 @@ const CreateItem: React.FC = () => {
             />
           </Input>
 
-          <Input label="Acabamento">
-            <SelectFinishingContainer>
-              <SelectFinishingBackground
-                imageStyle={{ borderRadius: 10 }}
-                source={stoneImage}
-              >
-                <EdgeFinishingButtonWrapper>
-                  <FinishingSelectButton
-                    onPress={() => handleChangeFinishingPosition('1')}
-                    isSelected={!!positionOne}
-                    style={{ marginTop: -19 }}
-                  >
-                    <ButtonText isSelected={!!positionOne}>1</ButtonText>
-                  </FinishingSelectButton>
-                </EdgeFinishingButtonWrapper>
+          <Input label="Acabamento das bordas">
+            <ItemInputButton onPress={() => navigateToSelectEdgeFinish()}>
+              <ItemInputButtonWrapper>
+                <ItemInputButtonText isOptionSelected={!!item?.stoneType.stone}>
+                  {item.stoneType.stone ||
+                    'Escolha o tipo do acabamento da borda'}
+                </ItemInputButtonText>
+              </ItemInputButtonWrapper>
+            </ItemInputButton>
 
-                <MiddleFinishingButtonWrapper>
-                  <FinishingSelectButton
-                    isSelected={positionTwo}
-                    style={{ marginLeft: -19 }}
-                    onPress={() => handleChangeFinishingPosition('2')}
-                  >
-                    <ButtonText isSelected={positionTwo}>2</ButtonText>
-                  </FinishingSelectButton>
-                  <FinishingSelectButton
-                    isSelected={positionThree}
-                    style={{ marginRight: -19 }}
-                    onPress={() => handleChangeFinishingPosition('3')}
-                  >
-                    <ButtonText isSelected={positionThree}>3</ButtonText>
-                  </FinishingSelectButton>
-                </MiddleFinishingButtonWrapper>
-
-                <EdgeFinishingButtonWrapper>
-                  <FinishingSelectButton
-                    isSelected={positionFour}
-                    style={{ marginBottom: -19 }}
-                    onPress={() => handleChangeFinishingPosition('4')}
-                  >
-                    <ButtonText isSelected={positionFour}>4</ButtonText>
-                  </FinishingSelectButton>
-                </EdgeFinishingButtonWrapper>
-              </SelectFinishingBackground>
-            </SelectFinishingContainer>
-
-            {item.finishing.map(finish => (
-              <FinishingSelectType key={finish.position}>
-                <FinishingNumber>{finish.position}</FinishingNumber>
-              </FinishingSelectType>
-            ))}
+            {item.shape === 'Retangular' && (
+              <Rectangular
+                stoneImage={stoneImage}
+                edgeFinishing={item.edgeFinishingPosition}
+                handleChangeFinishingPosition={handleChangeFinishingPosition}
+              />
+            )}
           </Input>
 
           <ButtonWrapper>

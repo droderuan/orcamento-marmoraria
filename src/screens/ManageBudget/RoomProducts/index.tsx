@@ -2,8 +2,6 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { TextInput, Keyboard, ScrollView } from 'react-native';
 
-import generateID from '@utils/GenerateID';
-
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -56,27 +54,19 @@ const RoomProducts: React.FC = () => {
 
   const { productId, room: routeRoom, stoneType } = routeParams;
 
-  const [room, setRoom] = useState(routeRoom);
   const [product, setProduct] = useState<Product>(() => {
-    if (productId) {
-      const findProduct = room.products.find(item => item.id === productId);
-      if (findProduct) {
-        return findProduct;
-      }
+    const findProduct = routeRoom.products.find(item => item.id === productId);
+    if (!findProduct) {
+      throw new Error('Product does not exist');
     }
-    return {
-      name: 'Novo Produto',
-      items: [],
-      id: generateID(),
-    };
+    return findProduct;
   });
 
   useEffect(() => {
-    saveProduct({ product, roomId: room.id });
-    setOptions({ headerTitle: room.name });
-  });
+    saveProduct({ product, roomId: routeRoom.id });
+    setOptions({ headerTitle: routeRoom.name });
+  }, []);
 
-  // TODO: add input to pointer to start after blur
   const handleBlur = useCallback(() => {
     Keyboard.dismiss();
     inputRef.current?.blur();
@@ -87,27 +77,28 @@ const RoomProducts: React.FC = () => {
   }, []);
 
   const editProduct = useCallback(() => {
-    saveProduct({ product, roomId: room.id });
-  }, [product, room, saveProduct]);
+    saveProduct({ product, roomId: routeRoom.id });
+  }, [product, routeRoom, saveProduct]);
 
   const handleCreateItem = useCallback(() => {
     navigate('CreateItem', {
-      roomId: room.id,
+      roomId: routeRoom.id,
       productId: product.id,
       stoneNumber: product.items.length,
       stoneType,
     });
-  }, [navigate, room.id, product.id, product.items, stoneType]);
+  }, [navigate, routeRoom.id, product.id, product.items, stoneType]);
 
   const handleEditItem = useCallback(
     itemId => {
+      console.log(routeRoom.id);
       navigate('CreateItem', {
-        roomId: room.id,
+        roomId: routeRoom.id,
         productId: product.id,
         itemId,
       });
     },
-    [navigate, room.id, product.id],
+    [navigate, routeRoom.id, product.id],
   );
 
   const deleteItem = useCallback(
@@ -122,9 +113,9 @@ const RoomProducts: React.FC = () => {
   );
 
   const deleteProductAndGoBack = useCallback(() => {
-    deleteProduct({ productId: product.id, roomId: room.id });
+    deleteProduct({ productId: product.id, roomId: routeRoom.id });
     goBack();
-  }, [deleteProduct, goBack, product.id, room.id]);
+  }, [deleteProduct, goBack, product.id, routeRoom.id]);
 
   return (
     <KeyboardDismiss onPress={handleBlur}>
