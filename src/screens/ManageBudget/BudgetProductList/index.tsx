@@ -279,7 +279,7 @@ const BudgetProductList: React.FC = () => {
                           <ItemTextContainerMeasures>
                             <ItemText
                               numberOfLines={1}
-                            >{`${item.measures.width}x${item.measures.length} ${item.measures.unit}`}</ItemText>
+                            >{`${item.measures.displayMeasures} ${item.unit}`}</ItemText>
                           </ItemTextContainerMeasures>
                         </ProductCardInfoItem>
                       ))}

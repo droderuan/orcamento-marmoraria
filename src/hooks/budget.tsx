@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+import Reactotron from 'reactotron-react-native';
 
 import Budget from '@dtos/Budget';
 import Room from '@dtos/Room';
@@ -88,8 +89,9 @@ export const BudgetProvider: React.FC = ({ children }) => {
     surfaceFinish: 'Polido',
     edgeFinishing: '',
     edgeFinishingPosition: [],
+    unit: 'cm',
     measures: {
-      unit: 'cm',
+      displayMeasures: '',
       length: '',
       width: '',
     },
@@ -188,7 +190,9 @@ export const BudgetProvider: React.FC = ({ children }) => {
   );
 
   const saveEditingItem = useCallback(item => {
-    console.log('foi no salvar');
+    Reactotron.display({
+      value: editingItem,
+    });
     setEditingItem(oldEditingItem => ({ ...oldEditingItem, ...item }));
   }, []);
 

@@ -17,6 +17,7 @@ import { useBudget } from '@hooks/budget';
 
 import RectangularSelectEdge from './components/RectangularSelectEdge';
 import RectangularMeasures from './components/RectangularMeasures';
+import CircleSelectEdge from './components/CircleSelectEdge';
 import CircleMeasures from './components/CircleMeasures';
 
 import {
@@ -395,6 +396,13 @@ const CreateItem: React.FC = () => {
 
             {editingItem.shape === 'Retangular' && (
               <RectangularSelectEdge
+                stoneImage={stoneImage}
+                edgeFinishing={editingItem.edgeFinishingPosition}
+                handleChangeFinishingPosition={handleChangeFinishingPosition}
+              />
+            )}
+            {editingItem.shape === 'Circular' && (
+              <CircleSelectEdge
                 stoneImage={stoneImage}
                 edgeFinishing={editingItem.edgeFinishingPosition}
                 handleChangeFinishingPosition={handleChangeFinishingPosition}
