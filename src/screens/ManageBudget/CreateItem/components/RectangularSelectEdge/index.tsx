@@ -20,7 +20,7 @@ interface RectangularProps {
   handleChangeFinishingPosition(options: EdgeFinishingPosition): void;
 }
 
-const Rectangular: React.FC<RectangularProps> = ({
+const RectangularSelectEdge: React.FC<RectangularProps> = ({
   stoneImage,
   edgeFinishing,
   handleChangeFinishingPosition,
@@ -141,4 +141,4 @@ const Rectangular: React.FC<RectangularProps> = ({
   );
 };
 
-export default Rectangular;
+export default RectangularSelectEdge;

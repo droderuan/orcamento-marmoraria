@@ -1,16 +1,18 @@
 export default interface Item {
   id: string;
   name: string;
+  shape: 'Retangular' | 'Circular';
+  unit: string;
   measures: {
-    unit: string;
-    width: string;
-    length: string;
+    displayMeasures: string;
+    width?: string;
+    length?: string;
+    diameter?: string;
   };
   surfaceFinish: string;
   edgeFinishing: string;
   edgeFinishingPosition: { position: string; name: string }[];
   quantity: string;
-  shape: string;
   stoneType: {
     type: string;
     stone: string;

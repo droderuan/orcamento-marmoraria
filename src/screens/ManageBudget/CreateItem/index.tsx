@@ -1,13 +1,7 @@
-import React, {
-  useCallback,
-  useState,
-  useRef,
-  useEffect,
-  SetStateAction,
-} from 'react';
+import React, { useCallback, useState, useEffect, SetStateAction } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/core';
-import { ScrollView, TextInput } from 'react-native';
+import { ScrollView } from 'react-native';
 import Reactotron from 'reactotron-react-native';
 import { RadioButton } from 'react-native-paper';
 
@@ -21,7 +15,9 @@ import ListPickerModal from '@components/ListPickerModal';
 import Input from '@components/Input';
 import { useBudget } from '@hooks/budget';
 
-import Rectangular from './components/Rectangular';
+import RectangularSelectEdge from './components/RectangularSelectEdge';
+import RectangularMeasures from './components/RectangularMeasures';
+import CircleMeasures from './components/CircleMeasures';
 
 import {
   Container,
@@ -75,8 +71,6 @@ const CreateItem: React.FC = () => {
   } = route.params as RouteParams;
   const { navigate, setOptions } = useNavigation();
 
-  const lengthInputRef = useRef<TextInput | null>(null);
-
   const [isNewItem, setIsNewItem] = useState(true);
 
   useEffect(() => {
@@ -91,14 +85,15 @@ const CreateItem: React.FC = () => {
         name: `Pedra${stoneNumber}`,
         quantity: '1',
         shape: 'Retangular',
-        surfaceFinish: 'Polido',
-        edgeFinishing: '',
-        edgeFinishingPosition: [],
+        unit: 'cm',
         measures: {
-          unit: 'cm',
+          displayMeasures: '',
           length: '',
           width: '',
         },
+        surfaceFinish: 'Polido',
+        edgeFinishing: '',
+        edgeFinishingPosition: [],
         stoneType: {
           stone: '',
           type: '',
@@ -173,22 +168,11 @@ const CreateItem: React.FC = () => {
     [saveEditingItem],
   );
 
-  const handleChangeMeasure = useCallback(
-    ({
-      unit = editingItem.measures.unit,
-      width = editingItem.measures.width,
-      length = editingItem.measures.length,
-    }) => {
-      saveEditingItem({
-        measures: { unit, width, length },
-      });
+  const handleChangeUnit = useCallback(
+    ({ unit }) => {
+      saveEditingItem({ unit });
     },
-    [
-      saveEditingItem,
-      editingItem.measures.unit,
-      editingItem.measures.width,
-      editingItem.measures.length,
-    ],
+    [saveEditingItem],
   );
 
   const handleChangeFinishingPosition = useCallback(
@@ -339,23 +323,8 @@ const CreateItem: React.FC = () => {
 
           <Input label="Medidas">
             <ItemWithTwoTextInputWrapper>
-              <ItemWithTwoTextInput
-                keyboardType="number-pad"
-                placeholder="Largura"
-                value={editingItem.measures.width}
-                placeholderTextColor="#A0A0A0"
-                onChangeText={value => handleChangeMeasure({ width: value })}
-                onSubmitEditing={() => lengthInputRef.current?.focus()}
-              />
-              <ItemText>x</ItemText>
-              <ItemWithTwoTextInput
-                ref={lengthInputRef}
-                keyboardType="number-pad"
-                placeholder="Comprimento"
-                value={editingItem.measures.length}
-                placeholderTextColor="#A0A0A0"
-                onChangeText={value => handleChangeMeasure({ length: value })}
-              />
+              {editingItem.shape === 'Retangular' && <RectangularMeasures />}
+              {editingItem.shape === 'Circular' && <CircleMeasures />}
 
               <UnitButton
                 onPress={() => toggleModal(setUnitModalPickerVisible)}
@@ -371,7 +340,7 @@ const CreateItem: React.FC = () => {
                   elevation: 4,
                 }}
               >
-                <UnitButtonText>{editingItem.measures?.unit}</UnitButtonText>
+                <UnitButtonText>{editingItem.unit}</UnitButtonText>
               </UnitButton>
 
               <ListPickerModal
@@ -380,7 +349,7 @@ const CreateItem: React.FC = () => {
                 selectDefault="cm"
                 visible={unitModalPickerVisible}
                 handleCloseModal={() => toggleModal(setUnitModalPickerVisible)}
-                handleOnChange={value => handleChangeMeasure({ unit: value })}
+                handleOnChange={value => handleChangeUnit({ unit: value })}
                 options={unitOptions}
               />
             </ItemWithTwoTextInputWrapper>
@@ -425,7 +394,7 @@ const CreateItem: React.FC = () => {
             </ItemInputButton>
 
             {editingItem.shape === 'Retangular' && (
-              <Rectangular
+              <RectangularSelectEdge
                 stoneImage={stoneImage}
                 edgeFinishing={editingItem.edgeFinishingPosition}
                 handleChangeFinishingPosition={handleChangeFinishingPosition}

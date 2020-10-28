@@ -186,9 +186,9 @@ const RoomProducts: React.FC = () => {
                   </Label>
                   <Label>
                     <TitleLabel>Medidas</TitleLabel>
-                    <InfoLabel
-                      numberOfLines={1}
-                    >{`${item.measures.width}x${item.measures.length} ${item.measures.unit}`}</InfoLabel>
+                    <InfoLabel numberOfLines={1}>
+                      {`${item.measures.displayMeasures} ${item.unit}`}
+                    </InfoLabel>
                   </Label>
                 </ItemCardRow>
 
