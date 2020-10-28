@@ -23,9 +23,7 @@ import CircleMeasures from './components/CircleMeasures';
 import {
   Container,
   Content,
-  ItemWithTwoTextInput,
   ItemWithTwoTextInputWrapper,
-  ItemText,
   UnitButton,
   UnitButtonText,
   ItemInputButton,
@@ -33,6 +31,8 @@ import {
   ItemInputButtonText,
   RadioButtomItem,
   ButtonWrapper,
+  TextAreaContainer,
+  TextArea,
 } from './styles';
 
 interface RouteParams {
@@ -99,6 +99,7 @@ const CreateItem: React.FC = () => {
           stone: '',
           type: '',
         },
+        moreInfo: '',
       } as Item);
     }
   }, []);
@@ -109,6 +110,8 @@ const CreateItem: React.FC = () => {
 
   const [stoneImage, setStoneImage] = useState<any>(null);
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
+
+  const [moreInfo, setMoreInfo] = useState(editingItem.moreInfo);
 
   const [
     finishingModalPickerVisible,
@@ -175,6 +178,10 @@ const CreateItem: React.FC = () => {
     },
     [saveEditingItem],
   );
+
+  const handleChangeMoreInfo = useCallback(() => {
+    saveEditingItem({ moreInfo });
+  }, [saveEditingItem, moreInfo]);
 
   const handleChangeFinishingPosition = useCallback(
     ({ name, position }: EdgeFinishingPosition) => {
@@ -408,6 +415,19 @@ const CreateItem: React.FC = () => {
                 handleChangeFinishingPosition={handleChangeFinishingPosition}
               />
             )}
+          </Input>
+          <Input label="Mais informações">
+            <TextAreaContainer>
+              <TextArea
+                numberOfLines={10}
+                multiline
+                placeholder="Digite aqui"
+                style={{ textAlignVertical: 'top' }}
+                value={moreInfo}
+                onChangeText={value => setMoreInfo(value)}
+                onEndEditing={e => handleChangeMoreInfo()}
+              />
+            </TextAreaContainer>
           </Input>
 
           <ButtonWrapper>

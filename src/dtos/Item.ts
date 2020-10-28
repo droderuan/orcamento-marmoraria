@@ -17,4 +17,5 @@ export default interface Item {
     type: string;
     stone: string;
   };
+  moreInfo: string;
 }

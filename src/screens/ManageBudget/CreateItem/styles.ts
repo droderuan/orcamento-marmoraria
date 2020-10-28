@@ -24,41 +24,11 @@ export const ItemInput = styled.View`
   width: 100%;
 `;
 
-export const ItemInputLabel = styled.Text`
-  margin-left: 15px;
-  font-family: 'Roboto-regular';
-  font-size: 16px;
-  color: #000;
-`;
-
-export const ItemTextInput = styled.TextInput`
-  height: 45px;
-  margin-left: 15px;
-  font-family: 'Roboto-Regular';
-  font-size: 20px;
-`;
-
 export const ItemWithTwoTextInputWrapper = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-`;
-
-export const ItemWithTwoTextInput = styled.TextInput`
-  text-align: center;
-  margin-right: 0px;
-  width: 40%;
-  height: 45px;
-  font-family: 'Roboto-Medium';
-  font-size: 20px;
-`;
-
-export const ItemText = styled.Text`
-  margin: 0 2px 5px;
-  font-family: 'Roboto-regular';
-  font-size: 22px;
-  color: #000;
 `;
 
 export const UnitButton = styled(RectButton)`
@@ -107,4 +77,21 @@ export const RadioButtomItem = styled.View`
 
 export const ButtonWrapper = styled.View`
   margin-top: 40px;
+`;
+
+export const TextAreaContainer = styled.View`
+  justify-content: flex-start;
+`;
+
+export const TextArea = styled.TextInput`
+  height: 200px;
+  margin: 12px 10px 5px;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 1px 5px 1px;
+  text-align: left;
+  border-color: ${primary500};
+  font-family: 'Roboto-regular';
+  font-size: 18px;
+  color: #000;
 `;

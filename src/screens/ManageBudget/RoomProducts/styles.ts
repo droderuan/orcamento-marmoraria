@@ -93,7 +93,7 @@ export const ItemCardColumnWithButtons = styled.View`
 
 export const Label = styled.View`
   margin: 0 5px 5px;
-  width: 30%;
+  flex: 1;
 `;
 
 export const TitleLabel = styled.Text`

@@ -99,6 +99,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
       stone: '',
       type: '',
     },
+    moreInfo: '',
   } as Item);
 
   const [loaded, setLoaded] = useState(false);
