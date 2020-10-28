@@ -123,6 +123,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
             address: [],
           } as Client,
           rooms: [],
+          deliveryAddress: {} as ClientAddress,
           created_at: new Date(),
         });
       }
@@ -363,7 +364,18 @@ export const BudgetProvider: React.FC = ({ children }) => {
       } else {
         clientCopy.address[checkAddressExists] = address;
       }
-      setBudget(oldBudget => ({ ...oldBudget, client: clientCopy }));
+      if (address.deliveryAddress) {
+        setBudget(oldBudget => ({
+          ...oldBudget,
+          client: clientCopy,
+          deliveryAddress: address,
+        }));
+      } else {
+        setBudget(oldBudget => ({
+          ...oldBudget,
+          client: clientCopy,
+        }));
+      }
     },
     [budget.client],
   );

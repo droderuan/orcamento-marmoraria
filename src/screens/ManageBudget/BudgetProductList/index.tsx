@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import { TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { Button } from 'react-native-paper';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { red, green } from '@styles/theme/colors';
@@ -104,6 +104,12 @@ const BudgetProductList: React.FC = () => {
     setEditRoom({} as RoomProps);
   }, [saveRoom, closeEditRoomModal, editRoom]);
 
+  const handleDuplicateRoom = useCallback(() => {
+    deleteRoom(editRoom);
+    closeEditRoomModal();
+    setEditRoom({} as RoomProps);
+  }, [deleteRoom, closeEditRoomModal, editRoom]);
+
   const handleDeleteRoom = useCallback(() => {
     deleteRoom(editRoom);
     closeEditRoomModal();
@@ -184,11 +190,18 @@ const BudgetProductList: React.FC = () => {
           <ModalHeaderWrapper>
             <ModalTitle>Editar cômodo</ModalTitle>
             <TouchableOpacity onPress={handleDeleteRoom}>
-              <MaterialIcons
-                name="delete"
+              <MaterialCommunityIcons
+                name="delete-outline"
                 size={48}
                 color="#dd3030"
                 style={{ marginRight: 10 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDuplicateRoom}>
+              <MaterialCommunityIcons
+                name="content-duplicate"
+                size={42}
+                color="#355C8A"
               />
             </TouchableOpacity>
           </ModalHeaderWrapper>
@@ -302,7 +315,11 @@ const BudgetProductList: React.FC = () => {
                   }}
                 >
                   <ProductCardAdd>
-                    <MaterialIcons name="add" size={48} color="#747171" />
+                    <MaterialCommunityIcons
+                      name="plus"
+                      size={48}
+                      color="#747171"
+                    />
                     <ProductCardAddText>Novo Produto</ProductCardAddText>
                   </ProductCardAdd>
                 </ProductCardContainer>
