@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Budget from '@dtos/Budget';
-import Client from '@dtos/Client';
-import { asyncStorage } from 'reactotron-react-native';
 
 const storageKeys = {
   budget: '@apporcamento:budget:id:',

@@ -27,6 +27,19 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
     return format(new Date(budget.created_at), 'dd/MM/yyyy');
   }, [budget.created_at]);
 
+  const parsedLocal = useMemo(() => {
+    let parsedAddress = 'Sem local de entrega';
+    if (budget.deliveryAddress.state) {
+      parsedAddress = budget.deliveryAddress.state;
+    }
+
+    if (budget.deliveryAddress.city) {
+      parsedAddress += ` - ${budget.deliveryAddress.city}`;
+    }
+
+    return parsedAddress;
+  }, [budget.deliveryAddress.state, budget.deliveryAddress.city]);
+
   return (
     <Container
       style={{
@@ -52,7 +65,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
           <Label>
             <TitleLabel>Local</TitleLabel>
             <InfoLabel numberOfLines={1} ellipsizeMode="tail">
-              RJ - Rio de Janeiro
+              {parsedLocal}
             </InfoLabel>
           </Label>
         </LeftBudgetCard>

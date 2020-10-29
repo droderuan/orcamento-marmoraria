@@ -7,6 +7,10 @@ import firestore from '@react-native-firebase/firestore';
 
 import { generateBudgetPdf } from '@services/HtmlToPdf';
 import { storagePermission } from '@services/HandlePermissions';
+
+import SectionLabel from '@components/SectionLabel';
+
+import { Text } from 'react-native';
 import { Container } from './styles';
 
 const BudgetOptions: React.FC = () => {
@@ -38,9 +42,32 @@ const BudgetOptions: React.FC = () => {
 
   return (
     <Container>
-      <Button onPress={() => generatePdf()}>Criar pdf</Button>
-      <Button onPress={() => deleteAndgoBack()}>apagar orçamento</Button>
-      <Button onPress={() => sendToFirestore()}>Salvar no firebase</Button>
+      <SectionLabel title="Endereço de entrega">
+        <Text style={{ margin: 30 }}>{budget.deliveryAddress.street}</Text>
+      </SectionLabel>
+      <SectionLabel title="Opções">
+        <Button
+          mode="contained"
+          style={{ margin: 30 }}
+          onPress={() => generatePdf()}
+        >
+          Criar pdf
+        </Button>
+        <Button
+          mode="contained"
+          style={{ margin: 30 }}
+          onPress={() => deleteAndgoBack()}
+        >
+          apagar orçamento
+        </Button>
+        <Button
+          mode="contained"
+          style={{ margin: 30 }}
+          onPress={() => sendToFirestore()}
+        >
+          Salvar no firebase
+        </Button>
+      </SectionLabel>
     </Container>
   );
 };

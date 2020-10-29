@@ -16,6 +16,7 @@ import SectionLabel from '@components/SectionLabel';
 import { RadioButton } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { Alert } from 'react-native';
 import {
   Container,
   ScrollView,
@@ -97,6 +98,10 @@ const ManageAdress: React.FC = () => {
         }));
       } catch (error) {
         console.log(error);
+        Alert.alert(
+          'Serviço indisponível',
+          'Não foi possivel pesquisar pelo CEP digitado. Verifique a conexão com a internet.',
+        );
       } finally {
         setLoading(false);
       }

@@ -12,6 +12,7 @@ import Product from '@dtos/Product';
 import { useNavigation } from '@react-navigation/core';
 import { useBudget } from '@hooks/budget';
 
+import { primary600 } from '@styles/theme/colors';
 import {
   Container,
   KeyboardDismiss,
@@ -141,7 +142,7 @@ const RoomProducts: React.FC = () => {
                 <MaterialCommunityIcons
                   name="content-duplicate"
                   size={42}
-                  color="#355C8A"
+                  color={primary600}
                 />
               </HeaderButton>
             </ProductHeaderButtons>
@@ -171,7 +172,7 @@ const RoomProducts: React.FC = () => {
                       <MaterialCommunityIcons
                         name="content-duplicate"
                         size={42}
-                        color="#355C8A"
+                        color={primary600}
                       />
                     </ButtonItemCard>
                   </ButtonsItemCard>

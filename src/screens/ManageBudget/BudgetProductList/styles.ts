@@ -149,13 +149,15 @@ export const ProductCardInfoItem = styled.View`
 `;
 
 export const ItemTextContainerQuantity = styled.View`
-  width: 20px;
+  margin-right: 2px;
+  width: 20%;
 `;
 export const ItemTextContainerName = styled.View`
-  width: 60px;
+  margin-right: 5px;
+  width: 30%;
 `;
 export const ItemTextContainerMeasures = styled.View`
-  width: 60px;
+  width: 50%;
 `;
 
 export const ItemText = styled.Text`
