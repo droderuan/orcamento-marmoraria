@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import TextInputMask from 'react-native-text-input-mask';
 
 interface AddressProps {
   isDelivery: boolean;

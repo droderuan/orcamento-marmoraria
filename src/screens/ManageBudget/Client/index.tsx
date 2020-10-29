@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/core';
 
 import { useBudget } from '@hooks/budget';
 
+import MaskTestInput from '@components/MaskTextInput';
 import Input from '@components/Input';
 import SectionLabel from '@components/SectionLabel';
 
@@ -84,22 +85,32 @@ const Client: React.FC = () => {
             value={budget.client.name}
             onChangeText={handleChangeName}
           />
-          <Input
-            label="CPF"
-            placeholder="Digite o CPF"
-            value={budget.client.cpf}
-            onChangeText={handleChangeCPF}
-            keyboardType="decimal-pad"
-            maxLength={14}
-          />
+          <Input label="CPF">
+            <MaskTestInput
+              placeholder="Digite o CPF"
+              value={budget.client.cpf}
+              keyboardType="decimal-pad"
+              maxLength={14}
+              onChangeText={(formatted, extracted) =>
+                extracted && handleChangeCPF(extracted)
+              }
+              mask="[000]-[000]-[000]-[00]"
+            />
+          </Input>
 
-          <Input
-            label="Telefone"
-            placeholder="Digite o telefone"
-            value={budget.client.phone}
-            onChangeText={handleChangePhone}
-            keyboardType="decimal-pad"
-          />
+          <Input label="Telefone">
+            <MaskTestInput
+              placeholder="Digite o telefone"
+              value={budget.client.phone}
+              keyboardType="decimal-pad"
+              maxLength={16}
+              onChangeText={(formatted, extracted) =>
+                extracted && handleChangePhone(formatted)
+              }
+              mask="([00]) [00000]-[0000]"
+            />
+          </Input>
+
           <Input
             label="E-mail"
             placeholder="Digite o e-mail"

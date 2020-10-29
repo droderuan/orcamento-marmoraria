@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { primary700 } from '@styles/theme/colors';
+import { primary800 } from '@styles/theme/colors';
 
 export const Container = styled.View`
   width: 100%;
@@ -10,7 +10,7 @@ export const SectionContainer = styled.View`
   width: 100%;
   height: 40px;
   padding-left: 10px;
-  background-color: ${primary700};
+  background-color: ${primary800};
 `;
 
 export const SectionTitle = styled.Text`

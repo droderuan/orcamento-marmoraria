@@ -6,10 +6,10 @@ import * as colors from './colors';
 const theme = {
   ...DefaultTheme,
   dark: false,
-  roundness: 4,
+  roundness: 5,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.primary600,
+    primary: colors.primary900,
     accent: colors.secondary900,
     background: '#f6f6f6',
     surface: colors.surface,
