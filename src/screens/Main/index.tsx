@@ -6,8 +6,7 @@ import {
   useIsFocused,
 } from '@react-navigation/native';
 import { ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/Fontisto';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getAllBudgetsFromStorage } from '@services/Storage';
 
 import Button from '@components/Button';
@@ -64,7 +63,7 @@ const HomePage: React.FC = () => {
     <Container>
       <Header>
         <DrawerMenuButton onPress={toggleDrawer}>
-          <Icon name="player-settings" size={32} color="#fff" />
+          <Icon name="menu" size={32} color="#fff" />
         </DrawerMenuButton>
         {/* <SearchArea>
           <SearchInput placeholder="Procure pelo nome do cliente" />

@@ -10,6 +10,7 @@ import Modal from '@components/Modal';
 import { secondary300 } from '@styles/theme/colors';
 import { useBudget } from '@hooks/budget';
 
+import MaskTestInput from '@components/MaskTextInput';
 import Input from '@components/Input';
 import SectionLabel from '@components/SectionLabel';
 
@@ -169,15 +170,18 @@ const ManageAdress: React.FC = () => {
     <Container>
       <ScrollView>
         <SectionLabel title="Cliente">
-          <Input
-            label="CEP"
-            placeholder="Digite o CEP"
-            value={address.cep}
-            onChangeText={handleChangeCEP}
-            onEndEditing={queryAndValidateCEP}
-            keyboardType="number-pad"
-            maxLength={8}
-          />
+          <Input label="CEP">
+            <MaskTestInput
+              value={address.cep}
+              placeholder="Digite o CEP"
+              onChangeText={(formatted, extracted) =>
+                extracted && handleChangeCEP(extracted)
+              }
+              onEndEditing={queryAndValidateCEP}
+              keyboardType="number-pad"
+              mask="[00].[000]-[000]"
+            />
+          </Input>
           <Modal visible={loading} transparent>
             <LoadingIndicatorContainer>
               <LoadingIndicator animating size="large" color={secondary300} />

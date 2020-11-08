@@ -34,6 +34,7 @@ const RectangularMeasures: React.FC = () => {
       <ItemWithTwoTextInput
         keyboardType="number-pad"
         placeholder="Largura"
+        maxLength={10}
         value={editingItem.measures.width}
         placeholderTextColor="#A0A0A0"
         onChangeText={value => handleChangeMeasure({ width: value })}
@@ -44,6 +45,7 @@ const RectangularMeasures: React.FC = () => {
         ref={lengthInputRef}
         keyboardType="number-pad"
         placeholder="Comprimento"
+        maxLength={10}
         value={editingItem.measures.length}
         placeholderTextColor="#A0A0A0"
         onChangeText={value => handleChangeMeasure({ length: value })}

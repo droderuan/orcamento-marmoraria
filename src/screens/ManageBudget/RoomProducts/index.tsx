@@ -180,9 +180,9 @@ const RoomProducts: React.FC = () => {
 
                 <ItemCardRow>
                   <Label>
-                    <TitleLabel>Tipo</TitleLabel>
+                    <TitleLabel>Pedra</TitleLabel>
                     <InfoLabel numberOfLines={1} ellipsizeMode="tail">
-                      {item.stoneType.stone}
+                      {item.stoneType.stone || 'Não selecionada'}
                     </InfoLabel>
                   </Label>
                   <Label>

@@ -88,7 +88,7 @@ export const TextArea = styled.TextInput`
   margin: 12px 10px 5px;
   border-width: 1px;
   border-radius: 10px;
-  padding: 1px 5px 1px;
+  padding: 1px 10px 1px;
   text-align: left;
   border-color: ${primary500};
   font-family: 'Roboto-regular';

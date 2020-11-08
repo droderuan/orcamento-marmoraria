@@ -52,6 +52,7 @@ interface BudgetContextData {
   budget: Budget;
   editingItem: Item;
   saveEditingItem(item: any): void;
+  removeEditingItem(): void;
   deleteBudget(): void;
   saveRoom(updatedRoom: Room): void;
   createRoom({ name }: CreateRoomDTO): void;
@@ -87,7 +88,10 @@ export const BudgetProvider: React.FC = ({ children }) => {
     quantity: '1',
     shape: 'Retangular',
     surfaceFinish: 'Polido',
-    edgeFinishing: '',
+    edgeFinishing: {
+      name: '',
+      type: '',
+    },
     edgeFinishingPosition: [],
     unit: 'cm',
     measures: {
@@ -191,12 +195,44 @@ export const BudgetProvider: React.FC = ({ children }) => {
     [budget, getProductIndex],
   );
 
-  const saveEditingItem = useCallback(item => {
+  const saveEditingItem = useCallback(
+    item => {
+      Reactotron.display({
+        value: editingItem,
+      });
+      setEditingItem(oldEditingItem => ({ ...oldEditingItem, ...item }));
+    },
+    [editingItem],
+  );
+
+  const removeEditingItem = useCallback(() => {
     Reactotron.display({
       value: editingItem,
     });
-    setEditingItem(oldEditingItem => ({ ...oldEditingItem, ...item }));
-  }, []);
+    setEditingItem({
+      id: '',
+      name: ``,
+      quantity: '1',
+      shape: 'Retangular',
+      surfaceFinish: 'Polido',
+      edgeFinishing: {
+        name: '',
+        type: '',
+      },
+      edgeFinishingPosition: [],
+      unit: 'cm',
+      measures: {
+        displayMeasures: '',
+        length: '',
+        width: '',
+      },
+      stoneType: {
+        stone: '',
+        type: '',
+      },
+      moreInfo: '',
+    });
+  }, [editingItem]);
 
   const deleteBudget = useCallback(() => {
     deleteBudgetFromStorage(budget.id);
@@ -416,6 +452,7 @@ export const BudgetProvider: React.FC = ({ children }) => {
         budget,
         editingItem,
         saveEditingItem,
+        removeEditingItem,
         deleteBudget,
         createRoom,
         saveRoom,

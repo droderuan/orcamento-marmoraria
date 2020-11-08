@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { FlatList, Dimensions } from 'react-native';
+import { primary50 } from '@styles/theme/colors';
 
 interface ItemProps {
   name: string;
@@ -26,14 +27,20 @@ export const ListItem = styled.View`
   align-items: center;
   flex: 1;
   flex-basis: 0;
-  height: 200px;
+  height: 160px;
+`;
+
+export const StoneImageWrapper = styled.View`
+  border-radius: 10px;
+  width: 100%;
+  background-color: ${primary50};
+  margin-bottom: 15px;
+  padding: 5px;
 `;
 
 export const StoneImage = styled.Image`
-  border-radius: 10px;
   width: 100%;
-  height: 120px;
-  margin-bottom: 10px;
+  height: 80px;
 `;
 
 export const StoneImageText = styled.Text`

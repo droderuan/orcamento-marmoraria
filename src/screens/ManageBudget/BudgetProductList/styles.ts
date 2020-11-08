@@ -146,6 +146,8 @@ export const ProductCardInfoItem = styled.View`
   justify-content: space-between;
   align-items: center;
   margin: 2px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: ${primary500};
 `;
 
 export const ItemTextContainerQuantity = styled.View`
@@ -162,7 +164,7 @@ export const ItemTextContainerMeasures = styled.View`
 
 export const ItemText = styled.Text`
   font-family: 'Roboto-Light';
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 export const ProductCardAdd = styled.View`

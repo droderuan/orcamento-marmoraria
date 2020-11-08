@@ -10,7 +10,10 @@ export default interface Item {
     diameter?: string;
   };
   surfaceFinish: string;
-  edgeFinishing: string;
+  edgeFinishing: {
+    name: string;
+    type: string;
+  };
   edgeFinishingPosition: { position: string; name: string }[];
   quantity: string;
   stoneType: {

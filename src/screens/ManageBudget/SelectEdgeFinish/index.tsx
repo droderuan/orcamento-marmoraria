@@ -10,6 +10,7 @@ import {
   ListContent,
   ListItemButton,
   ListItem,
+  StoneImageWrapper,
   StoneImage,
   StoneImageText,
 } from './styles';
@@ -23,8 +24,13 @@ const SelectEdgeFinish: React.FC = () => {
   const { navigate } = useNavigation();
 
   const handleSelectEdgeFinishAndGoBack = useCallback(
-    ({ option }) => {
-      saveEditingItem({ edgeFinishing: option });
+    ({ name, type }) => {
+      saveEditingItem({
+        edgeFinishing: {
+          name,
+          type,
+        },
+      });
       navigate('CreateItem');
     },
     [saveEditingItem, navigate],
@@ -34,9 +40,9 @@ const SelectEdgeFinish: React.FC = () => {
     <Container>
       <Listcontainer>
         <List.AccordionGroup>
-          {EdgeFinishImages.map(finishType => (
+          {EdgeFinishImages.edgeFinishes.map(finishType => (
             <List.Accordion
-              title={finishType.type}
+              title={finishType.display}
               id={finishType.type}
               key={finishType.type}
             >
@@ -52,12 +58,30 @@ const SelectEdgeFinish: React.FC = () => {
                   <ListItemButton
                     onPress={() =>
                       handleSelectEdgeFinishAndGoBack({
-                        option: item.displayName,
+                        name: item.displayName,
+                        type: finishType.type,
                       })
                     }
                   >
                     <ListItem>
-                      <StoneImage source={item.img} />
+                      <StoneImageWrapper
+                        style={{
+                          shadowColor: '#000',
+                          shadowOffset: {
+                            width: 0,
+                            height: 2,
+                          },
+                          shadowOpacity: 0.25,
+                          shadowRadius: 2.5,
+
+                          elevation: 4,
+                        }}
+                      >
+                        <StoneImage
+                          source={item.img}
+                          style={{ resizeMode: 'contain' }}
+                        />
+                      </StoneImageWrapper>
                       <StoneImageText numberOfLines={2}>
                         {item.displayName}
                       </StoneImageText>

@@ -29,6 +29,7 @@ const CircleMeasures: React.FC = () => {
       <ItemWithTwoTextInput
         keyboardType="number-pad"
         placeholder="Diâmetro"
+        maxLength={10}
         value={editingItem.measures?.diameter}
         placeholderTextColor="#A0A0A0"
         onChangeText={value => handleChangeMeasure({ diameter: value })}

@@ -42,6 +42,14 @@ const Client: React.FC = () => {
     });
   }, [budget.client.address, JSON.stringify(budget.client.address)]);
 
+  const phoneMask = useMemo(() => {
+    const mask =
+      budget.client.phone.length !== 15
+        ? '([00]) [0000]-[0000][0]'
+        : '([00]) [00000]-[0000]';
+    return mask;
+  }, [budget.client.phone.length]);
+
   const handleChangeName = useCallback(
     (value: string) => {
       saveClient({ ...budget.client, name: value });
@@ -94,7 +102,7 @@ const Client: React.FC = () => {
               onChangeText={(formatted, extracted) =>
                 extracted && handleChangeCPF(extracted)
               }
-              mask="[000]-[000]-[000]-[00]"
+              mask="[000].[000].[000]-[00]"
             />
           </Input>
 
@@ -107,7 +115,7 @@ const Client: React.FC = () => {
               onChangeText={(formatted, extracted) =>
                 extracted && handleChangePhone(formatted)
               }
-              mask="([00]) [00000]-[0000]"
+              mask={phoneMask}
             />
           </Input>
 

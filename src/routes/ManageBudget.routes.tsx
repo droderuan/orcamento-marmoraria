@@ -12,6 +12,7 @@ import CreateItem from '../screens/ManageBudget/CreateItem';
 import SelectStone from '../screens/ManageBudget/SelectStone';
 import SelectEdgeFinish from '../screens/ManageBudget/SelectEdgeFinish';
 import ManageAddress from '../screens/ManageBudget/ManageAdress';
+import PDFWebView from '../screens/ManageBudget/PDFWebView';
 import MainPage from './ManageBudgetTab.routes';
 
 interface RouteParamsProps {
@@ -73,6 +74,13 @@ const ManageBudgetRoutes: React.FC = () => {
           component={ManageAddress}
           options={{
             headerTitle: 'Endereço',
+          }}
+        />
+        <ManageBudget.Screen
+          name="PDFWebView"
+          component={PDFWebView}
+          options={{
+            headerTitle: 'PDFWebView',
           }}
         />
       </ManageBudget.Navigator>

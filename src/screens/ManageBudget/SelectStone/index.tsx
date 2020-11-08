@@ -63,7 +63,10 @@ const SelectStone: React.FC = () => {
                     }
                   >
                     <ListItem>
-                      <StoneImage source={item.img} />
+                      <StoneImage
+                        source={item.img}
+                        style={{ resizeMode: 'contain' }}
+                      />
                       <StoneImageText numberOfLines={2}>
                         {item.display}
                       </StoneImageText>

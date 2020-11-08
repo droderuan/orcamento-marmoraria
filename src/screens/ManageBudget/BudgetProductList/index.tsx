@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { Button } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -265,30 +265,23 @@ const BudgetProductList: React.FC = () => {
                   <ProductCardContainer
                     onPress={() => handleNavigateToProduct(room, product.id)}
                     key={product.id}
-                    style={{
-                      shadowColor: '#000',
-                      shadowOffset: {
-                        width: 0,
-                        height: 2,
-                      },
-                      shadowOpacity: 0.25,
-                      shadowRadius: 3.84,
-
-                      elevation: 6,
-                    }}
                   >
                     <ProductCardHeader>
-                      <ProductCardTitle>{product.name}</ProductCardTitle>
+                      <ProductCardTitle numberOfLines={2} ellipsizeMode="tail">
+                        {product.name}
+                      </ProductCardTitle>
                     </ProductCardHeader>
                     <ProductCardInfo>
                       {product.items.map((item, itemIndex) => (
                         <ProductCardInfoItem key={itemIndex.toString()}>
                           <ItemTextContainerQuantity>
-                            <ItemText>{item.quantity}</ItemText>
+                            <ItemText>{item.quantity}x</ItemText>
                           </ItemTextContainerQuantity>
+
                           <ItemTextContainerName>
                             <ItemText numberOfLines={1}>{item.name}</ItemText>
                           </ItemTextContainerName>
+
                           <ItemTextContainerMeasures>
                             <ItemText
                               numberOfLines={1}
@@ -302,17 +295,6 @@ const BudgetProductList: React.FC = () => {
 
                 <ProductCardContainer
                   onPress={() => handleCreateAndNavigateToProduct(room)}
-                  style={{
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-
-                    elevation: 6,
-                  }}
                 >
                   <ProductCardAdd>
                     <MaterialCommunityIcons

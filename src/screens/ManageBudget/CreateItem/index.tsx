@@ -59,6 +59,7 @@ const CreateItem: React.FC = () => {
     getItem,
     editingItem,
     saveEditingItem,
+    removeEditingItem,
   } = useBudget();
 
   const route = useRoute();
@@ -93,7 +94,10 @@ const CreateItem: React.FC = () => {
           width: '',
         },
         surfaceFinish: 'Polido',
-        edgeFinishing: '',
+        edgeFinishing: {
+          name: '',
+          type: '',
+        },
         edgeFinishingPosition: [],
         stoneType: {
           stone: '',
@@ -110,8 +114,6 @@ const CreateItem: React.FC = () => {
 
   const [stoneImage, setStoneImage] = useState<any>(null);
   const [unitModalPickerVisible, setUnitModalPickerVisible] = useState(false);
-
-  const [moreInfo, setMoreInfo] = useState(editingItem.moreInfo);
 
   const [
     finishingModalPickerVisible,
@@ -179,9 +181,12 @@ const CreateItem: React.FC = () => {
     [saveEditingItem],
   );
 
-  const handleChangeMoreInfo = useCallback(() => {
-    saveEditingItem({ moreInfo });
-  }, [saveEditingItem, moreInfo]);
+  const handleChangeMoreInfo = useCallback(
+    (value: string) => {
+      saveEditingItem({ moreInfo: value });
+    },
+    [saveEditingItem],
+  );
 
   const handleChangeFinishingPosition = useCallback(
     ({ name, position }: EdgeFinishingPosition) => {
@@ -195,6 +200,17 @@ const CreateItem: React.FC = () => {
       } else {
         toUpdatefinishing.push({ position, name });
       }
+      toUpdatefinishing.sort((a, b) => {
+        const positionA = parseInt(a.position, 10);
+        const positionB = parseInt(b.position, 10);
+        if (positionA < positionB) {
+          return -1;
+        }
+        if (positionA > positionB) {
+          return 1;
+        }
+        return 0;
+      });
 
       saveEditingItem({
         edgeFinishingPosition: toUpdatefinishing,
@@ -238,7 +254,7 @@ const CreateItem: React.FC = () => {
     } else {
       saveItem({ roomId, productId, item: editingItem });
     }
-
+    removeEditingItem();
     navigate('RoomProducts', { stoneType });
   }, [
     saveItem,
@@ -249,6 +265,7 @@ const CreateItem: React.FC = () => {
     navigate,
     stoneType,
     editingItem,
+    removeEditingItem,
   ]);
 
   useEffect(() => {
@@ -393,9 +410,9 @@ const CreateItem: React.FC = () => {
             <ItemInputButton onPress={() => navigateToSelectEdgeFinish()}>
               <ItemInputButtonWrapper>
                 <ItemInputButtonText
-                  isOptionSelected={!!editingItem?.edgeFinishing}
+                  isOptionSelected={!!editingItem.edgeFinishing.name}
                 >
-                  {editingItem.edgeFinishing ||
+                  {editingItem.edgeFinishing.name ||
                     'Escolha o tipo do acabamento da borda'}
                 </ItemInputButtonText>
               </ItemInputButtonWrapper>
@@ -423,9 +440,8 @@ const CreateItem: React.FC = () => {
                 multiline
                 placeholder="Digite aqui"
                 style={{ textAlignVertical: 'top' }}
-                value={moreInfo}
-                onChangeText={value => setMoreInfo(value)}
-                onEndEditing={e => handleChangeMoreInfo()}
+                value={editingItem.moreInfo}
+                onChangeText={value => handleChangeMoreInfo(value)}
               />
             </TextAreaContainer>
           </Input>
