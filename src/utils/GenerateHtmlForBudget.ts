@@ -1,5 +1,4 @@
 import Budget from '@dtos/Budget';
-import Handlebars from 'react-native-handlebars';
 import RNFS from 'react-native-fs';
 
 export default async function GenerateHtmlForBudget(

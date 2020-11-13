@@ -5,14 +5,22 @@ import fs from 'fs';
 import handlebars from 'handlebars';
 import pdf from 'html-pdf';
 
+import Budget from '../dtos/Budget';
+
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
 initializeApp({ projectId: 'app-orcamento-marmoraria' });
 
+interface RequestBody {
+  budget: Budget;
+}
+
 export const templateTestSouthAmerica = functions
   .region('southamerica-east1')
   .https.onRequest(async (request, response) => {
+    const { budget } = <RequestBody>request.body;
+
     const templatePath = path.resolve(
       __dirname,
       '..',
@@ -24,7 +32,7 @@ export const templateTestSouthAmerica = functions
     });
 
     const template = handlebars.compile(templateFile);
-    const parseTemplate = template({ name: 'ruan', legal: 'deudedeudh' });
+    const parseTemplate = template(budget);
 
     pdf
       .create(parseTemplate, {

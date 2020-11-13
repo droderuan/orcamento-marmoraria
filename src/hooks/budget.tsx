@@ -317,7 +317,6 @@ export const BudgetProvider: React.FC = ({ children }) => {
       const { roomIndex, productIndex } = getProductIndex(roomId, productId);
 
       budgetCopy.rooms[roomIndex].products[productIndex].items.push(item);
-
       setBudget(budgetCopy);
     },
     [budget, getProductIndex],
