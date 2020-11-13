@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRoute } from '@react-navigation/core';
-import { RouteProp } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { primary900 } from '@styles/theme/colors';
