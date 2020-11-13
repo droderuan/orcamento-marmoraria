@@ -16,13 +16,13 @@ import {
   ButtonContainer,
 } from './styles';
 
-interface HomePageProps {
+interface HomePageViewProps {
   toggleDrawer: () => void;
   navigateToManageBudget: () => void;
   budgets: Budget[];
 }
 
-const HomePageView: React.FC<HomePageProps> = ({
+const HomePageView: React.FC<HomePageViewProps> = ({
   toggleDrawer,
   navigateToManageBudget,
   budgets,

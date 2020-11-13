@@ -1,18 +1,14 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React from 'react';
 import { TouchableOpacity, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import { Button, Divider } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { red, green } from '@styles/theme/colors';
-import RoomProps from '@dtos/Room';
 import Modal from '@components/Modal';
 
-import GenerateID from '@utils/GenerateID';
-import Product from '@dtos/Product';
-import { useBudget } from '@hooks/budget';
-
+import Budget from '@dtos/Budget';
+import Room from '@dtos/Room';
 import {
   Container,
   HeaderButtons,
@@ -26,7 +22,7 @@ import {
   ModalInputText,
   ProductsContainer,
   RoomList,
-  Room,
+  RoomContent,
   RoomNameWrapper,
   RoomTitleWrapper,
   RoomTitle,
@@ -44,114 +40,61 @@ import {
   ProductCardAddText,
 } from './styles';
 
-interface EditRoomDTO {
-  room: RoomProps;
-  index: number;
+interface BudgetProductsViewProps {
+  budget: Budget;
+  roomToShowOptions: Room;
+  modalCreateRoomInputTextRef: React.RefObject<TextInput>;
+  createRoomModal: {
+    visibility: boolean;
+    openModal: () => void;
+    closeModal: () => void;
+  };
+  setRoomNameToCreate: (name: string) => void;
+  handleCreateRoom: () => void;
+  roomOptionsModal: {
+    visibility: boolean;
+    openModal: (room: Room) => void;
+    closeModal: () => void;
+  };
+  handleFinishEditingRoom: () => void;
+  handleChangeEditingRoomName: (name: string) => void;
+  deleteEditingRoom: () => void;
+  duplicateEditingRoom: () => void;
+  navigateToProduct: (room: Room, productId: string) => void;
+  createAndNavigateToProduct: (room: Room) => void;
 }
 
-const BudgetProductList: React.FC = () => {
-  const {
-    budget,
-    createRoom,
-    saveRoom,
-    deleteRoom,
-    createProduct,
-  } = useBudget();
-  const { navigate } = useNavigation();
-  const [writedRoomName, setwritedRoomName] = useState('');
-  const [editRoom, setEditRoom] = useState<RoomProps>({} as RoomProps);
-
-  const [addRoomModalVisible, setAddRoomModalVisible] = useState(false);
-  const [editRoomModalVisible, setEditRoomModalVisible] = useState(false);
-
-  const modalInputRef = useRef<TextInput>(null);
-
-  const openAddRoomModal = useCallback(() => {
-    setAddRoomModalVisible(true);
-    setTimeout(() => modalInputRef.current?.focus(), 250);
-  }, []);
-
-  const closeAddRoomModal = useCallback(
-    () => setAddRoomModalVisible(false),
-    [],
-  );
-
-  const addRoom = useCallback(() => {
-    if (writedRoomName !== '') {
-      createRoom({
-        name: writedRoomName,
-      });
-
-      setwritedRoomName('');
-
-      closeAddRoomModal();
-    }
-  }, [closeAddRoomModal, writedRoomName, createRoom]);
-
-  const openEditRoomModal = useCallback(({ room }: EditRoomDTO) => {
-    setEditRoomModalVisible(true);
-    setEditRoom(room);
-  }, []);
-
-  const closeEditRoomModal = useCallback(() => {
-    setEditRoomModalVisible(false);
-    setEditRoom({} as RoomProps);
-  }, []);
-
-  const handleEditRoom = useCallback(() => {
-    saveRoom(editRoom);
-    closeEditRoomModal();
-    setEditRoom({} as RoomProps);
-  }, [saveRoom, closeEditRoomModal, editRoom]);
-
-  const handleDuplicateRoom = useCallback(() => {
-    deleteRoom(editRoom);
-    closeEditRoomModal();
-    setEditRoom({} as RoomProps);
-  }, [deleteRoom, closeEditRoomModal, editRoom]);
-
-  const handleDeleteRoom = useCallback(() => {
-    deleteRoom(editRoom);
-    closeEditRoomModal();
-    setEditRoom({} as RoomProps);
-  }, [deleteRoom, closeEditRoomModal, editRoom]);
-
-  const handleNavigateToProduct = useCallback(
-    (room, productId = null) => {
-      navigate('RoomProducts', { room, productId });
-    },
-    [navigate],
-  );
-
-  const handleCreateAndNavigateToProduct = useCallback(
-    (room: RoomProps) => {
-      const product = {
-        id: GenerateID(),
-        name: 'Novo Produto',
-        items: [],
-      } as Product;
-      navigate('RoomProducts', { room, productId: product.id });
-      createProduct({ roomId: room.id, product });
-    },
-    [navigate, createProduct],
-  );
-
+const BudgetProductView: React.FC<BudgetProductsViewProps> = ({
+  budget,
+  roomToShowOptions,
+  modalCreateRoomInputTextRef,
+  createRoomModal,
+  setRoomNameToCreate,
+  handleCreateRoom,
+  roomOptionsModal,
+  handleChangeEditingRoomName,
+  handleFinishEditingRoom,
+  deleteEditingRoom,
+  duplicateEditingRoom,
+  navigateToProduct,
+  createAndNavigateToProduct,
+}) => {
   return (
     <Container>
       <Modal
         animationType="fade"
         transparent
-        visible={addRoomModalVisible}
-        onRequestClose={closeAddRoomModal}
-        closeModal={closeAddRoomModal}
+        visible={createRoomModal.visibility}
+        onRequestClose={createRoomModal.closeModal}
+        closeModal={createRoomModal.closeModal}
       >
         <ModalContent>
           <ModalTitle>Adicionar cômodo</ModalTitle>
 
           <ModalInputTextContainer>
             <ModalInputText
-              ref={modalInputRef}
-              onChangeText={room => setwritedRoomName(room)}
+              ref={modalCreateRoomInputTextRef}
+              onChangeText={room => setRoomNameToCreate(room)}
               placeholder="Digite o nome do cômodo"
               placeholderTextColor="#efefef"
             />
@@ -162,7 +105,7 @@ const BudgetProductList: React.FC = () => {
               icon="cancel"
               mode="contained"
               style={{ backgroundColor: red }}
-              onPress={closeAddRoomModal}
+              onPress={createRoomModal.closeModal}
             >
               Cancelar
             </Button>
@@ -171,7 +114,7 @@ const BudgetProductList: React.FC = () => {
               icon="check"
               mode="contained"
               style={{ backgroundColor: green }}
-              onPress={addRoom}
+              onPress={handleCreateRoom}
             >
               Confirmar
             </Button>
@@ -182,14 +125,14 @@ const BudgetProductList: React.FC = () => {
       <Modal
         animationType="fade"
         transparent
-        visible={editRoomModalVisible}
-        onRequestClose={closeEditRoomModal}
-        closeModal={closeEditRoomModal}
+        visible={roomOptionsModal.visibility}
+        onRequestClose={roomOptionsModal.closeModal}
+        closeModal={roomOptionsModal.closeModal}
       >
         <ModalContent>
           <ModalHeaderWrapper>
             <ModalTitle>Editar cômodo</ModalTitle>
-            <TouchableOpacity onPress={handleDeleteRoom}>
+            <TouchableOpacity onPress={deleteEditingRoom}>
               <MaterialCommunityIcons
                 name="delete-outline"
                 size={48}
@@ -197,7 +140,7 @@ const BudgetProductList: React.FC = () => {
                 style={{ marginRight: 10 }}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDuplicateRoom}>
+            <TouchableOpacity onPress={duplicateEditingRoom}>
               <MaterialCommunityIcons
                 name="content-duplicate"
                 size={42}
@@ -208,10 +151,8 @@ const BudgetProductList: React.FC = () => {
 
           <ModalInputTextContainer>
             <ModalInputText
-              onChangeText={roomName =>
-                setEditRoom({ ...editRoom, name: roomName })
-              }
-              value={editRoom.name}
+              onChangeText={handleChangeEditingRoomName}
+              value={roomToShowOptions.name}
               placeholder="Digite o nome do cômodo"
               placeholderTextColor="#efefef"
             />
@@ -222,7 +163,7 @@ const BudgetProductList: React.FC = () => {
               icon="cancel"
               mode="contained"
               style={{ backgroundColor: red }}
-              onPress={closeEditRoomModal}
+              onPress={roomOptionsModal.closeModal}
             >
               Cancelar
             </Button>
@@ -231,7 +172,7 @@ const BudgetProductList: React.FC = () => {
               icon="check"
               mode="contained"
               style={{ backgroundColor: green }}
-              onPress={handleEditRoom}
+              onPress={handleFinishEditingRoom}
             >
               Confirmar
             </Button>
@@ -240,7 +181,7 @@ const BudgetProductList: React.FC = () => {
       </Modal>
 
       <HeaderButtons>
-        <HeaderButton onPress={openAddRoomModal}>
+        <HeaderButton onPress={createRoomModal.openModal}>
           <MaterialCommunityIcons name="plus" size={26} color="#fff" />
           <HeaderButtonText>Cômodo</HeaderButtonText>
         </HeaderButton>
@@ -250,11 +191,9 @@ const BudgetProductList: React.FC = () => {
         <RoomList
           data={budget.rooms}
           keyExtractor={room => room.id}
-          renderItem={({ item: room, index: roomIndex }) => (
-            <Room>
-              <RoomNameWrapper
-                onPress={() => openEditRoomModal({ room, index: roomIndex })}
-              >
+          renderItem={({ item: room }) => (
+            <RoomContent>
+              <RoomNameWrapper onPress={() => roomOptionsModal.openModal(room)}>
                 <RoomTitleWrapper>
                   <RoomTitle>{room.name}</RoomTitle>
                 </RoomTitleWrapper>
@@ -263,7 +202,7 @@ const BudgetProductList: React.FC = () => {
               <ProductHorizontalList>
                 {room.products.map(product => (
                   <ProductCardContainer
-                    onPress={() => handleNavigateToProduct(room, product.id)}
+                    onPress={() => navigateToProduct(room, product.id)}
                     key={product.id}
                   >
                     <ProductCardHeader>
@@ -294,7 +233,7 @@ const BudgetProductList: React.FC = () => {
                 ))}
 
                 <ProductCardContainer
-                  onPress={() => handleCreateAndNavigateToProduct(room)}
+                  onPress={() => createAndNavigateToProduct(room)}
                 >
                   <ProductCardAdd>
                     <MaterialCommunityIcons
@@ -306,7 +245,7 @@ const BudgetProductList: React.FC = () => {
                   </ProductCardAdd>
                 </ProductCardContainer>
               </ProductHorizontalList>
-            </Room>
+            </RoomContent>
           )}
         />
       </ProductsContainer>
@@ -314,4 +253,4 @@ const BudgetProductList: React.FC = () => {
   );
 };
 
-export default BudgetProductList;
+export default BudgetProductView;

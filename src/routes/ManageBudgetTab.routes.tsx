@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { primary900 } from '@styles/theme/colors';
-import BudgetProductList from '../screens/ManageBudget/BudgetProductList';
+import BudgetProducts from '../screens/ManageBudget/BudgetProducts';
 import Client from '../screens/ManageBudget/Client';
 import BudgetOptions from '../screens/ManageBudget/BudgetOptions';
 
@@ -35,7 +35,7 @@ const MainPage: React.FC = () => {
     >
       <Tab.Screen
         name="BudgetProductList"
-        component={BudgetProductList}
+        component={BudgetProducts}
         initialParams={{ budgetId }}
         options={{
           title: 'Orçamento',
