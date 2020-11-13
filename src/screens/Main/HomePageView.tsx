@@ -18,13 +18,13 @@ import {
 
 interface HomePageProps {
   toggleDrawer: () => void;
-  handleNavigateToBudget: () => void;
+  navigateToManageBudget: () => void;
   budgets: Budget[];
 }
 
 const HomePageView: React.FC<HomePageProps> = ({
   toggleDrawer,
-  handleNavigateToBudget,
+  navigateToManageBudget,
   budgets,
 }) => {
   return (
@@ -45,7 +45,7 @@ const HomePageView: React.FC<HomePageProps> = ({
       </ScrollView>
 
       <ButtonContainer>
-        <Button onPress={handleNavigateToBudget}>Novo orçamento</Button>
+        <Button onPress={navigateToManageBudget}>Novo orçamento</Button>
       </ButtonContainer>
     </Container>
   );

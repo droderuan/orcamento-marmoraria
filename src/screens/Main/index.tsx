@@ -33,7 +33,7 @@ const HomePageController: React.FC = () => {
     dispatch(DrawerActions.toggleDrawer());
   }, [dispatch]);
 
-  const navigateToBudget = useCallback(() => {
+  const navigateToManageBudget = useCallback(() => {
     navigate('ManageBudget', {});
   }, [navigate]);
 
@@ -41,7 +41,7 @@ const HomePageController: React.FC = () => {
     <HomePageView
       budgets={budgets}
       toggleDrawer={toggleDrawer}
-      handleNavigateToBudget={navigateToBudget}
+      navigateToManageBudget={navigateToManageBudget}
     />
   );
 };
