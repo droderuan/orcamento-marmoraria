@@ -4,10 +4,6 @@ import RoomProps from '@dtos/Room';
 
 import { primary500 } from '@styles/theme/colors';
 
-interface Product {
-  type: string;
-}
-
 export const Container = styled.View`
   flex: 1;
   align-items: center;
@@ -92,7 +88,7 @@ export const RoomList = styled(FlatList as new () => FlatList<RoomProps>)`
   height: 100%;
 `;
 
-export const Room = styled.View`
+export const RoomContent = styled.View`
   margin: 10px 0;
 `;
 
