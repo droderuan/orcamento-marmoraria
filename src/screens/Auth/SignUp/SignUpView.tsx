@@ -9,14 +9,7 @@ import { ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import FormInput from '@components/FormInput';
 import Button from '@components/Button';
 
-import {
-  Container,
-  Title,
-  ButtonContainer,
-  ButtonContainerDivider,
-  Line,
-  ButtonContainerDividerText,
-} from './styles';
+import { Container, Title, ButtonContainer } from './styles';
 
 interface SignUpViewProps {
   handleSubmitCreateAccount: (data: { [key: string]: string }) => void;

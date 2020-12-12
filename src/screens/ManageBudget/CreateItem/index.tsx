@@ -71,6 +71,7 @@ const CreateItem: React.FC = () => {
     stoneNumber,
     stoneType,
   } = route.params as RouteParams;
+
   const { navigate, setOptions } = useNavigation();
 
   const [isNewItem, setIsNewItem] = useState(true);
@@ -162,9 +163,11 @@ const CreateItem: React.FC = () => {
 
   const handleChangeStone = useCallback(
     ({ type, stone }) => {
-      saveEditingItem({ stoneType: { type, stone } });
+      if (stone !== editingItem.stoneType.stone) {
+        saveEditingItem({ stoneType: { type, stone } });
+      }
     },
-    [saveEditingItem],
+    [saveEditingItem, editingItem.stoneType.stone],
   );
 
   const handleChangeSurfaceFinish = useCallback(
@@ -233,10 +236,12 @@ const CreateItem: React.FC = () => {
         const image = StonesImages.stonesType
           .find(stones => stones.type === type)
           ?.stones.find(stones => stones.display === imageName);
+
         if (!image) {
           throw new Error('Image does not exist');
         }
-        setStoneImage(image?.img);
+
+        setStoneImage(image.img);
       }
     },
     [editingItem.stoneType.stone],
@@ -288,7 +293,7 @@ const CreateItem: React.FC = () => {
       handleChangeStone({ type: stoneType.type, stone: stoneType.stone });
       handleSetImage({ type: stoneType.type, imageName: stoneType.stone });
     }
-  }, [handleChangeStone, stoneType, handleSetImage]);
+  }, [stoneType, handleSetImage, handleChangeStone]);
 
   return (
     <Container>

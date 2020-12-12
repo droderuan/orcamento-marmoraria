@@ -65,9 +65,7 @@ const SignIn: React.FC<SignInViewProps> = ({
               >
                 Entrar
               </Button>
-              <PaperButton mode="text" onPress={navigateToSignUp}>
-                Não possui conta? Crie uma agora mesmo!
-              </PaperButton>
+
               <ButtonContainerDivider>
                 <Line />
                 <ButtonContainerDividerText>ou</ButtonContainerDividerText>

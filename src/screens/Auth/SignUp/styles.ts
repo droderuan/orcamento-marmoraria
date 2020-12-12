@@ -9,7 +9,7 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-family: 'Heebo', Arial, Helvetica, sans-serif;
+  font-family: 'Heebo-Regular';
   font-size: 32px;
   color: ${secondary700};
   margin-bottom: 28px;
