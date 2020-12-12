@@ -17,8 +17,10 @@ async function requestStoragePermission(): Promise<boolean> {
 }
 
 export async function storagePermission(): Promise<void | boolean> {
-  const result = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
-  switch (result) {
+  const write = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+  const read = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+
+  switch (write || read) {
     case RESULTS.UNAVAILABLE:
       Alert.alert(
         'Serviço indisponível',
@@ -28,7 +30,6 @@ export async function storagePermission(): Promise<void | boolean> {
     case RESULTS.DENIED:
       return requestStoragePermission();
 
-      break;
     case RESULTS.GRANTED:
       return true;
     case RESULTS.BLOCKED:

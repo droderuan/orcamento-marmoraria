@@ -7,14 +7,15 @@ import puppeteer from 'puppeteer';
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
-export const helloWorld = functions
+export const generatePdf = functions
   .runWith({
     memory: "1GB"
   })
   .https
   .onRequest(
     async (request, response) => {
-      functions.logger.info("Hello logs!", {structuredData: true});
+      functions.logger.info(request, {structuredData: true});
+
       const variables = request.body;
 
       const templatePath = path.resolve(__dirname, '..', 'template', 'template.hbs');
@@ -42,5 +43,5 @@ export const helloWorld = functions
 
       response.type('application/pdf');
 
-      response.send(pdfBuffer);
+      response.json({data: pdfBuffer});
 });
