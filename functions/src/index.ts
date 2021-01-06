@@ -43,5 +43,5 @@ export const generatePdf = functions
 
       response.type('application/pdf');
 
-      response.json({data: pdfBuffer});
+      response.end(Buffer.from(pdfBuffer));
 });

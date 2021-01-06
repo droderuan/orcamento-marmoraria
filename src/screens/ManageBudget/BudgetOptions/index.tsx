@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Share from 'react-native-share';
 import functions from '@react-native-firebase/functions';
 import RNFS from 'react-native-fs';
+import Reactotron from 'reactotron-react-native';
 
 import { useNavigation } from '@react-navigation/core';
 import { useBudget } from '@hooks/budget';
@@ -28,29 +29,7 @@ const BudgetOptionsController: React.FC = () => {
       try {
         setIsLoading(true);
 
-        const generatePdf = functions().httpsCallable('generatePdf');
-
-        const DownloadFileOptions = {
-          fromUrl:
-            'https://us-central1-app-orcamento-marmoraria.cloudfunctions.net/generatePdf',
-          toFile: `${RNFS.ExternalDirectoryPath}/teste.pdf`,
-        };
-
-        const { promise } = await RNFS.downloadFile(DownloadFileOptions);
-
-        promise.then(result => {
-          console.log(result);
-          const shareOptions = {
-            title: 'Share via',
-            message: 'some message',
-            type: 'application/pdf',
-            saveToFiles: true,
-            url: `file://${RNFS.ExternalDirectoryPath}/teste.pdf`,
-            social: Share.Social.EMAIL,
-          };
-
-          Share.shareSingle(shareOptions);
-        });
+        // const generatePdf = functions().httpsCallable('generatePdf');
 
         // const response = await generatePdf({
         //   company: {
@@ -63,14 +42,34 @@ const BudgetOptionsController: React.FC = () => {
         //   budget,
         // });
 
-        // const pdfBuffer = response.data;
+        // const pdfBuffer = Buffer.from(response.data);
+
+        // const pdfBase = pdfBuffer.toString('base64');
+
+        const { promise } = RNFS.downloadFile({
+          fromUrl:
+            'https://us-central1-app-orcamento-marmoraria.cloudfunctions.net/generatePdf',
+          toFile: `${RNFS.ExternalDirectoryPath}/teste.pdf`,
+          headers: { body: { company: { name: 'ruan' } } },
+        });
+
+        promise.then(value => {
+          const shareOptions = {
+            title: 'Orçamento',
+            message: 'Orçamento sobre peças de marmores e granitos.',
+            type: 'application/pdf',
+            url: `file://${RNFS.ExternalDirectoryPath}/teste.pdf`,
+            social: Share.Social.WHATSAPP,
+          };
+
+          Share.shareSingle(shareOptions);
+        });
 
         // await RNFS.writeFile(
         //   `${RNFS.ExternalDirectoryPath}/${budget.id}.pdf`,
-        //   JSON.stringify(pdfBuffer),
+        //   pdfBase,
+        //   'base64',
         // );
-
-        // console.log(`${RNFS.ExternalDirectoryPath}/${budget.id}.pdf`);
       } catch (err) {
         console.log(err);
       } finally {

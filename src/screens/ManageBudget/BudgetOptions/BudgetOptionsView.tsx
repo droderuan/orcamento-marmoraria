@@ -32,13 +32,13 @@ const BudgetOptionsView: React.FC<BudgetOptionsViewProps> = ({
         <Text style={{ margin: 30 }}>{budget.deliveryAddress.street}</Text>
       </SectionLabel>
       <SectionLabel title="Opções">
-        {/* <Button
+        <Button
           mode="contained"
           style={{ margin: 30 }}
           onPress={() => generatePdfAndShare()}
         >
           Criar pdf
-        </Button> */}
+        </Button>
         <Button
           mode="contained"
           style={{ margin: 30 }}
