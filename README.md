@@ -1,9 +1,13 @@
 # orcamento-marmoraria
 
+Projeto sendo desenvolvido com **Typescript** e **React Native**.
+Foi utilizado **Styled-Components** para estilização dos componentes.
+Foi utilizado a biblioteca **React Native Paper** para o uso de alguns componenents.
+
 Este projeto possui algumas depêndencias nativas no android, pois o desenvolvimento estava sendo por um emulador do 
 android. Alterações no código nativo do android foram para **pedir permissões** ao usuário e **configurações do firebase**.
 
-## Depêndencias
+## Depêndencias mobile
 
 ### Firebase
 O firebase foi adicionado numa estapa mais posterior do projeto, logo não possui uma implementação muito presa. Foram
